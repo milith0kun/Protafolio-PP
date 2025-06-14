@@ -1,0 +1,174 @@
+/* ===========================
+   ESTILOS DEL HEADER GENERAL OPTIMIZADO
+=========================== */
+
+/* HEADER GENERAL */
+.main-header {
+    width: 100%;
+    box-shadow: var(--shadow);
+    background: #ffffff;
+    position: relative;
+    z-index: 100;
+  }
+  
+  /* SECCIÓN SUPERIOR: BÚSQUEDA + ACCIONES */
+  .header-top {
+    background: var(--bg-light);
+    padding: 0.8rem 2rem;
+    border-bottom: 1px solid #e0e0e0;
+  }
+  
+  .header-top-container {
+    max-width: 1400px;
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  /* BUSCADOR */
+  .search-container {
+    display: flex;
+    background: #f1f3f5;
+    border-radius: 25px;
+    border: 1px solid #ddd;
+    overflow: hidden;
+    width: 100%;
+    max-width: 400px;
+  }
+  
+  .search-input {
+    border: none;
+    padding: 0.6rem 1rem;
+    font-size: 0.9rem;
+    flex: 1;
+    background: transparent;
+  }
+  
+  .search-input:focus { outline: none; }
+  
+  /* REDES + USUARIO */
+  .header-actions {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+  }
+  
+  .social-icons {
+    display: flex;
+    gap: 0.8rem;
+  }
+  
+  .social-icon {
+    background: #f1f3f5;
+    color: var(--primary-color);
+    width: 35px;
+    height: 35px;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 1.1rem;
+    transition: 0.3s;
+  }
+  
+  .social-icon:hover {
+    background: var(--secondary-color);
+    color: var(--primary-color);
+  }
+  
+  .user-menu {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: var(--primary-color);
+    color: white;
+    padding: 0.5rem 1rem;
+    border-radius: 25px;
+  }
+  
+  .user-icon {
+    background: white;
+    color: var(--primary-color);
+    border-radius: 50%;
+    padding: 0.4rem;
+    font-weight: bold;
+  }
+  
+  /* SECCIÓN DEL LOGO */
+  .header-middle {
+    background: #ffffff;
+    padding: 1rem 2rem;
+  }
+  
+  .header-middle-container {
+    max-width: 1400px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  
+  .logo-container {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
+  
+  .logo-text-container {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .logo-title {
+    font-size: 1.6rem;
+    font-weight: 700;
+    color: var(--primary-color);
+  }
+  
+  .logo-subtitle {
+    font-size: 1rem;
+    color: #DA5F0A;
+  }
+  
+  /* MENU INFERIOR */
+  .header-bottom {
+    background: var(--primary-color);
+    border-bottom: 3px solid var(--secondary-color);
+  }
+  
+  .header-bottom-container {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 0.6rem 2rem;
+    display: flex;
+    justify-content: center;
+  }
+  
+  .nav-list {
+    list-style: none;
+    display: flex;
+    gap: 2rem;
+  }
+  
+  .nav-list li a {
+    color: #ffffff;
+    text-decoration: none;
+    font-weight: 500;
+    transition: 0.3s;
+    padding-bottom: 5px;
+  }
+  
+  .nav-list li a.active {
+    border-bottom: 3px solid var(--secondary-color);
+  }
+  
+  .nav-list li a:hover {
+    color: var(--secondary-color);
+  }
+  
+  /* BOTÓN MENÚ (sólo si usas responsive) */
+  .menu-toggle {
+    display: none;
+  }
+  

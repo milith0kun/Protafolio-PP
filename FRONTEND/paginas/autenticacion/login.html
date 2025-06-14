@@ -1,0 +1,520 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Sistema de Portafolio Docente - Gestión y verificación de documentos académicos">
+  <meta name="keywords" content="portafolio docente, documentos académicos, verificación, educación">
+  <meta name="author" content="UNSAAC">
+  <title>Iniciar Sesión - Sistema de Portafolio Docente</title>
+ 
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" integrity="sha512-Avb2QiuDEEvB4bZJYdft2mNjVShBftLdPG8FJ0V7irTLQ8Uo0qcPxh4Plq7G5tGm0rU+1SPhVotteLpBERwTkw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <link rel="stylesheet" href="../../assets/css/paginas/autenticacion/login/body.css">
+  <link rel="stylesheet" href="../../assets/css/paginas/autenticacion/login/footer.css">
+  <link rel="stylesheet" href="../../assets/css/paginas/autenticacion/login/head.css">
+</head>
+<body>
+  <!-- Header principal -->
+  <header class="main-header">
+    <!-- Sección superior -->
+    <div class="header-top">
+      <div class="header-top-container">
+        <!-- Búsqueda -->
+        <div class="search-container">
+          <div class="search-wrapper">
+            <input type="text" class="search-input" placeholder="Buscar..." aria-label="Campo de búsqueda">
+            <button type="button" class="search-btn" aria-label="Buscar">
+              <i class="fas fa-search"></i>
+            </button>
+          </div>
+        </div>
+        
+        <!-- Redes y usuario -->
+        <div class="header-actions">
+          <div class="social-icons">
+            <a href="https://www.facebook.com/unsaac.oficial" target="_blank" class="social-icon facebook" aria-label="Facebook UNSAAC">
+              <i class="fab fa-facebook-f"></i>
+            </a>
+            <a href="https://twitter.com/unsaac_oficial" target="_blank" class="social-icon twitter" aria-label="Twitter UNSAAC">
+              <i class="fab fa-twitter"></i>
+            </a>
+            <a href="https://www.instagram.com/unsaac_oficial" target="_blank" class="social-icon instagram" aria-label="Instagram UNSAAC">
+              <i class="fab fa-instagram"></i>
+            </a>
+            <a href="https://www.youtube.com/channel/UCunsaac" target="_blank" class="social-icon youtube" aria-label="YouTube UNSAAC">
+              <i class="fab fa-youtube"></i>
+            </a>
+          </div>
+          
+          <div class="user-menu">
+            <div class="user-icon">
+              <i class="fas fa-user"></i>
+            </div>
+            <span class="user-name">Entrar</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Logo -->
+    <div class="header-middle">
+      <div class="header-middle-container">
+        <div class="logo-container">
+          <div class="logo-img">
+            <img src="../../assets/images/logo-unsaac.png" alt="Logo UNSAAC" class="logo">
+          </div>
+          <div class="logo-text-container">
+            <h1 class="logo-title">Sistema de Portafolio</h1>
+            <span class="logo-subtitle">Docente</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Menú de navegación -->
+    <nav class="header-bottom">
+      <div class="header-bottom-container">
+        <button class="menu-toggle" aria-label="Abrir menú" aria-expanded="false">
+          <span class="menu-icon">
+            <i class="fas fa-bars"></i>
+          </span>
+        </button>
+        
+        <div class="main-nav">
+          <ul class="nav-list">
+            <li class="nav-item">
+              <a href="../../index.html" class="nav-link">
+                <i class="fas fa-home"></i>
+                <span>Inicio</span>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a href="../compartidas/ayuda.html" class="nav-link">
+                <i class="fas fa-question-circle"></i>
+                <span>Ayuda</span>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a href="login.html" class="nav-link active">
+                <i class="fas fa-sign-in-alt"></i>
+                <span>Iniciar Sesión</span>
+              </a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+  </header>
+
+  <!-- Contenido principal -->
+  <main class="main-content">  
+    <!-- Contenido de login -->
+    <div class="login-container">
+      <!-- Formulario de login -->
+      <section class="login-form-container" id="contenedor-formulario">
+        <div class="login-header">
+          <div class="login-logo">
+            
+          </div>
+          <h1 class="login-title">Sistema de Portafolio Docente</h1>
+          <p class="login-subtitle">Acceda a su cuenta institucional</p>
+        </div>
+        
+        <!-- Spinner de carga -->
+        <div id="spinner-carga" class="spinner-container d-none">
+          <div class="spinner-border text-primary" role="status">
+            <span class="visually-hidden">Cargando...</span>
+          </div>
+          <p class="spinner-text">Verificando credenciales...</p>
+        </div>
+        
+        <!-- Alertas -->
+        <div class="alerts-container">
+          <div id="alerta-error" class="alert alert-danger d-none" role="alert">
+            <div class="alert-content">
+              <i class="fas fa-exclamation-triangle alert-icon"></i>
+              <span id="texto-error" class="alert-text"></span>
+            </div>
+            <button type="button" class="alert-close" aria-label="Cerrar alerta">
+              <i class="fas fa-times"></i>
+            </button>
+          </div>
+          
+          <div id="alerta-exito" class="alert alert-success d-none" role="alert">
+            <div class="alert-content">
+              <i class="fas fa-check-circle alert-icon"></i>
+              <span id="texto-exito" class="alert-text"></span>
+            </div>
+            <button type="button" class="alert-close" aria-label="Cerrar alerta">
+              <i class="fas fa-times"></i>
+            </button>
+          </div>
+        </div>
+        
+        <!-- Formulario de login -->
+        <form id="formulario-login" class="login-form">
+          <div class="form-group">
+            <label for="correo" class="form-label">
+              <i class="fas fa-envelope label-icon"></i>
+              Correo institucional
+            </label>
+            <div class="input-group">
+              <span class="input-group-text">
+                <i class="fas fa-envelope"></i>
+              </span>
+              <input 
+                type="email" 
+                id="correo" 
+                name="correo" 
+                class="form-control" 
+                placeholder="usuario@unsaac.edu.pe" 
+                required 
+                autocomplete="email"
+                aria-describedby="correo-help"
+              >
+            </div>
+            <small id="correo-help" class="form-text">Ingrese su correo institucional de UNSAAC</small>
+          </div>
+          
+          <div class="form-group">
+            <label for="password" class="form-label">
+              <i class="fas fa-lock label-icon"></i>
+              Contraseña
+            </label>
+            <div class="input-group">
+              <span class="input-group-text">
+                <i class="fas fa-lock"></i>
+              </span>
+              <input 
+                type="password" 
+                id="password" 
+                name="password" 
+                class="form-control" 
+                placeholder="Ingrese su contraseña" 
+                required 
+                autocomplete="current-password"
+                aria-describedby="password-help"
+              >
+              <button 
+                type="button" 
+                id="btn-mostrar-password" 
+                class="btn btn-outline-secondary toggle-password" 
+                title="Mostrar contraseña"
+                aria-label="Mostrar u ocultar contraseña"
+              >
+                <i class="fas fa-eye"></i>
+              </button>
+            </div>
+            <small id="password-help" class="form-text">Su contraseña debe tener al menos 8 caracteres</small>
+          </div>
+          
+          <div class="form-options">
+            <div class="form-check">
+              <input 
+                type="checkbox" 
+                id="recordar-sesion" 
+                name="recordar-sesion" 
+                class="form-check-input"
+              >
+              <label for="recordar-sesion" class="form-check-label">
+                <i class="fas fa-remember-me"></i>
+                Recordar mi sesión
+              </label>
+            </div>
+          </div>
+          
+          <!-- Información de intentos -->
+          <div id="info-intentos" class="info-intentos d-none">
+            <div class="alert alert-warning">
+              <i class="fas fa-exclamation-triangle"></i>
+              <span class="info-text"></span>
+            </div>
+          </div>
+          
+          <!-- Contador de bloqueo -->
+          <div id="contador-bloqueo" class="contador-bloqueo d-none">
+            <div class="alert alert-warning">
+              <div class="bloqueo-content">
+                <i class="fas fa-clock bloqueo-icon"></i>
+                <div class="bloqueo-text">
+                  <strong>Login bloqueado</strong>
+                  <p>Tiempo restante: <strong id="tiempo-restante" class="tiempo-restante">00:00</strong></p>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <!-- Acciones del formulario -->
+          <div class="form-actions">
+            <button type="submit" id="btn-login" class="btn btn-primary btn-login">
+              <span class="btn-content">
+                <i class="fas fa-sign-in-alt btn-icon"></i>
+                <span class="btn-text">Iniciar Sesión</span>
+              </span>
+            </button>
+            
+            <div class="secondary-actions">
+              <button type="button" id="btn-recuperar-password" class="btn btn-link btn-recovery">
+                <i class="fas fa-key"></i>
+                ¿Olvidó su contraseña?
+              </button>
+            </div>
+          </div>
+        </form>
+        
+        <!-- Footer del formulario -->
+        <div class="login-footer">
+          <p class="copyright">
+            <i class="fas fa-copyright"></i>
+            Sistema de Gestión de Portafolio Docente &copy; 2025
+          </p>
+          <p class="institution">Universidad Nacional de San Antonio Abad del Cusco</p>
+        </div>
+      </section>
+      
+      <!-- Información del sistema -->
+      <aside class="login-info">
+        <div class="info-content">
+          <div class="info-header">
+            <h2 class="info-title">Bienvenido al Sistema de Portafolio Docente</h2>
+            <p class="info-description">
+              Esta plataforma le permite gestionar, organizar y verificar documentos académicos de manera eficiente y segura.
+            </p>
+          </div>
+          
+          <div class="feature-list">
+            <div class="feature-item">
+              <div class="feature-icon">
+                <i class="fas fa-file-alt"></i>
+              </div>
+              <div class="feature-content">
+                <h3 class="feature-title">Gestión de Documentos</h3>
+                <p class="feature-description">Suba, organice y administre sus documentos académicos de forma centralizada.</p>
+              </div>
+            </div>
+            
+            <div class="feature-item">
+              <div class="feature-icon">
+                <i class="fas fa-check-circle"></i>
+              </div>
+              <div class="feature-content">
+                <h3 class="feature-title">Verificación Automática</h3>
+                <p class="feature-description">Proceso de verificación transparente y eficiente con validación en tiempo real.</p>
+              </div>
+            </div>
+            
+            <div class="feature-item">
+              <div class="feature-icon">
+                <i class="fas fa-chart-bar"></i>
+              </div>
+              <div class="feature-content">
+                <h3 class="feature-title">Reportes Detallados</h3>
+                <p class="feature-description">Genere informes completos sobre su actividad académica y progreso.</p>
+              </div>
+            </div>
+            
+            <div class="feature-item">
+              <div class="feature-icon">
+                <i class="fas fa-shield-alt"></i>
+              </div>
+              <div class="feature-content">
+                <h3 class="feature-title">Seguridad Garantizada</h3>
+                <p class="feature-description">Sus documentos están protegidos con los más altos estándares de seguridad.</p>
+              </div>
+            </div>
+          </div>
+          
+          <!-- Estado del sistema -->
+          <div class="system-status">
+            <div class="status-card">
+              <div class="status-header">
+                <i class="fas fa-server status-icon"></i>
+                <h4 class="status-title">Estado del Sistema</h4>
+              </div>
+              <div class="status-content">
+                <div class="status-indicator online">
+                  <span class="status-dot"></span>
+                  <span class="status-text">Operativo</span>
+                </div>
+                <p class="status-description">Todos los servicios funcionando correctamente</p>
+              </div>
+            </div>
+          </div>
+          
+          <!-- Información de soporte -->
+          <div class="support-info">
+            <div class="support-card">
+              <h4 class="support-title">
+                <i class="fas fa-headset"></i>
+                ¿Necesita ayuda?
+              </h4>
+              <p class="support-description">
+                Nuestro equipo de soporte está disponible para asistirle.
+              </p>
+              <div class="support-actions">
+                <a href="../compartidas/ayuda.html" class="btn btn-outline-light btn-sm">
+                  <i class="fas fa-question-circle"></i>
+                  Centro de Ayuda
+                </a>
+                <a href="mailto:soporte@unsaac.edu.pe" class="btn btn-outline-light btn-sm">
+                  <i class="fas fa-envelope"></i>
+                  Contactar Soporte
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </aside>
+    </div>
+  </main>
+ 
+  <!-- Footer -->
+  <footer class="main-footer">
+    <div class="footer-container">
+      <div class="footer-content">
+        <div class="footer-info">
+          <div class="footer-logo">
+            
+          </div>
+          <div class="footer-text">
+            <p class="footer-copyright">
+              &copy; 2025 Sistema de Portafolio Docente. Todos los derechos reservados.
+            </p>
+            <p class="footer-institution">
+              Universidad Nacional de San Antonio Abad del Cusco
+            </p>
+          </div>
+        </div>
+        
+        <div class="footer-links">
+          <div class="footer-links-group">
+            <h5 class="footer-links-title">Legal</h5>
+            <a href="#" class="footer-link">Términos y Condiciones</a>
+            <a href="#" class="footer-link">Política de Privacidad</a>
+          </div>
+          
+          <div class="footer-links-group">
+            <h5 class="footer-links-title">Soporte</h5>
+            <a href="../compartidas/ayuda.html" class="footer-link">Centro de Ayuda</a>
+            <a href="mailto:soporte@unsaac.edu.pe" class="footer-link">Contacto</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </footer>
+  
+  <!-- Scripts -->
+  <script src="../../assets/js/nucleo/configuracion.js"></script>
+  <script src="../../assets/js/nucleo.js"></script>
+  <script src="../../assets/js/autenticacion.js"></script>
+  
+  <!-- Script de configuración e inicialización -->
+  <script>
+    // Función para mostrar información de depuración
+    function mostrarDepuracion() {
+      console.log('DEBUG - Mostrando información de depuración');
+      
+      // Crear un div para mostrar mensajes de depuración
+      const debugDiv = document.createElement('div');
+      debugDiv.id = 'debug-info';
+      debugDiv.className = 'debug-panel';
+      debugDiv.style.cssText = `
+        position: fixed;
+        bottom: 10px;
+        left: 10px;
+        background-color: rgba(0,0,0,0.8);
+        color: white;
+        padding: 15px;
+        border-radius: 8px;
+        max-width: 400px;
+        z-index: 9999;
+        font-size: 12px;
+        max-height: 200px;
+        overflow-y: auto;
+        font-family: monospace;
+        box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+      `;
+      
+      // Añadir información de depuración
+      const token = localStorage.getItem(window.CONFIG?.STORAGE?.TOKEN || 'token');
+      const usuario = localStorage.getItem(window.CONFIG?.STORAGE?.USER || 'user');
+      
+      debugDiv.innerHTML = `
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+          <h3 style="margin: 0; color: #4CAF50;">Información de Depuración</h3>
+          <button onclick="this.closest('#debug-info').remove();" style="background: none; border: none; color: white; cursor: pointer; font-size: 16px;">×</button>
+        </div>
+        <div style="line-height: 1.4;">
+          <p><strong>URL:</strong> ${window.location.href}</p>
+          <p><strong>Token existe:</strong> ${!!token ? '✅' : '❌'}</p>
+          <p><strong>Usuario existe:</strong> ${!!usuario ? '✅' : '❌'}</p>
+          <p><strong>API URL:</strong> ${window.CONFIG?.API?.BASE_URL || 'No configurada'}</p>
+          <p><strong>Timestamp:</strong> ${new Date().toLocaleString()}</p>
+        </div>
+      `;
+      
+      // Remover debug panel anterior si existe
+      const existingDebug = document.getElementById('debug-info');
+      if (existingDebug) {
+        existingDebug.remove();
+      }
+      
+      document.body.appendChild(debugDiv);
+      
+      // Mostrar información de los elementos del formulario
+      const formulario = document.getElementById('formulario-login');
+      console.log('Formulario encontrado:', !!formulario);
+      
+      if (formulario) {
+        console.log('Elementos del formulario:', {
+          correo: !!document.getElementById('correo'),
+          password: !!document.getElementById('password'),
+          btnMostrar: !!document.getElementById('btn-mostrar-password'),
+          btnLogin: !!document.getElementById('btn-login')
+        });
+      }
+    }
+    
+    // Inicialización cuando el DOM esté completamente cargado
+    document.addEventListener('DOMContentLoaded', function() {
+      console.log('DEBUG - DOM completamente cargado');
+      
+      // Mostrar información de depuración en modo desarrollo
+      if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
+        mostrarDepuracion();
+      }
+      
+      // Configurar el formulario de login
+      if (typeof configurarLogin === 'function') {
+        console.log('DEBUG - Configurando login...');
+        configurarLogin();
+      } else {
+        console.error('ERROR: La función configurarLogin no está definida');
+      }
+      
+      // Agregar funcionalidad adicional para mejorar UX
+      const menuToggle = document.querySelector('.menu-toggle');
+      const mainNav = document.querySelector('.main-nav');
+      
+      if (menuToggle && mainNav) {
+        menuToggle.addEventListener('click', function() {
+          const isExpanded = this.getAttribute('aria-expanded') === 'true';
+          this.setAttribute('aria-expanded', !isExpanded);
+          mainNav.classList.toggle('nav-open');
+        });
+      }
+      
+      // Auto-cerrar alertas después de 5 segundos
+      const alerts = document.querySelectorAll('.alert');
+      alerts.forEach(alert => {
+        const closeBtn = alert.querySelector('.alert-close');
+        if (closeBtn) {
+          closeBtn.addEventListener('click', () => {
+            alert.classList.add('d-none');
+          });
+        }
+      });
+    });
+  </script>
+</body>
+</html>

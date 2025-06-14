@@ -1,0 +1,442 @@
+/* ========================================
+   ESTILOS FOOTER - SISTEMA PORTAFOLIO
+   ======================================== */
+
+/* ========================================
+   FOOTER PRINCIPAL
+   ======================================== */
+
+   .main-footer {
+    background: var(--primary-gradient);
+    color: var(--white);
+    position: relative;
+    overflow: hidden;
+    margin-top: auto;
+    border-top: 3px solid var(--secondary-color);
+  }
+  
+  .main-footer::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: 
+      radial-gradient(circle at 20% 20%, rgba(255, 255, 255, 0.05) 0%, transparent 50%),
+      radial-gradient(circle at 80% 80%, rgba(243, 156, 18, 0.08) 0%, transparent 50%);
+    pointer-events: none;
+  }
+  
+  .footer-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: var(--spacing-xl) var(--spacing-md);
+    position: relative;
+    z-index: 1;
+  }
+  
+  /* ========================================
+     CONTENIDO DEL FOOTER
+     ======================================== */
+  
+  .footer-content {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: var(--spacing-xl);
+    align-items: start;
+  }
+  
+  /* ========================================
+     INFORMACIÓN DEL FOOTER
+     ======================================== */
+  
+  .footer-info {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-lg);
+  }
+  
+  .footer-logo {
+    flex-shrink: 0;
+    width: 60px;
+    height: 60px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: var(--border-radius-md);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: var(--shadow-sm);
+    transition: all var(--transition-normal);
+    background-image: url('../../../../assets/imagenes/logo-unsaac2.png');
+    background-size: 85%;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-color: rgba(255, 255, 255, 0.9);
+    overflow: hidden;
+  }
+  
+  .footer-logo:hover {
+    transform: scale(1.05);
+    background: rgba(255, 255, 255, 0.15);
+  }
+  
+  .footer-logo-img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    filter: brightness(0) invert(1);
+  }
+  
+  .footer-text {
+    flex: 1;
+  }
+  
+  .footer-copyright {
+    font-size: var(--font-size-sm);
+    font-weight: 500;
+    margin: 0 0 var(--spacing-xs);
+    color: var(--white);
+    opacity: 0.9;
+  }
+  
+  .footer-institution {
+    font-size: var(--font-size-xs);
+    font-weight: 400;
+    margin: 0;
+    color: var(--secondary-color);
+    opacity: 0.9;
+  }
+  
+  /* ========================================
+     ENLACES DEL FOOTER
+     ======================================== */
+  
+  .footer-links {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--spacing-lg);
+  }
+  
+  .footer-links-group {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-sm);
+  }
+  
+  .footer-links-title {
+    font-size: var(--font-size-sm);
+    font-weight: 600;
+    margin: 0 0 var(--spacing-xs);
+    color: var(--secondary-color);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    position: relative;
+    padding-bottom: var(--spacing-xs);
+  }
+  
+  .footer-links-title::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 20px;
+    height: 2px;
+    background: var(--secondary-color);
+    border-radius: 1px;
+  }
+  
+  .footer-link {
+    color: var(--white);
+    text-decoration: none;
+    font-size: var(--font-size-xs);
+    font-weight: 400;
+    opacity: 0.8;
+    transition: all var(--transition-normal);
+    position: relative;
+    padding: var(--spacing-xs) 0;
+    display: inline-flex;
+    align-items: center;
+    gap: var(--spacing-xs);
+  }
+  
+  .footer-link::before {
+    content: '';
+    width: 4px;
+    height: 4px;
+    background: var(--secondary-color);
+    border-radius: 50%;
+    opacity: 0;
+    transform: translateX(-10px);
+    transition: all var(--transition-normal);
+  }
+  
+  .footer-link:hover {
+    opacity: 1;
+    color: var(--secondary-color);
+    transform: translateX(var(--spacing-xs));
+  }
+  
+  .footer-link:hover::before {
+    opacity: 1;
+    transform: translateX(0);
+  }
+  
+  /* Enlaces especiales (email) */
+  .footer-link[href^="mailto:"] {
+    position: relative;
+  }
+  
+  .footer-link[href^="mailto:"]::after {
+    content: '\f0e0';
+    font-family: 'Font Awesome 6 Free';
+    font-weight: 900;
+    font-size: var(--font-size-xs);
+    margin-left: var(--spacing-xs);
+    opacity: 0.6;
+    transition: opacity var(--transition-normal);
+  }
+  
+  .footer-link[href^="mailto:"]:hover::after {
+    opacity: 1;
+  }
+  
+  /* ========================================
+     ESTADOS RESPONSIVOS
+     ======================================== */
+  
+  @media (max-width: 768px) {
+    .footer-container {
+      padding: var(--spacing-lg) var(--spacing-md);
+    }
+    
+    .footer-content {
+      grid-template-columns: 1fr;
+      gap: var(--spacing-lg);
+      text-align: center;
+    }
+    
+    .footer-info {
+      flex-direction: column;
+      text-align: center;
+      gap: var(--spacing-md);
+    }
+    
+    .footer-links {
+      grid-template-columns: 1fr;
+      gap: var(--spacing-md);
+      max-width: 300px;
+      margin: 0 auto;
+    }
+    
+    .footer-links-group {
+      text-align: center;
+    }
+    
+    .footer-links-title::after {
+      left: 50%;
+      transform: translateX(-50%);
+    }
+  }
+  
+  @media (max-width: 576px) {
+    .footer-container {
+      padding: var(--spacing-md);
+    }
+    
+    .footer-content {
+      gap: var(--spacing-md);
+    }
+    
+    .footer-info {
+      gap: var(--spacing-sm);
+    }
+    
+    .footer-logo {
+      width: 40px;
+      height: 40px;
+    }
+    
+    .footer-copyright {
+      font-size: var(--font-size-xs);
+    }
+    
+    .footer-institution {
+      font-size: 0.65rem;
+    }
+    
+    .footer-links {
+      gap: var(--spacing-sm);
+    }
+    
+    .footer-links-group {
+      gap: var(--spacing-xs);
+    }
+  }
+  
+  /* ========================================
+     EFECTOS ADICIONALES
+     ======================================== */
+  
+  /* Efecto de ondas en el footer */
+  .main-footer::after {
+    content: '';
+    position: absolute;
+    top: -2px;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, 
+      var(--secondary-color) 0%, 
+      var(--primary-color) 25%, 
+      var(--secondary-color) 50%, 
+      var(--primary-color) 75%, 
+      var(--secondary-color) 100%);
+    background-size: 200% 100%;
+    animation: wave 4s linear infinite;
+  }
+  
+  @keyframes wave {
+    0% { background-position: 0% 0%; }
+    100% { background-position: 200% 0%; }
+  }
+  
+  /* Animación de entrada para el footer */
+  .main-footer {
+    animation: slideUp 0.6s ease-out;
+  }
+  
+  @keyframes slideUp {
+    from {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  
+  /* ========================================
+     VARIANTES ADICIONALES
+     ======================================== */
+  
+  /* Footer compacto (opcional) */
+  .main-footer.footer-compact {
+    padding: var(--spacing-md) 0;
+  }
+  
+  .main-footer.footer-compact .footer-container {
+    padding: var(--spacing-md);
+  }
+  
+  .main-footer.footer-compact .footer-content {
+    grid-template-columns: 1fr;
+    gap: var(--spacing-md);
+    text-align: center;
+  }
+  
+  .main-footer.footer-compact .footer-info {
+    flex-direction: row;
+    justify-content: center;
+    gap: var(--spacing-md);
+  }
+  
+  .main-footer.footer-compact .footer-links {
+    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+    max-width: 400px;
+    margin: 0 auto;
+  }
+  
+  /* ========================================
+     MODO OSCURO ESPECÍFICO PARA FOOTER
+     ======================================== */
+  
+  @media (prefers-color-scheme: dark) {
+    .main-footer {
+      background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
+      border-top-color: var(--secondary-color);
+    }
+    
+    .footer-logo {
+      background: rgba(255, 255, 255, 0.05);
+      border-color: rgba(255, 255, 255, 0.1);
+    }
+    
+    .footer-copyright,
+    .footer-link {
+      color: #e0e0e0;
+    }
+    
+    .footer-institution,
+    .footer-links-title {
+      color: var(--secondary-color);
+    }
+  }
+  
+  /* ========================================
+     UTILIDADES ESPECÍFICAS DEL FOOTER
+     ======================================== */
+  
+  /* Espaciado interno consistente */
+  .footer-container * {
+    box-sizing: border-box;
+  }
+  
+  /* Prevenir selección en elementos decorativos */
+  .footer-logo,
+  .footer-links-title::after,
+  .footer-link::before {
+    user-select: none;
+  }
+  
+  /* Mejorar legibilidad en pantallas pequeñas */
+  @media (max-width: 480px) {
+    .footer-copyright,
+    .footer-institution,
+    .footer-link {
+      line-height: 1.4;
+    }
+    
+    .footer-text {
+      max-width: 280px;
+      margin: 0 auto;
+    }
+  }
+  
+  /* ========================================
+     ACCESIBILIDAD MEJORADA
+     ======================================== */
+  
+  /* Focus visible para enlaces */
+  .footer-link:focus {
+    outline: 2px solid var(--secondary-color);
+    outline-offset: 2px;
+    border-radius: var(--border-radius-sm);
+  }
+  
+  /* Mejores contrastes para texto */
+  .footer-copyright {
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+  }
+  
+  .footer-link {
+    text-shadow: 0 1px 1px rgba(0, 0, 0, 0.2);
+  }
+  
+  /* Indicador visual para enlaces externos */
+  .footer-link[target="_blank"]::after {
+    content: '\f35d';
+    font-family: 'Font Awesome 6 Free';
+    font-weight: 900;
+    font-size: 0.7em;
+    margin-left: var(--spacing-xs);
+    opacity: 0.5;
+    transition: opacity var(--transition-normal);
+  }
+  
+  .footer-link[target="_blank"]:hover::after {
+    opacity: 0.8;
+  }

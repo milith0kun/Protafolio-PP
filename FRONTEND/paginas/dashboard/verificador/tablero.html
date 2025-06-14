@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Panel Verificador - Sistema de Portafolio Docente UNSAAC</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Dashboard Verificador - Sistema de Portafolio Docente UNSAAC">
+  <meta name="keywords" content="verificador, portafolio, revisión, UNSAAC">
+  <meta name="author" content="UNSAAC">
+
+  <link rel="stylesheet" href="../../../assets/css/paginas/verificador/body.css">
+  <link rel="stylesheet" href="../../../assets/css/paginas/verificador/footer.css">  
+  <link rel="stylesheet" href="../../../assets/css/paginas/verificador/head.css">  
+  
+</head>
+
+<body>
+
+  <!-- Encabezado -->
+  <header class="main-header">
+    <div class="header-top">
+      <div class="header-top-container">
+        <div class="search-container">
+          <input type="text" class="search-input" placeholder="Buscar documentos para revisar...">
+        </div>
+        <div class="header-actions">
+          <div class="social-icons">
+            <a href="https://www.facebook.com/unsaac.oficial" target="_blank" class="social-icon"><i class="fab fa-facebook-f"></i></a>
+            <a href="https://twitter.com/unsaac_oficial" target="_blank" class="social-icon"><i class="fab fa-twitter"></i></a>
+            <a href="https://www.instagram.com/unsaac_oficial" target="_blank" class="social-icon"><i class="fab fa-instagram"></i></a>
+            <a href="https://www.youtube.com/channel/UCunsaac" target="_blank" class="social-icon"><i class="fab fa-youtube"></i></a>
+          </div>
+          <div class="user-menu">
+            <div class="user-icon"><i class="fas fa-user-check"></i></div>
+            <span class="user-name">Verificador</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="header-middle">
+      <div class="header-middle-container">
+        <div class="logo-container">
+          <div class="logo-img">
+            <img src="../../assets/imagenes/logos/logo-unsaac.png" alt="Logo UNSAAC">
+          </div>
+          <div class="logo-text-container">
+            <span class="logo-title">Sistema de Portafolio</span>
+            <span class="logo-subtitle">Panel Verificador</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="header-bottom">
+      <div class="header-bottom-container">
+        <button class="menu-toggle" aria-label="Abrir menú">
+          <i class="fas fa-bars"></i>
+        </button>
+        <nav class="main-nav">
+          <ul class="nav-list">
+            <li><a href="tablero.html" class="active">Inicio</a></li>
+            <li><a href="pendientes.html">Documentos Pendientes</a></li>
+            <li><a href="revisados.html">Documentos Revisados</a></li>
+            <li><a href="observaciones.html">Observaciones</a></li>
+            <li><a href="estadisticas.html">Estadísticas</a></li>
+            <li><a href="../compartidas/notificaciones.html">Notificaciones</a></li>
+            <li><a href="../compartidas/ayuda.html">Ayuda</a></li>
+            <li><a href="#" onclick="cerrarSesion()">Cerrar sesión</a></li>
+          </ul>
+        </nav>
+      </div>
+    </div>
+  </header>
+
+  <!-- Contenido principal -->
+  <main class="main-content">
+    <!-- Estado del sistema para verificador -->
+    <section class="system-status-section">
+      <div class="status-banner verificador-banner">
+        <div class="status-content">
+          <div class="status-icon">
+            <i class="fas fa-info-circle"></i>
+          </div>
+          <div class="status-text">
+            <h3>Estado del Sistema</h3>
+            <p id="systemStatusMessage">Ciclo académico activo: 2025-I. Hay documentos pendientes de revisión.</p>
+          </div>
+          <div class="status-indicator">
+            <span class="status-badge active" id="systemStatusBadge">Revisión Activa</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Dashboard del verificador -->
+    <section class="dashboard-overview">
+      <div class="dashboard-cards">
+        <div class="dashboard-card pending-card">
+          <div class="card-header">
+            <h3><i class="fas fa-clipboard-list"></i> Documentos Pendientes</h3>
+          </div>
+          <div class="card-content">
+            <div class="stats-container">
+              <div class="stat-item">
+                <div class="stat-value" id="totalPending">42</div>
+                <div class="stat-label">Total Pendientes</div>
+              </div>
+              <div class="stat-item">
+                <div class="stat-value" id="urgentPending">15</div>
+                <div class="stat-label">Urgentes</div>
+              </div>
+              <div class="stat-item">
+                <div class="stat-value" id="newToday">8</div>
+                <div class="stat-label">Nuevos Hoy</div>
+              </div>
+            </div>
+            <div class="pending-list" id="recentPendingList">
+              <!-- Se cargará dinámicamente -->
+            </div>
+          </div>
+          <div class="card-action">
+            <a href="pendientes.html" class="btn btn-primary">Ver Todos</a>
+          </div>
+        </div>
+
+        <div class="dashboard-card reviewed-card">
+          <div class="card-header">
+            <h3><i class="fas fa-check-double"></i> Documentos Revisados</h3>
+          </div>
+          <div class="card-content">
+            <div class="stats-container">
+              <div class="stat-item">
+                <div class="stat-value" id="totalReviewed">156</div>
+                <div class="stat-label">Total Revisados</div>
+              </div>
+              <div class="stat-item">
+                <div class="stat-value" id="approvedDocs">124</div>
+                <div class="stat-label">Aprobados</div>
+              </div>
+              <div class="stat-item">
+                <div class="stat-value" id="observedDocs">32</div>
+                <div class="stat-label">Con Observaciones</div>
+              </div>
+            </div>
+            <div class="reviewed-list" id="recentReviewedList">
+              <!-- Se cargará dinámicamente -->
+            </div>
+          </div>
+          <div class="card-action">
+            <a href="revisados.html" class="btn btn-secondary">Ver Todos</a>
+          </div>
+        </div>
+
+        <div class="dashboard-card notifications-card">
+          <div class="card-header">
+            <h3><i class="fas fa-bell"></i> Notificaciones</h3>
+          </div>
+          <div class="card-content">
+            <div class="notifications-list" id="notificationsList">
+              <!-- Se cargará dinámicamente -->
+            </div>
+          </div>
+          <div class="card-action">
+            <a href="../compartidas/notificaciones.html" class="btn btn-info">Ver Todas</a>
+          </div>
+        </div>
+
+        <div class="dashboard-card stats-card">
+          <div class="card-header">
+            <h3><i class="fas fa-chart-line"></i> Mi Rendimiento</h3>
+          </div>
+          <div class="card-content">
+            <div class="performance-stats">
+              <div class="performance-item">
+                <span class="label">Documentos revisados hoy:</span>
+                <span class="value" id="reviewedToday">12</span>
+              </div>
+              <div class="performance-item">
+                <span class="label">Tiempo promedio de revisión:</span>
+                <span class="value" id="avgReviewTime">8.5 min</span>
+              </div>
+              <div class="performance-item">
+                <span class="label">Revisiones esta semana:</span>
+                <span class="value" id="reviewsThisWeek">45</span>
+              </div>
+              <div class="performance-item">
+                <span class="label">Eficiencia:</span>
+                <span class="value" id="efficiency">92%</span>
+              </div>
+            </div>
+            <div class="performance-chart">
+              <!-- Aquí iría un gráfico de rendimiento -->
+              <div class="chart-placeholder">Gráfico de rendimiento semanal</div>
+            </div>
+          </div>
+          <div class="card-action">
+            <a href="estadisticas.html" class="btn btn-warning">Ver Estadísticas</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Sección de documentos recientes -->
+    <section class="recent-documents-section">
+      <h2>📄 Documentos Recientes para Revisar</h2>
+      <div class="documents-container">
+        <div class="documents-filters">
+          <button class="filter-btn active" data-filter="all">Todos</button>
+          <button class="filter-btn" data-filter="pending">Pendientes</button>
+          <button class="filter-btn" data-filter="urgent">Urgentes</button>
+          <button class="filter-btn" data-filter="recent">Recientes</button>
+        </div>
+        <div class="documents-table-container">
+          <table class="documents-table">
+            <thead>
+              <tr>
+                <th>Documento</th>
+                <th>Docente</th>
+                <th>Asignatura</th>
+                <th>Fecha Subida</th>
+                <th>Estado</th>
+                <th>Acciones</th>
+              </tr>
+            </thead>
+            <tbody id="recentDocumentsList">
+              <!-- Se cargará dinámicamente -->
+              <tr>
+                <td>
+                  <div class="document-info">
+                    <i class="fas fa-file-pdf document-icon"></i>
+                    <span class="document-name">Silabo_Algoritmos_2025I.pdf</span>
+                  </div>
+                </td>
+                <td>María Rodríguez</td>
+                <td>Algoritmos y Estructuras de Datos</td>
+                <td>12/06/2025</td>
+                <td><span class="status-badge pending">Pendiente</span></td>
+                <td>
+                  <div class="action-buttons">
+                    <button class="btn-icon view-btn" title="Ver documento"><i class="fas fa-eye"></i></button>
+                    <button class="btn-icon review-btn" title="Revisar"><i class="fas fa-check-circle"></i></button>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <div class="document-info">
+                    <i class="fas fa-file-word document-icon"></i>
+                    <span class="document-name">Informe_Final_BD_2025I.docx</span>
+                  </div>
+                </td>
+                <td>Carlos Sánchez</td>
+                <td>Bases de Datos</td>
+                <td>11/06/2025</td>
+                <td><span class="status-badge urgent">Urgente</span></td>
+                <td>
+                  <div class="action-buttons">
+                    <button class="btn-icon view-btn" title="Ver documento"><i class="fas fa-eye"></i></button>
+                    <button class="btn-icon review-btn" title="Revisar"><i class="fas fa-check-circle"></i></button>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- Acciones rápidas -->
+    <section class="quick-actions">
+      <h2>Acciones Rápidas</h2>
+      <div class="actions-grid">
+        <a href="pendientes.html" class="action-card pending-action">
+          <div class="action-icon">
+            <i class="fas fa-clipboard-check"></i>
+          </div>
+          <div class="action-content">
+            <h3>Revisar Pendientes</h3>
+            <p>Documentos que requieren revisión</p>
+          </div>
+        </a>
+
+        <a href="observaciones.html" class="action-card observations-action">
+          <div class="action-icon">
+            <i class="fas fa-comment-dots"></i>
+          </div>
+          <div class="action-content">
+            <h3>Gestionar Observaciones</h3>
+            <p>Administrar comentarios y observaciones</p>
+          </div>
+        </a>
+
+        <a href="estadisticas.html" class="action-card stats-action">
+          <div class="action-icon">
+            <i class="fas fa-chart-pie"></i>
+          </div>
+          <div class="action-content">
+            <h3>Mis Estadísticas</h3>
+            <p>Ver rendimiento y métricas</p>
+          </div>
+        </a>
+
+        <a href="../compartidas/notificaciones.html" class="action-card notifications-action">
+          <div class="action-icon">
+            <i class="fas fa-bell"></i>
+          </div>
+          <div class="action-content">
+            <h3>Notificaciones</h3>
+            <p>Centro de mensajes y alertas</p>
+          </div>
+        </a>
+      </div>
+    </section>
+  </main>
+
+  <!-- Pie de página -->
+  <footer class="main-footer">
+    <div class="footer-container">
+      <div class="footer-info">
+        <p>&copy; 2025 Sistema de Portafolio Docente. Todos los derechos reservados.</p>
+      </div>
+      <div class="footer-links">
+        <a href="#">Términos y Condiciones</a>
+        <a href="#">Política de Privacidad</a>  
+        <a href="../compartidas/ayuda.html">Ayuda</a>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Scripts -->
+  <script src="../../../assets/js/nucleo/configuracion.js"></script>
+  <script src="../../../assets/js/nucleo.js"></script>
+  <script src="../../../assets/js/autenticacion.js"></script>
+  <script src="../../../assets/js/paginas/dashboard/verificador/tablero.js"></script>
+</body>
+</html>

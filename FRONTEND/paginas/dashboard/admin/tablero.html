@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Panel Administrador - Sistema de Portafolio Docente UNSAAC</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Dashboard Administrador - Sistema de Portafolio Docente UNSAAC">
+  <meta name="keywords" content="administrador, portafolio, gestión, UNSAAC">
+  <meta name="author" content="UNSAAC">
+
+
+  <link rel="stylesheet" href="../../../assets/css/paginas/admin/body.css">
+  <link rel="stylesheet" href="../../../assets/css/paginas/admin/head.css">
+  <link rel="stylesheet" href="../../../assets/css/paginas/admin/footer.css">
+  
+</head>
+
+<body>
+
+  <!-- Encabezado -->
+  <header class="main-header">
+    <div class="header-top">
+      <div class="header-top-container">
+        <div class="search-container">
+          <input type="text" class="search-input" placeholder="Buscar usuarios, ciclos...">
+        </div>
+        <div class="header-actions">
+          <div class="social-icons">
+            <a href="https://www.facebook.com/unsaac.oficial" target="_blank" class="social-icon"><i class="fab fa-facebook-f"></i></a>
+            <a href="https://twitter.com/unsaac_oficial" target="_blank" class="social-icon"><i class="fab fa-twitter"></i></a>
+            <a href="https://www.instagram.com/unsaac_oficial" target="_blank" class="social-icon"><i class="fab fa-instagram"></i></a>
+            <a href="https://www.youtube.com/channel/UCunsaac" target="_blank" class="social-icon"><i class="fab fa-youtube"></i></a>
+          </div>
+          <div class="user-menu">
+            <div class="user-icon"><i class="fas fa-user-shield"></i></div>
+            <span class="user-name">Administrador</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="header-middle">
+      <div class="header-middle-container">
+        <div class="logo-container">
+          <div class="logo-img">
+            <img src="../../assets/imagenes/logos/logo-unsaac.png" alt="Logo UNSAAC">
+          </div>
+          <div class="logo-text-container">
+            <span class="logo-title">Sistema de Portafolio</span>
+            <span class="logo-subtitle">Panel Administrador</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="header-bottom">
+      <div class="header-bottom-container">
+        <button class="menu-toggle" aria-label="Abrir menú">
+          <i class="fas fa-bars"></i>
+        </button>
+        <nav class="main-nav">
+          <ul class="nav-list">
+            <li><a href="tablero.html" class="active">Inicio</a></li>
+            <li><a href="usuarios.html">Gestión de Usuarios</a></li>
+            <li><a href="ciclos.html">Ciclos Académicos</a></li>
+            <li><a href="asignaciones.html">Asignaciones</a></li>
+            <li><a href="reportes.html">Reportes</a></li>
+            <li><a href="configuracion.html">Configuración</a></li>
+            <li><a href="../compartidas/notificaciones.html">Notificaciones</a></li>
+            <li><a href="../compartidas/ayuda.html">Ayuda</a></li>
+            <li><a href="#" onclick="cerrarSesion()">Cerrar sesión</a></li>
+          </ul>
+        </nav>
+      </div>
+    </div>
+  </header>
+
+  <!-- Contenido principal -->
+  <main class="main-content">
+    <!-- Estado del sistema para administrador -->
+    <section class="system-status-section">
+      <div class="status-banner admin-banner">
+        <div class="status-content">
+          <div class="status-icon">
+            <i class="fas fa-info-circle"></i>
+          </div>
+          <div class="status-text">
+            <h3>Estado del Sistema</h3>
+            <p id="systemStatusMessage">Ciclo académico activo: 2025-I. Período de subida de documentos activo.</p>
+          </div>
+          <div class="status-indicator">
+            <span class="status-badge active" id="systemStatusBadge">Sistema Operativo</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Dashboard del administrador -->
+    <section class="dashboard-overview">
+      <div class="dashboard-cards">
+        <div class="dashboard-card users-card">
+          <div class="card-header">
+            <h3><i class="fas fa-users"></i> Usuarios del Sistema</h3>
+          </div>
+          <div class="card-content">
+            <div class="stats-container">
+              <div class="stat-item">
+                <div class="stat-value" id="totalUsers">248</div>
+                <div class="stat-label">Total Usuarios</div>
+              </div>
+              <div class="stat-item">
+                <div class="stat-value" id="activeUsers">215</div>
+                <div class="stat-label">Activos</div>
+              </div>
+              <div class="stat-item">
+                <div class="stat-value" id="pendingUsers">12</div>
+                <div class="stat-label">Pendientes</div>
+              </div>
+            </div>
+            <div class="roles-distribution">
+              <div class="role-item">
+                <span class="role-name">Docentes:</span>
+                <span class="role-count" id="teacherCount">180</span>
+              </div>
+              <div class="role-item">
+                <span class="role-name">Verificadores:</span>
+                <span class="role-count" id="verifierCount">45</span>
+              </div>
+              <div class="role-item">
+                <span class="role-name">Administradores:</span>
+                <span class="role-count" id="adminCount">23</span>
+              </div>
+            </div>
+          </div>
+          <div class="card-action">
+            <a href="usuarios.html" class="btn btn-primary">Gestionar Usuarios</a>
+          </div>
+        </div>
+
+        <div class="dashboard-card cycles-card">
+          <div class="card-header">
+            <h3><i class="fas fa-calendar-alt"></i> Ciclos Académicos</h3>
+          </div>
+          <div class="card-content">
+            <div class="current-cycle">
+              <h4>Ciclo Actual: <span id="currentCycle">2025-I</span></h4>
+              <div class="cycle-dates">
+                <div class="date-item">
+                  <span class="date-label">Inicio:</span>
+                  <span class="date-value" id="cycleStartDate">01/04/2025</span>
+                </div>
+                <div class="date-item">
+                  <span class="date-label">Fin:</span>
+                  <span class="date-value" id="cycleEndDate">31/07/2025</span>
+                </div>
+              </div>
+              <div class="cycle-progress">
+                <div class="progress-bar">
+                  <div class="progress-fill" style="width: 45%;"></div>
+                </div>
+                <span class="progress-text">45% completado</span>
+              </div>
+            </div>
+            <div class="cycles-list" id="recentCycles">
+              <!-- Se cargará dinámicamente -->
+            </div>
+          </div>
+          <div class="card-action">
+            <a href="ciclos.html" class="btn btn-secondary">Gestionar Ciclos</a>
+          </div>
+        </div>
+
+        <div class="dashboard-card notifications-card">
+          <div class="card-header">
+            <h3><i class="fas fa-bell"></i> Notificaciones del Sistema</h3>
+          </div>
+          <div class="card-content">
+            <div class="notifications-list" id="systemNotifications">
+              <!-- Se cargará dinámicamente -->
+            </div>
+          </div>
+          <div class="card-action">
+            <a href="../compartidas/notificaciones.html" class="btn btn-info">Ver Todas</a>
+          </div>
+        </div>
+
+        <div class="dashboard-card stats-card">
+          <div class="card-header">
+            <h3><i class="fas fa-chart-bar"></i> Estadísticas Generales</h3>
+          </div>
+          <div class="card-content">
+            <div class="stats-grid">
+              <div class="stat-box">
+                <div class="stat-icon"><i class="fas fa-file-upload"></i></div>
+                <div class="stat-info">
+                  <div class="stat-value" id="totalDocuments">1,245</div>
+                  <div class="stat-label">Documentos</div>
+                </div>
+              </div>
+              <div class="stat-box">
+                <div class="stat-icon"><i class="fas fa-check-circle"></i></div>
+                <div class="stat-info">
+                  <div class="stat-value" id="approvedDocuments">876</div>
+                  <div class="stat-label">Aprobados</div>
+                </div>
+              </div>
+              <div class="stat-box">
+                <div class="stat-icon"><i class="fas fa-clock"></i></div>
+                <div class="stat-info">
+                  <div class="stat-value" id="pendingDocuments">289</div>
+                  <div class="stat-label">Pendientes</div>
+                </div>
+              </div>
+              <div class="stat-box">
+                <div class="stat-icon"><i class="fas fa-comment-dots"></i></div>
+                <div class="stat-info">
+                  <div class="stat-value" id="observedDocuments">80</div>
+                  <div class="stat-label">Observados</div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="card-action">
+            <a href="reportes.html" class="btn btn-warning">Ver Reportes</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Sección de actividad reciente -->
+    <section class="recent-activity-section">
+      <h2>📊 Actividad Reciente</h2>
+      <div class="activity-container">
+        <div class="activity-filters">
+          <button class="filter-btn active" data-filter="all">Todos</button>
+          <button class="filter-btn" data-filter="users">Usuarios</button>
+          <button class="filter-btn" data-filter="documents">Documentos</button>
+          <button class="filter-btn" data-filter="system">Sistema</button>
+        </div>
+        <div class="activity-list" id="activityList">
+          <!-- Se cargará dinámicamente -->
+          <div class="activity-item">
+            <div class="activity-icon"><i class="fas fa-user-plus"></i></div>
+            <div class="activity-content">
+              <div class="activity-title">Nuevo usuario registrado</div>
+              <div class="activity-details">Juan Pérez (Docente) se ha registrado en el sistema</div>
+              <div class="activity-time">Hace 2 horas</div>
+            </div>
+          </div>
+          <div class="activity-item">
+            <div class="activity-icon"><i class="fas fa-file-upload"></i></div>
+            <div class="activity-content">
+              <div class="activity-title">Documentos subidos</div>
+              <div class="activity-details">15 nuevos documentos subidos en las últimas 24 horas</div>
+              <div class="activity-time">Hace 5 horas</div>
+            </div>
+          </div>
+          <div class="activity-item">
+            <div class="activity-icon"><i class="fas fa-cog"></i></div>
+            <div class="activity-content">
+              <div class="activity-title">Configuración actualizada</div>
+              <div class="activity-details">Se actualizaron los plazos de entrega para el ciclo 2025-I</div>
+              <div class="activity-time">Hace 1 día</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Acciones rápidas -->
+    <section class="quick-actions">
+      <h2>Acciones Rápidas</h2>
+      <div class="actions-grid">
+        <a href="usuarios.html" class="action-card users-action">
+          <div class="action-icon">
+            <i class="fas fa-user-plus"></i>
+          </div>
+          <div class="action-content">
+            <h3>Nuevo Usuario</h3>
+            <p>Crear cuenta de usuario en el sistema</p>
+          </div>
+        </a>
+
+        <a href="ciclos.html" class="action-card cycle-action">
+          <div class="action-icon">
+            <i class="fas fa-calendar-plus"></i>
+          </div>
+          <div class="action-content">
+            <h3>Nuevo Ciclo</h3>
+            <p>Configurar un nuevo ciclo académico</p>
+          </div>
+        </a>
+
+        <a href="asignaciones.html" class="action-card assignment-action">
+          <div class="action-icon">
+            <i class="fas fa-tasks"></i>
+          </div>
+          <div class="action-content">
+            <h3>Asignaciones</h3>
+            <p>Gestionar asignaciones de cursos</p>
+          </div>
+        </a>
+
+        <a href="reportes.html" class="action-card reports-action">
+          <div class="action-icon">
+            <i class="fas fa-chart-pie"></i>
+          </div>
+          <div class="action-content">
+            <h3>Reportes</h3>
+            <p>Generar informes y estadísticas</p>
+          </div>
+        </a>
+      </div>
+    </section>
+  </main>
+
+  <!-- Pie de página -->
+  <footer class="main-footer">
+    <div class="footer-container">
+      <div class="footer-info">
+        <p>&copy; 2025 Sistema de Portafolio Docente. Todos los derechos reservados.</p>
+      </div>
+      <div class="footer-links">
+        <a href="#">Términos y Condiciones</a>
+        <a href="#">Política de Privacidad</a>  
+        <a href="../compartidas/ayuda.html">Ayuda</a>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Scripts -->
+  <script src="../../../assets/js/nucleo/configuracion.js"></script>
+  <script src="../../../assets/js/nucleo.js"></script>
+  <script src="../../../assets/js/autenticacion.js"></script>
+  <script src="../../../assets/js/paginas/dashboard/admin/tablero.js"></script>
+</body>
+</html>
