@@ -186,6 +186,118 @@ const formatearFecha = (fecha) => {
     return new Date(fecha).toLocaleDateString('es-ES', opciones);
 };
 
+/**
+ * Muestra una notificación al usuario
+ * @param {string} mensaje - Mensaje a mostrar
+ * @param {string} tipo - Tipo de notificación (exito, error, info, advertencia)
+ * @param {number} duracion - Duración en milisegundos (opcional)
+ */
+const mostrarNotificacion = (mensaje, tipo = 'info', duracion = 5000) => {
+    // Verificar si existe toastr (librería de notificaciones)
+    if (window.toastr) {
+        // Configurar toastr
+        toastr.options = {
+            closeButton: true,
+            progressBar: true,
+            positionClass: window.CONFIG.NOTIFICATIONS.POSITION || 'toast-top-right',
+            timeOut: duracion || window.CONFIG.NOTIFICATIONS.DURATION
+        };
+        
+        // Mostrar notificación según el tipo
+        switch (tipo) {
+            case 'exito':
+                toastr.success(mensaje);
+                break;
+            case 'error':
+                toastr.error(mensaje);
+                break;
+            case 'advertencia':
+                toastr.warning(mensaje);
+                break;
+            default:
+                toastr.info(mensaje);
+        }
+    } else {
+        // Fallback si no existe toastr
+        const tipoAlerta = tipo === 'error' ? 'danger' : 
+                         tipo === 'exito' ? 'success' : 
+                         tipo === 'advertencia' ? 'warning' : 'info';
+        
+        // Crear elemento de alerta
+        const alertaDiv = document.createElement('div');
+        alertaDiv.className = `alert alert-${tipoAlerta} alert-dismissible fade show notification-alert`;
+        alertaDiv.role = 'alert';
+        alertaDiv.innerHTML = `
+            ${mensaje}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Cerrar"></button>
+        `;
+        
+        // Estilos para la alerta
+        alertaDiv.style.position = 'fixed';
+        alertaDiv.style.top = '20px';
+        alertaDiv.style.right = '20px';
+        alertaDiv.style.zIndex = '9999';
+        alertaDiv.style.minWidth = '300px';
+        
+        // Añadir al DOM
+        document.body.appendChild(alertaDiv);
+        
+        // Eliminar después de la duración especificada
+        setTimeout(() => {
+            alertaDiv.classList.remove('show');
+            setTimeout(() => alertaDiv.remove(), 300);
+        }, duracion);
+    }
+};
+
+/**
+ * Muestra un diálogo de confirmación al usuario
+ * @param {string} titulo - Título del diálogo
+ * @param {string} mensaje - Mensaje a mostrar
+ * @param {string} tipo - Tipo de confirmación (question, warning, info, error, success)
+ * @param {string} textoConfirmar - Texto del botón de confirmación
+ * @param {string} textoCancelar - Texto del botón de cancelación
+ * @returns {Promise<boolean>} Promesa que se resuelve con true si el usuario confirma, false en caso contrario
+ */
+const mostrarConfirmacion = (titulo, mensaje, tipo = 'question', textoConfirmar = 'Aceptar', textoCancelar = 'Cancelar') => {
+    return new Promise((resolve) => {
+        // Verificar si existe SweetAlert2
+        if (window.Swal) {
+            Swal.fire({
+                title: titulo,
+                text: mensaje,
+                icon: tipo,
+                showCancelButton: true,
+                confirmButtonText: textoConfirmar,
+                cancelButtonText: textoCancelar,
+                reverseButtons: true
+            }).then((result) => {
+                resolve(result.isConfirmed);
+            });
+        } else {
+            // Fallback usando confirm nativo
+            const confirmado = confirm(`${titulo}\n\n${mensaje}`);
+            resolve(confirmado);
+        }
+    });
+};
+
+/**
+ * Redirige al usuario a la página de selección de roles
+ */
+const redirigirASelector = () => {
+    window.location.href = window.CONFIG.ROUTES.SELECTOR_ROLES;
+};
+
+/**
+ * Cierra la sesión del usuario
+ */
+const cerrarSesion = () => {
+    eliminarToken();
+    eliminarUsuario();
+    redirigirALogin();
+};
+
 // Exportar funciones globales
 window.APP = {
     guardarToken,
@@ -197,7 +309,11 @@ window.APP = {
     estaAutenticado,
     tieneRol,
     redirigirALogin,
+    redirigirASelector,
+    cerrarSesion,
     apiRequest,
     mostrarError,
-    formatearFecha
+    formatearFecha,
+    mostrarNotificacion,
+    mostrarConfirmacion
 };

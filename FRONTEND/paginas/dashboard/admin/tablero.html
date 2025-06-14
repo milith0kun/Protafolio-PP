@@ -9,9 +9,16 @@
   <meta name="author" content="UNSAAC">
 
 
+  <!-- CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;600;700&display=swap" rel="stylesheet">
+  
+  <!-- Estilos personalizados -->
   <link rel="stylesheet" href="../../../assets/css/paginas/admin/body.css">
   <link rel="stylesheet" href="../../../assets/css/paginas/admin/head.css">
   <link rel="stylesheet" href="../../../assets/css/paginas/admin/footer.css">
+  <link rel="stylesheet" href="../../../assets/css/paginas/admin/dashboard.css">
   
 </head>
 
@@ -43,7 +50,7 @@
       <div class="header-middle-container">
         <div class="logo-container">
           <div class="logo-img">
-            <img src="../../assets/imagenes/logos/logo-unsaac.png" alt="Logo UNSAAC">
+           
           </div>
           <div class="logo-text-container">
             <span class="logo-title">Sistema de Portafolio</span>
@@ -312,6 +319,56 @@
         </a>
       </div>
     </section>
+
+
+    
+  <!-- Sección de Inicialización del Sistema -->
+  <section class="system-init-section">
+    <h2>🔧 Inicialización del Sistema</h2>
+    <div class="init-container">
+      <div class="init-card">
+        <div class="init-icon">
+          <i class="fas fa-file-excel"></i>
+        </div>
+        <div class="init-content">
+          <h3>Carga Masiva Inicial</h3>
+          <p>Suba los archivos Excel para inicializar el sistema con datos iniciales. Asegúrese de subir los archivos en el orden correcto.</p>
+          
+          <div class="upload-instructions">
+            <h4>Archivos Requeridos:</h4>
+            <ol>
+              <li>01_usuarios.xlsx - Lista de usuarios del sistema</li>
+              <li>02_ciclos.xlsx - Configuración de ciclos académicos</li>
+              <li>03_asignaturas.xlsx - Catálogo de asignaturas</li>
+              <li>04_docentes.xlsx - Información de docentes</li>
+              <li>05_verificadores.xlsx - Asignación de verificadores</li>
+              <li>06_estructura_portafolio.xlsx - Estructura jerárquica</li>
+              <li>07_asignaciones.xlsx - Asignación de cursos</li>
+              <li>08_parametros.xlsx - Parámetros del sistema</li>
+            </ol>
+          </div>
+          
+          <div id="uploadProgress" class="progress-container" style="display: none;">
+            <div class="progress">
+              <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" style="width: 0%"></div>
+            </div>
+            <div class="progress-text text-center mt-2">Preparando carga...</div>
+          </div>
+          
+          <div class="text-center mt-4">
+            <button id="startUploadBtn" class="btn btn-primary btn-lg">
+              <i class="fas fa-upload me-2"></i>Iniciar Carga Masiva
+            </button>
+          </div>
+          
+          <div id="uploadLog" class="upload-log mt-3" style="display: none;">
+            <h5>Registro de Proceso:</h5>
+            <div class="log-entries"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
   </main>
 
   <!-- Pie de página -->
@@ -328,10 +385,12 @@
     </div>
   </footer>
 
+
   <!-- Scripts -->
   <script src="../../../assets/js/nucleo/configuracion.js"></script>
   <script src="../../../assets/js/nucleo.js"></script>
   <script src="../../../assets/js/autenticacion.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
   <script src="../../../assets/js/paginas/dashboard/admin/tablero.js"></script>
 </body>
 </html>

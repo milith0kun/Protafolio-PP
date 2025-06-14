@@ -129,3 +129,30 @@ git branch -d nombre-rama
 # Forzar eliminación de rama (si tiene cambios no fusionados)
 git branch -D nombre-rama
 ```
+
+
+
+
+
+
+
+
+
+
+Algunso cosas 
+
+
+
+# 1. Actualiza tu rama con los últimos cambios de main
+git fetch origin
+git merge origin/main
+
+# 2. Crea una rama para tu tarea
+git checkout -b feature/nombre-de-tu-tarea
+
+# 3. Realiza tus cambios y haz commits
+git add .
+git commit -m "tipo: descripción clara"
+
+# 4. Sube tus cambios
+git push -u origin feature/nombre-de-tu-tarea

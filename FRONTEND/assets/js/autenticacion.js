@@ -128,7 +128,7 @@ function configurarLogin() {
                 console.log('DEBUG - Roles del usuario:', data.usuario.roles);
 
                 // Verificar si el usuario tiene múltiples roles
-                verificarRolesYRedirigir();
+                window.autenticacion.verificarRolesYRedirigir();
 
             } catch (error) {
                 console.error('Error al iniciar sesión:', error);
@@ -182,23 +182,7 @@ function verificarAutenticacion() {
     // haciendo una petición a un endpoint protegido
 }
 
-/**
- * Cierra la sesión del usuario
- */
-async function cerrarSesion() {
-    try {
-        await APP.apiRequest('/auth/logout', 'POST');
-    } catch (error) {
-        console.error('Error al cerrar sesión:', error);
-    } finally {
-        // Limpiar datos de sesión
-        APP.eliminarToken();
-        APP.eliminarUsuario();
-        
-        // Redirigir al login
-        APP.redirigirALogin();
-    }
-}
+// La función cerrarSesion se usa desde APP.cerrarSesion definida en nucleo.js
 
 /**
  * Redirige al usuario al dashboard correspondiente según su rol
@@ -254,7 +238,7 @@ async function verificarRolesYRedirigir() {
         if (!usuario) {
             console.error('No se encontró información del usuario');
             alert('Error: No se encontró información del usuario. Intente iniciar sesión nuevamente.');
-            cerrarSesion();
+            APP.cerrarSesion();
             return;
         }
         
@@ -266,7 +250,7 @@ async function verificarRolesYRedirigir() {
         if (roles.length === 0) {
             console.error('El usuario no tiene roles asignados');
             alert('No tiene roles asignados en el sistema. Contacte al administrador.');
-            cerrarSesion();
+            APP.cerrarSesion();
             return;
         }
         
@@ -278,7 +262,7 @@ async function verificarRolesYRedirigir() {
             if (!roles[0].rol) {
                 console.error('Estructura de rol inválida:', roles[0]);
                 alert('Error: Estructura de rol inválida. Contacte al administrador.');
-                cerrarSesion();
+                APP.cerrarSesion();
                 return;
             }
             
@@ -298,13 +282,13 @@ async function verificarRolesYRedirigir() {
     } catch (error) {
         console.error('Error al verificar roles:', error);
         alert('Error al verificar roles: ' + (error.message || 'Error desconocido') + '. Intente nuevamente.');
-        cerrarSesion();
+        APP.cerrarSesion();
     }
 }
 
 // Hacer las funciones disponibles globalmente
 window.autenticacion = {
-    cerrarSesion,
+    cerrarSesion: APP.cerrarSesion,
     redirigirSegunRol,
     verificarRolesYRedirigir
 };

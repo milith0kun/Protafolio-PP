@@ -134,6 +134,10 @@
 .logo-img img {
     height: 60px;
     max-width: 100%;
+    background-image: url('../../../imagenes/logo-unsaac2.png');
+    background-size: contain;
+    background-position: center;
+    background-repeat: no-repeat;
     transition: transform 0.3s ease;
 }
 

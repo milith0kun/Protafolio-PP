@@ -182,12 +182,13 @@ exports.logout = (req, res) => {
 exports.getUsuarioActual = async (req, res) => {
   try {
     const usuario = await Usuario.findByPk(req.usuario.id, {
-      attributes: { exclude: ['password'] },
+      attributes: { exclude: ['contrasena'] },
       include: [
         {
-          model: Rol,
-          as: 'rol',
-          attributes: ['id', 'nombre', 'nivel']
+          model: UsuarioRol,
+          as: 'rolesAsignados',
+          where: { activo: true },
+          required: false
         }
       ]
     });
@@ -217,51 +218,68 @@ exports.getUsuarioActual = async (req, res) => {
 // Cambiar de rol (para usuarios con múltiples roles)
 exports.cambiarRol = async (req, res) => {
   try {
-    const { rolId } = req.body;
+    const { rolNombre } = req.body;
     const usuarioId = req.usuario.id;
 
-    // Verificar que se proporcione un ID de rol
-    if (!rolId) {
+    // Verificar que se proporcione un nombre de rol
+    if (!rolNombre) {
       return res.status(400).json({
-        mensaje: 'Se requiere un ID de rol',
+        mensaje: 'Se requiere especificar el rol',
         error: true
       });
     }
 
-    // Buscar el rol solicitado
-    const rol = await Rol.findByPk(rolId);
-    if (!rol) {
+    // Verificar que el usuario tenga el rol solicitado
+    const rolUsuario = await UsuarioRol.findOne({
+      where: {
+        usuario_id: usuarioId,
+        rol: rolNombre,
+        activo: true
+      }
+    });
+
+    if (!rolUsuario) {
       return res.status(404).json({
-        mensaje: 'Rol no encontrado',
+        mensaje: 'No tiene asignado el rol solicitado o no está activo',
         error: true
       });
     }
 
-    // Actualizar el rol del usuario
-    await Usuario.update(
-      { rol_id: rolId },
-      { where: { id: usuarioId } }
-    );
-
-    // Obtener el usuario actualizado con el nuevo rol
-    const usuarioActualizado = await Usuario.findByPk(usuarioId, {
-      attributes: { exclude: ['password'] },
-      include: [
-        {
-          model: Rol,
-          as: 'rol',
-          attributes: ['id', 'nombre', 'nivel']
-        }
-      ]
+    // Obtener el usuario con sus roles asignados
+    const usuario = await Usuario.findByPk(usuarioId, {
+      attributes: { exclude: ['contrasena'] },
+      include: [{
+        model: UsuarioRol,
+        as: 'rolesAsignados',
+        where: { activo: true },
+        required: false
+      }]
     });
 
     // Generar nuevo token con el rol actualizado
-    const token = generarToken(usuarioActualizado);
+    const token = generarToken(usuario, rolNombre);
+
+    // Mapear los roles para la respuesta
+    const roles = usuario.rolesAsignados.map(ur => ({
+      id: ur.id,
+      rol: ur.rol,
+      asignado_por: ur.asignado_por
+    }));
+
+    // Preparar objeto de usuario para la respuesta
+    const usuarioRespuesta = {
+      id: usuario.id,
+      nombres: usuario.nombres,
+      apellidos: usuario.apellidos,
+      correo: usuario.correo,
+      roles: roles,
+      rolActual: rolNombre
+    };
 
     res.status(200).json({
       mensaje: 'Rol cambiado exitosamente',
       token,
-      usuario: usuarioActualizado,
+      usuario: usuarioRespuesta,
       error: false
     });
 

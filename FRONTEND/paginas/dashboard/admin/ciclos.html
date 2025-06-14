@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestión de Ciclos Académicos | Portafolio Docente UNSAAC</title>
+    <!-- CSS desde CDN -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css" rel="stylesheet">
+    <link href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap5.min.css" rel="stylesheet">
+    
+    <!-- Estilos personalizados -->
+    <link rel="stylesheet" href="../../../assets/css/paginas/admin/body.css">
+    <link rel="stylesheet" href="../../../assets/css/paginas/admin/head.css">
+    <link rel="stylesheet" href="../../../assets/css/paginas/admin/footer.css">
+    <link rel="stylesheet" href="../../../assets/css/paginas/admin/dashboard.css">
+</head>
+<body>
+    <div class="wrapper">
+        <!-- Sidebar -->
+        <nav id="sidebar">
+            <div class="sidebar-header">
+                <h3>Portafolio Docente</h3>
+                <strong>PD</strong>
+            </div>
+
+            <ul class="list-unstyled components">
+                <li>
+                    <a href="tablero.html">
+                        <i class="fas fa-tachometer-alt"></i>
+                        <span class="menu-text">Tablero</span>
+                    </a>
+                </li>
+                <li class="active">
+                    <a href="ciclos.html">
+                        <i class="fas fa-calendar-alt"></i>
+                        <span class="menu-text">Ciclos Académicos</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="usuarios.html">
+                        <i class="fas fa-users"></i>
+                        <span class="menu-text">Usuarios</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="asignaturas.html">
+                        <i class="fas fa-book"></i>
+                        <span class="menu-text">Asignaturas</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="carga-masiva.html">
+                        <i class="fas fa-upload"></i>
+                        <span class="menu-text">Carga Masiva</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="reportes.html">
+                        <i class="fas fa-chart-bar"></i>
+                        <span class="menu-text">Reportes</span>
+                    </a>
+                </li>
+            </ul>
+
+            <ul class="list-unstyled components sidebar-footer">
+                <li>
+                    <a href="#" id="cerrarSesion">
+                        <i class="fas fa-sign-out-alt"></i>
+                        <span class="menu-text">Cerrar Sesión</span>
+                    </a>
+                </li>
+            </ul>
+        </nav>
+
+        <!-- Page Content -->
+        <div id="content">
+            <nav class="navbar navbar-expand-lg navbar-light bg-light">
+                <div class="container-fluid">
+                    <button type="button" id="sidebarCollapse" class="btn btn-info">
+                        <i class="fas fa-align-left"></i>
+                        <span>Menú</span>
+                    </button>
+                    <div class="ml-auto d-flex align-items-center">
+                        <div class="user-info">
+                            <span id="nombreUsuario">Cargando...</span>
+                            <span id="rolUsuario" class="badge badge-primary">Administrador</span>
+                        </div>
+                    </div>
+                </div>
+            </nav>
+
+            <div class="container-fluid">
+                <div class="row mb-4">
+                    <div class="col-12">
+                        <h2>Gestión de Ciclos Académicos</h2>
+                        <p>Administre los ciclos académicos del sistema.</p>
+                    </div>
+                </div>
+
+                <div class="row mb-4">
+                    <div class="col-12">
+                        <div class="card">
+                            <div class="card-header d-flex justify-content-between align-items-center">
+                                <h5 class="mb-0">Ciclos Académicos</h5>
+                                <button id="btnNuevoCiclo" class="btn btn-primary">
+                                    <i class="fas fa-plus"></i> Nuevo Ciclo
+                                </button>
+                            </div>
+                            <div class="card-body">
+                                <div class="table-responsive">
+                                    <table id="tablaCiclos" class="table table-striped table-bordered" style="width:100%">
+                                        <thead>
+                                            <tr>
+                                                <th>ID</th>
+                                                <th>Nombre</th>
+                                                <th>Descripción</th>
+                                                <th>Estado</th>
+                                                <th>Fecha Inicio</th>
+                                                <th>Fecha Fin</th>
+                                                <th>Acciones</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <!-- Los datos se cargarán dinámicamente -->
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal para Crear/Editar Ciclo -->
+    <div class="modal fade" id="modalCiclo" tabindex="-1" role="dialog" aria-labelledby="modalCicloLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modalCicloLabel">Nuevo Ciclo Académico</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form id="formCiclo">
+                        <input type="hidden" id="cicloId">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="nombre">Nombre del Ciclo *</label>
+                                    <input type="text" class="form-control" id="nombre" required>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="estado">Estado</label>
+                                    <select class="form-control" id="estado">
+                                        <option value="preparacion">Preparación</option>
+                                        <option value="activo">Activo</option>
+                                        <option value="cerrado">Cerrado</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="descripcion">Descripción</label>
+                            <textarea class="form-control" id="descripcion" rows="2"></textarea>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="fechaInicio">Fecha de Inicio *</label>
+                                    <input type="date" class="form-control" id="fechaInicio" required>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="fechaFin">Fecha de Fin *</label>
+                                    <input type="date" class="form-control" id="fechaFin" required>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="semestreActual">Semestre Actual *</label>
+                                    <input type="text" class="form-control" id="semestreActual" required>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="anioActual">Año Actual *</label>
+                                    <input type="number" class="form-control" id="anioActual" required>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+                    <button type="button" class="btn btn-primary" id="btnGuardarCiclo">Guardar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal para Gestionar Estados del Sistema -->
+    <div class="modal fade" id="modalEstados" tabindex="-1" role="dialog" aria-labelledby="modalEstadosLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modalEstadosLabel">Gestionar Estados del Sistema</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="alert alert-info">
+                        <i class="fas fa-info-circle"></i> Configure qué módulos están habilitados para este ciclo académico.
+                    </div>
+                    <form id="formEstados">
+                        <input type="hidden" id="estadoCicloId">
+                        <div class="form-group">
+                            <div class="custom-control custom-switch">
+                                <input type="checkbox" class="custom-control-input" id="moduloCargaDatos">
+                                <label class="custom-control-label" for="moduloCargaDatos">Carga de Datos</label>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="custom-control custom-switch">
+                                <input type="checkbox" class="custom-control-input" id="moduloGestionDocumentos">
+                                <label class="custom-control-label" for="moduloGestionDocumentos">Gestión de Documentos</label>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="custom-control custom-switch">
+                                <input type="checkbox" class="custom-control-input" id="moduloVerificacion">
+                                <label class="custom-control-label" for="moduloVerificacion">Verificación</label>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="custom-control custom-switch">
+                                <input type="checkbox" class="custom-control-input" id="moduloReportes">
+                                <label class="custom-control-label" for="moduloReportes">Reportes</label>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="observaciones">Observaciones</label>
+                            <textarea class="form-control" id="observaciones" rows="3"></textarea>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+                    <button type="button" class="btn btn-primary" id="btnGuardarEstados">Guardar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts desde CDN -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap5.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.4/moment.min.js"></script>
+    
+    <!-- Scripts del sistema -->
+    <script src="../../../assets/js/nucleo/configuracion.js"></script>
+    <script src="../../../assets/js/nucleo.js"></script>
+    <script src="../../../assets/js/autenticacion.js"></script>
+    <script src="../../../assets/js/paginas/dashboard/admin/ciclos.js"></script>
+</body>
+</html>

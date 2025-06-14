@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Carga Masiva | Portafolio Docente UNSAAC</title>
+    <meta name="description" content="Carga Masiva - Sistema de Portafolio Docente UNSAAC">
+    <meta name="keywords" content="carga masiva, portafolio, gestión, UNSAAC">
+    <meta name="author" content="UNSAAC">
+    
+    <!-- CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/dropzone/5.9.3/min/dropzone.min.css" rel="stylesheet">
+    
+    <!-- Estilos personalizados -->
+    <link rel="stylesheet" href="../../../assets/css/paginas/admin/body.css">
+    <link rel="stylesheet" href="../../../assets/css/paginas/admin/head.css">
+    <link rel="stylesheet" href="../../../assets/css/paginas/admin/footer.css">
+    <link rel="stylesheet" href="../../../assets/css/paginas/admin/dashboard.css">
+</head>
+<body>
+    <div class="wrapper">
+        <!-- Sidebar -->
+        <nav id="sidebar">
+            <div class="sidebar-header">
+                <h3>Portafolio Docente</h3>
+                <p class="user-role">Administrador</p>
+            </div>
+            <ul class="list-unstyled components">
+                <li>
+                    <a href="tablero.html"><i class="fas fa-tachometer-alt"></i> Tablero</a>
+                </li>
+                <li>
+                    <a href="usuarios.html"><i class="fas fa-users"></i> Usuarios</a>
+                </li>
+                <li>
+                    <a href="asignaturas.html"><i class="fas fa-book"></i> Asignaturas</a>
+                </li>
+                <li>
+                    <a href="ciclos.html"><i class="fas fa-calendar-alt"></i> Ciclos Académicos</a>
+                </li>
+                <li class="active">
+                    <a href="carga-masiva.html">
+                        <i class="fas fa-upload"></i>
+                        <span class="menu-text">Carga Masiva</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="reportes.html">
+                        <i class="fas fa-chart-bar"></i>
+                        <span class="menu-text">Reportes</span>
+                    </a>
+                </li>
+            </ul>
+
+            <ul class="list-unstyled components sidebar-footer">
+                <li>
+                    <a href="#" id="cerrarSesion">
+                        <i class="fas fa-sign-out-alt"></i>
+                        <span class="menu-text">Cerrar Sesión</span>
+                    </a>
+                </li>
+            </ul>
+        </nav>
+
+        <!-- Page Content -->
+        <div id="content">
+            <nav class="navbar navbar-expand-lg navbar-light bg-light">
+                <div class="container-fluid">
+                    <button type="button" id="sidebarCollapse" class="btn btn-info">
+                        <i class="fas fa-align-left"></i>
+                        <span>Menú</span>
+                    </button>
+                    <div class="ml-auto d-flex align-items-center">
+                        <div class="user-info">
+                            <span id="nombreUsuario">Cargando...</span>
+                            <span id="rolUsuario" class="badge badge-primary">Administrador</span>
+                        </div>
+                    </div>
+                </div>
+            </nav>
+
+            <div class="container-fluid">
+                <div class="row mb-4">
+                    <div class="col-12">
+                        <h2>Carga Masiva de Datos</h2>
+                        <p>Utilice esta herramienta para cargar datos masivamente al sistema.</p>
+                    </div>
+                </div>
+
+                <div class="row mb-4">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="selectCiclo">Seleccione un Ciclo Académico:</label>
+                            <select class="form-control" id="selectCiclo">
+                                <option value="">Cargando ciclos...</option>
+                            </select>
+                            <small class="form-text text-muted">Requerido para carga de asignaturas y asignaciones.</small>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6 mb-4">
+                        <div class="card">
+                            <div class="card-header">
+                                <h5 class="mb-0">Carga de Usuarios</h5>
+                            </div>
+                            <div class="card-body">
+                                <p>Cargue un archivo Excel con la lista de usuarios a crear en el sistema.</p>
+                                <div class="alert alert-info">
+                                    <i class="fas fa-info-circle"></i> El archivo debe contener las columnas: nombre, apellidos, email, dni, rol (administrador, docente, verificador).
+                                </div>
+                                <form class="dropzone" id="dropzoneUsuarios">
+                                    <div class="fallback">
+                                        <input name="file" type="file" />
+                                    </div>
+                                </form>
+                                <div class="mt-3">
+                                    <button id="btnDescargarPlantillaUsuarios" class="btn btn-outline-primary btn-sm">
+                                        <i class="fas fa-download"></i> Descargar Plantilla
+                                    </button>
+                                    <button id="btnProcesarUsuarios" class="btn btn-primary float-right">
+                                        <i class="fas fa-upload"></i> Procesar Archivo
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6 mb-4">
+                        <div class="card">
+                            <div class="card-header">
+                                <h5 class="mb-0">Carga de Asignaturas</h5>
+                            </div>
+                            <div class="card-body">
+                                <p>Cargue un archivo Excel con la lista de asignaturas a crear en el sistema.</p>
+                                <div class="alert alert-info">
+                                    <i class="fas fa-info-circle"></i> El archivo debe contener las columnas: codigo, nombre, carrera, semestre, creditos, tipo (obligatorio, electivo).
+                                </div>
+                                <form class="dropzone" id="dropzoneAsignaturas">
+                                    <div class="fallback">
+                                        <input name="file" type="file" />
+                                    </div>
+                                </form>
+                                <div class="mt-3">
+                                    <button id="btnDescargarPlantillaAsignaturas" class="btn btn-outline-primary btn-sm">
+                                        <i class="fas fa-download"></i> Descargar Plantilla
+                                    </button>
+                                    <button id="btnProcesarAsignaturas" class="btn btn-primary float-right">
+                                        <i class="fas fa-upload"></i> Procesar Archivo
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6 mb-4">
+                        <div class="card">
+                            <div class="card-header">
+                                <h5 class="mb-0">Carga de Asignaciones Docente-Asignatura</h5>
+                            </div>
+                            <div class="card-body">
+                                <p>Cargue un archivo Excel con las asignaciones de docentes a asignaturas.</p>
+                                <div class="alert alert-info">
+                                    <i class="fas fa-info-circle"></i> El archivo debe contener las columnas: codigo_asignatura, email_docente.
+                                </div>
+                                <form class="dropzone" id="dropzoneAsignaciones">
+                                    <div class="fallback">
+                                        <input name="file" type="file" />
+                                    </div>
+                                </form>
+                                <div class="mt-3">
+                                    <button id="btnDescargarPlantillaAsignaciones" class="btn btn-outline-primary btn-sm">
+                                        <i class="fas fa-download"></i> Descargar Plantilla
+                                    </button>
+                                    <button id="btnProcesarAsignaciones" class="btn btn-primary float-right">
+                                        <i class="fas fa-upload"></i> Procesar Archivo
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Sección de inicialización completa del sistema -->
+                <div class="row mt-4">
+                    <div class="col-12">
+                        <div class="card">
+                            <div class="card-header bg-primary text-white">
+                                <h5 class="mb-0">Inicialización Completa del Sistema</h5>
+                            </div>
+                            <div class="card-body">
+                                <div class="alert alert-warning">
+                                    <i class="fas fa-exclamation-triangle"></i> <strong>Advertencia:</strong> Esta acción inicializará el sistema completo. Debe seleccionar exactamente 8 archivos Excel en el orden correcto.
+                                </div>
+                                
+                                <p>Los archivos requeridos son:</p>
+                                <ol>
+                                    <li>Ciclos académicos</li>
+                                    <li>Roles</li>
+                                    <li>Usuarios</li>
+                                    <li>Carreras</li>
+                                    <li>Asignaturas</li>
+                                    <li>Asignaciones docente-asignatura</li>
+                                    <li>Criterios de evaluación</li>
+                                    <li>Configuración del sistema</li>
+                                </ol>
+                                
+                                <div class="form-group">
+                                    <label for="archivosInicializacion">Seleccione los 8 archivos Excel:</label>
+                                    <input type="file" class="form-control-file" id="archivosInicializacion" multiple accept=".xlsx,.xls">
+                                    <small class="form-text text-muted">Seleccione exactamente 8 archivos en el orden indicado arriba.</small>
+                                </div>
+                                
+                                <div id="uploadProgress" class="progress mt-3" style="display: none;">
+                                    <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" style="width: 0%"></div>
+                                </div>
+                                <p class="progress-text mt-2" style="display: none;"></p>
+                                
+                                <div id="uploadLog" class="mt-3" style="display: none;">
+                                    <h6>Log de inicialización:</h6>
+                                    <div class="log-entries p-2 bg-light" style="max-height: 200px; overflow-y: auto; border: 1px solid #ddd;">
+                                        <!-- Los logs se cargarán dinámicamente -->
+                                    </div>
+                                </div>
+                                
+                                <div class="mt-3">
+                                    <button id="startUploadBtn" class="btn btn-danger" onclick="inicializarSistema()">
+                                        <i class="fas fa-cogs"></i> Inicializar Sistema
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal de Resultados -->
+    <div class="modal fade" id="modalResultados" tabindex="-1" role="dialog" aria-labelledby="modalResultadosLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modalResultadosLabel">Resultados de la Carga</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="alert alert-success mb-3" id="alertaExito">
+                        <i class="fas fa-check-circle"></i> <span id="mensajeExito"></span>
+                    </div>
+                    <div class="alert alert-danger mb-3" id="alertaError">
+                        <i class="fas fa-exclamation-triangle"></i> <span id="mensajeError"></span>
+                    </div>
+                    
+                    <div id="contenedorDetalles">
+                        <h6>Detalles:</h6>
+                        <div class="table-responsive">
+                            <table class="table table-sm table-bordered" id="tablaResultados">
+                                <thead>
+                                    <tr>
+                                        <th>Fila</th>
+                                        <th>Estado</th>
+                                        <th>Mensaje</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <!-- Los datos se cargarán dinámicamente -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="../../../assets/js/nucleo/configuracion.js"></script>
+    <script src="../../../assets/js/nucleo.js"></script>
+    <script src="../../../assets/js/autenticacion.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/dropzone/5.9.3/min/dropzone.min.js"></script>
+    <script src="../../../assets/js/paginas/dashboard/admin/carga-masiva.js"></script>
+</body>
+</html>

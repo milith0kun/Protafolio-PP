@@ -11,6 +11,10 @@ require('./modelos/asociaciones');
 // Importar rutas
 const authRoutes = require('./rutas/auth');
 const usuarioRoutes = require('./rutas/usuarios');
+const ciclosRoutes = require('./rutas/ciclos');
+const asignaturasRoutes = require('./rutas/asignaturas');
+const inicializacionRoutes = require('./rutas/inicializacion');
+const reportesRoutes = require('./rutas/reportes');
 
 // Inicializar la aplicación Express
 const app = express();
@@ -71,9 +75,13 @@ app.get('/api', (req, res) => {
   res.json({ mensaje: 'API del Portafolio Docente UNSAAC' });
 });
 
-// Rutas base de la API
+// Configuración de rutas API
 app.use('/api/auth', authRoutes);
 app.use('/api/usuarios', usuarioRoutes);
+app.use('/api/ciclos', ciclosRoutes);
+app.use('/api/asignaturas', asignaturasRoutes);
+app.use('/api/inicializacion', inicializacionRoutes);
+app.use('/api/reportes', reportesRoutes);
 
 // Manejo de rutas no encontradas (404) - IMPORTANTE: debe ir después de todas las rutas definidas
 app.use((req, res, next) => {

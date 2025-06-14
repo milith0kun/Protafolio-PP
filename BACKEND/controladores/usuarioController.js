@@ -1,4 +1,4 @@
-const { Usuario, Rol, UsuarioRol } = require('../modelos');
+const { Usuario, UsuarioRol } = require('../modelos');
 const { Op } = require('sequelize');
 const bcrypt = require('bcryptjs');
 
@@ -10,28 +10,29 @@ exports.obtenerUsuarios = async (req, res) => {
 
     const where = {};
     
-    // Búsqueda por nombre, apellido o email
+    // Búsqueda por nombres, apellidos o correo
     if (busqueda) {
       where[Op.or] = [
-        { nombre: { [Op.like]: `%${busqueda}%` } },
-        { apellido: { [Op.like]: `%${busqueda}%` } },
-        { email: { [Op.like]: `%${busqueda}%` } }
+        { nombres: { [Op.like]: `%${busqueda}%` } },
+        { apellidos: { [Op.like]: `%${busqueda}%` } },
+        { correo: { [Op.like]: `%${busqueda}%` } }
       ];
     }
 
     const { count, rows } = await Usuario.findAndCountAll({
       where,
-      attributes: { exclude: ['password'] },
+      attributes: { exclude: ['contrasena'] },
       include: [
         {
-          model: Rol,
-          as: 'rol',
-          attributes: ['id', 'nombre']
+          model: UsuarioRol,
+          as: 'rolesAsignados',
+          where: { activo: true },
+          required: false
         }
       ],
       limit: parseInt(limite),
       offset: parseInt(offset),
-      order: [['apellido', 'ASC']]
+      order: [['apellidos', 'ASC']]
     });
 
     res.status(200).json({
@@ -54,12 +55,13 @@ exports.obtenerUsuarios = async (req, res) => {
 exports.obtenerUsuario = async (req, res) => {
   try {
     const usuario = await Usuario.findByPk(req.params.id, {
-      attributes: { exclude: ['password'] },
+      attributes: { exclude: ['contrasena'] },
       include: [
         {
-          model: Rol,
-          as: 'rol',
-          attributes: ['id', 'nombre']
+          model: UsuarioRol,
+          as: 'rolesAsignados',
+          where: { activo: true },
+          required: false
         }
       ]
     });
@@ -85,10 +87,10 @@ exports.obtenerUsuario = async (req, res) => {
 // Crear un nuevo usuario (solo administradores)
 exports.crearUsuario = async (req, res) => {
   try {
-    const { nombre, apellido, email, password, rol_id, activo = true } = req.body;
+    const { nombres, apellidos, correo, contrasena, rol, activo = true } = req.body;
 
-    // Validar que el email no esté en uso
-    const existeUsuario = await Usuario.findOne({ where: { email } });
+    // Validar que el correo no esté en uso
+    const existeUsuario = await Usuario.findOne({ where: { correo } });
     if (existeUsuario) {
       return res.status(400).json({
         mensaje: 'El correo electrónico ya está en uso',
@@ -96,28 +98,37 @@ exports.crearUsuario = async (req, res) => {
       });
     }
 
-    // Verificar que el rol exista
-    const rol = await Rol.findByPk(rol_id);
-    if (!rol) {
+    // Verificar que el rol sea válido
+    const rolesValidos = ['docente', 'verificador', 'administrador'];
+    if (rol && !rolesValidos.includes(rol)) {
       return res.status(400).json({
-        mensaje: 'El rol especificado no existe',
+        mensaje: 'El rol especificado no es válido',
         error: true
       });
     }
 
     // Crear el usuario
     const usuario = await Usuario.create({
-      nombre,
-      apellido,
-      email,
-      password, // El hash se maneja en el hook beforeCreate del modelo
-      rol_id,
+      nombres,
+      apellidos,
+      correo,
+      contrasena, // El hash se maneja en el hook beforeCreate del modelo
       activo
     });
+    
+    // Crear el rol del usuario
+    if (rol) {
+      await UsuarioRol.create({
+        usuario_id: usuario.id,
+        rol,
+        activo: true,
+        asignado_por: req.usuario.id // ID del administrador que crea el usuario
+      });
+    }
 
     // No devolver la contraseña en la respuesta
     const usuarioCreado = usuario.get({ plain: true });
-    delete usuarioCreado.password;
+    delete usuarioCreado.contrasena;
 
     res.status(201).json({
       mensaje: 'Usuario creado exitosamente',
@@ -138,7 +149,7 @@ exports.crearUsuario = async (req, res) => {
 exports.actualizarUsuario = async (req, res) => {
   try {
     const { id } = req.params;
-    const { nombre, apellido, email, password, rol_id, activo } = req.body;
+    const { nombres, apellidos, correo, contrasena, rol, activo } = req.body;
 
     // Buscar el usuario
     const usuario = await Usuario.findByPk(id);
@@ -149,47 +160,83 @@ exports.actualizarUsuario = async (req, res) => {
       });
     }
 
-    // Verificar si el email ya está en uso por otro usuario
-    if (email && email !== usuario.email) {
-      const existeEmail = await Usuario.findOne({ where: { email } });
+    // Verificar si el correo ya está en uso por otro usuario
+    if (correo && correo !== usuario.correo) {
+      const existeEmail = await Usuario.findOne({
+        where: {
+          correo,
+          id: { [Op.ne]: id }
+        }
+      });
+
       if (existeEmail) {
         return res.status(400).json({
-          mensaje: 'El correo electrónico ya está en uso',
+          mensaje: 'El correo electrónico ya está en uso por otro usuario',
           error: true
         });
       }
     }
 
-    // Verificar que el rol exista si se está actualizando
-    if (rol_id) {
-      const rol = await Rol.findByPk(rol_id);
-      if (!rol) {
+    // Verificar si el rol es válido
+    if (rol) {
+      const rolesValidos = ['docente', 'verificador', 'administrador'];
+      if (!rolesValidos.includes(rol)) {
         return res.status(400).json({
-          mensaje: 'El rol especificado no existe',
+          mensaje: 'El rol especificado no es válido',
           error: true
         });
       }
     }
 
-    // Actualizar los campos
+    // Actualizar los campos del usuario
     const datosActualizacion = {};
-    if (nombre) datosActualizacion.nombre = nombre;
-    if (apellido) datosActualizacion.apellido = apellido;
-    if (email) datosActualizacion.email = email;
-    if (password) datosActualizacion.password = password; // El hash se maneja en el hook beforeUpdate
-    if (rol_id) datosActualizacion.rol_id = rol_id;
+    
+    if (nombres) datosActualizacion.nombres = nombres;
+    if (apellidos) datosActualizacion.apellidos = apellidos;
+    if (correo) datosActualizacion.correo = correo;
+    if (contrasena) datosActualizacion.contrasena = contrasena; // El hash se maneja en el hook beforeUpdate
     if (activo !== undefined) datosActualizacion.activo = activo;
 
     await usuario.update(datosActualizacion);
 
+    // Actualizar el rol si se ha especificado
+    if (rol) {
+      // Buscar si ya tiene este rol asignado y activo
+      const rolExistente = await UsuarioRol.findOne({
+        where: {
+          usuario_id: id,
+          rol,
+          activo: true
+        }
+      });
+      
+      // Si no tiene este rol, crear una nueva asignación
+      if (!rolExistente) {
+        // Desactivar roles anteriores si es necesario
+        await UsuarioRol.update(
+          { activo: false },
+          { where: { usuario_id: id, activo: true } }
+        );
+        
+        // Crear el nuevo rol
+        await UsuarioRol.create({
+          usuario_id: id,
+          rol,
+          activo: true,
+          asignado_por: req.usuario.id
+        });
+      }
+    }
+
     // Obtener el usuario actualizado sin la contraseña
     const usuarioActualizado = await Usuario.findByPk(usuario.id, {
-      attributes: { exclude: ['password'] },
+      attributes: { exclude: ['contrasena'] },
       include: [
         {
-          model: Rol,
-          as: 'rol',
-          attributes: ['id', 'nombre']
+          model: UsuarioRol,
+          as: 'rolesAsignados',
+          where: { activo: true },
+          required: false
         }
       ]
     });
@@ -219,15 +266,15 @@ exports.obtenerRolesUsuario = async (req, res) => {
       where: { usuario_id: usuarioId },
       include: [
         {
-          model: Rol,
-          as: 'rolInfo', // Actualizado para usar el nuevo alias
-          attributes: ['id', 'nombre', 'nivel']
+          model: UsuarioRol,
+          as: 'rolesAsignados',
+          attributes: ['id', 'rol']
         }
       ]
     });
 
     // Extraer solo la información de los roles
-    const roles = rolesUsuario.map(ur => ur.rolInfo);
+    const roles = rolesUsuario.map(ur => ur.rolesAsignados);
 
     res.status(200).json({
       roles,
@@ -283,7 +330,7 @@ exports.eliminarUsuario = async (req, res) => {
 // Actualizar perfil del usuario actual
 exports.actualizarPerfil = async (req, res) => {
   try {
-    const { nombre, apellido, email, passwordActual, nuevaPassword } = req.body;
+    const { nombres, apellidos, correo, contrasena, nuevaPassword } = req.body;
     const usuarioId = req.usuario.id;
 
     // Buscar el usuario
@@ -297,7 +344,7 @@ exports.actualizarPerfil = async (req, res) => {
 
     // Verificar contraseña actual si se está cambiando la contraseña
     if (nuevaPassword) {
-      const esValida = await usuario.validarPassword(passwordActual);
+      const esValida = await usuario.validarPassword(contrasena);
       if (!esValida) {
         return res.status(400).json({
           mensaje: 'La contraseña actual es incorrecta',
@@ -306,33 +353,41 @@ exports.actualizarPerfil = async (req, res) => {
       }
     }
 
-    // Actualizar los campos
-    const datosActualizacion = {};
-    if (nombre) datosActualizacion.nombre = nombre;
-    if (apellido) datosActualizacion.apellido = apellido;
-    if (email && email !== usuario.email) {
-      // Verificar si el email ya está en uso
-      const existeEmail = await Usuario.findOne({ where: { email } });
+    // Verificar si el correo ya está en uso por otro usuario
+    if (correo && correo !== usuario.correo) {
+      const existeEmail = await Usuario.findOne({
+        where: {
+          correo,
+          id: { [Op.ne]: usuarioId }
+        }
+      });
+
       if (existeEmail) {
         return res.status(400).json({
-          mensaje: 'El correo electrónico ya está en uso',
+          mensaje: 'El correo electrónico ya está en uso por otro usuario',
           error: true
         });
       }
-      datosActualizacion.email = email;
     }
-    if (nuevaPassword) datosActualizacion.password = nuevaPassword; // El hash se maneja en el hook beforeUpdate
+
+    // Actualizar los campos
+    const datosActualizacion = {};
+    if (nombres) datosActualizacion.nombres = nombres;
+    if (apellidos) datosActualizacion.apellidos = apellidos;
+    if (correo) datosActualizacion.correo = correo;
+    if (nuevaPassword) datosActualizacion.contrasena = nuevaPassword; // El hash se maneja en el hook beforeUpdate
 
     await usuario.update(datosActualizacion);
 
     // Obtener el usuario actualizado sin la contraseña
     const usuarioActualizado = await Usuario.findByPk(usuario.id, {
-      attributes: { exclude: ['password'] },
+      attributes: { exclude: ['contrasena'] },
       include: [
         {
-          model: Rol,
-          as: 'rol',
-          attributes: ['id', 'nombre']
+          model: UsuarioRol,
+          as: 'rolesAsignados',
+          where: { activo: true },
+          required: false
         }
       ]
     });

@@ -1,0 +1,159 @@
+const { Usuario, UsuarioRol } = require('../../modelos');
+const { Op } = require('sequelize');
+const XLSX = require('xlsx');
+const logger = require('../../config/logger');
+const { registrarError } = require('./utils');
+
+/**
+ * Procesa el archivo Excel de docentes
+ * @param {Object} archivo - Archivo Excel subido
+ * @param {Object} transaction - Transacción de la base de datos
+ * @returns {Object} Resultados del procesamiento
+ */
+const procesar = async (archivo, transaction) => {
+    try {
+        const workbook = XLSX.readFile(archivo.path);
+        const sheetName = workbook.SheetNames[0];
+        const data = XLSX.utils.sheet_to_json(workbook.Sheets[sheetName]);
+
+        const resultados = {
+            total: data.length,
+            procesados: 0,
+            errores: []
+        };
+
+        // Obtener el ID del administrador para el campo creado_por
+        const admin = await Usuario.findOne({
+            where: { correo: 'admin@unsaac.edu.pe' },
+            transaction
+        });
+
+        if (!admin) {
+            throw new Error('No se encontró un usuario administrador para registrar los cambios');
+        }
+
+        const adminId = admin.id;
+
+        // Obtener el ID del rol de docente
+        const rolDocente = await UsuarioRol.findOne({
+            where: { 
+                nombre: 'docente',
+                activo: true
+            },
+            transaction
+        });
+
+        if (!rolDocente) {
+            throw new Error('No se encontró el rol de docente en el sistema');
+        }
+
+        const rolDocenteId = rolDocente.id;
+
+        for (let i = 0; i < data.length; i++) {
+            try {
+                const fila = data[i];
+                const { 
+                    correo,
+                    dni,
+                    nombres,
+                    apellidos,
+                    departamento,
+                    categoria,
+                    especialidad
+                } = fila;
+
+                // Validar campos requeridos
+                if (!correo || !nombres || !apellidos) {
+                    throw new Error('Faltan campos requeridos (correo, nombres, apellidos)');
+                }
+
+                // Validar formato de correo
+                if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(correo)) {
+                    throw new Error('Formato de correo electrónico inválido');
+                }
+
+                // Buscar si el usuario ya existe
+                let usuario = await Usuario.findOne({
+                    where: { 
+                        [Op.or]: [
+                            { correo },
+                            { dni: dni || null }
+                        ]
+                    },
+                    transaction
+                });
+
+                // Si no existe, crearlo
+                if (!usuario) {
+                    // Generar contraseña por defecto (primeras 4 letras del apellido + últimos 4 dígitos del DNI)
+                    let contrasenaDefault = 'Docente123';
+                    if (apellidos && dni) {
+                        const prefijo = apellidos.substring(0, 4).toLowerCase();
+                        const sufijo = dni.substring(dni.length - 4);
+                        contrasenaDefault = `${prefijo}${sufijo}`;
+                    }
+
+                    usuario = await Usuario.create({
+                        nombres,
+                        apellidos,
+                        correo,
+                        dni: dni || null,
+                        contrasena: contrasenaDefault, // En producción, esto debería encriptarse
+                        departamento: departamento || null,
+                        categoria: categoria || null,
+                        especialidad: especialidad || null,
+                        estado: 'activo',
+                        creado_por: adminId
+                    }, { transaction });
+
+                    logger.info(`Usuario docente creado: ${correo}`);
+                } else {
+                    // Actualizar información del docente
+                    await usuario.update({
+                        nombres: nombres || usuario.nombres,
+                        apellidos: apellidos || usuario.apellidos,
+                        departamento: departamento || usuario.departamento,
+                        categoria: categoria || usuario.categoria,
+                        especialidad: especialidad || usuario.especialidad,
+                        actualizado_por: adminId
+                    }, { transaction });
+
+                    logger.info(`Usuario docente actualizado: ${correo}`);
+                }
+
+                // Asignar rol de docente si no lo tiene
+                const tieneRolDocente = await usuario.hasRol(rolDocenteId, { transaction });
+                
+                if (!tieneRolDocente) {
+                    await usuario.addRol(rolDocenteId, { 
+                        through: { 
+                            activo: true,
+                            creado_por: adminId
+                        },
+                        transaction 
+                    });
+                    logger.info(`Rol de docente asignado a: ${correo}`);
+                }
+
+                resultados.procesados++;
+            } catch (error) {
+                logger.error(`Error en fila ${i + 2} de docentes:`, error);
+                resultados.errores.push({
+                    fila: i + 2,
+                    valores: data[i],
+                    error: error.message
+                });
+            }
+        }
+
+        logger.info(`Procesamiento de docentes completado: ${resultados.procesados} procesados, ${resultados.errores.length} errores`);
+        return resultados;
+    } catch (error) {
+        registrarError(error, 'procesarDocentes');
+        throw new Error(`Error al procesar el archivo de docentes: ${error.message}`);
+    }
+};
+
+module.exports = {
+    procesar
+};
