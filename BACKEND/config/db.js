@@ -1,10 +1,10 @@
 /**
  * Archivo puente para mantener compatibilidad con importaciones existentes
- * Re-exporta la configuración de la base de datos desde database.js
+ * Re-exporta la instancia de Sequelize desde database.js
  */
 
-// Re-exportar la configuración de la base de datos
-const dbConfig = require('./database.js');
+// Re-exportar la instancia de Sequelize directamente
+const { sequelize } = require('./database.js');
 
-// Exportar la configuración
-module.exports = dbConfig;
+// Exportar la instancia de Sequelize directamente
+module.exports = sequelize;

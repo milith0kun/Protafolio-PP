@@ -1,0 +1,292 @@
+/* ==========================================================================
+   VERIFICAR DATOS - BODY STYLES
+   Estilos para el contenido principal de la página verificar-datos
+   ========================================================================== */
+
+/* Container principal */
+.container-fluid {
+    padding: 20px;
+}
+
+/* Título principal */
+h1.h3 {
+    color: #2c3e50;
+    font-weight: 600;
+    margin-bottom: 10px;
+}
+
+/* Tarjetas de estadísticas */
+.stats-card {
+    border: none;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+    background: white;
+}
+
+.stats-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+}
+
+.stats-card .card-body {
+    padding: 20px;
+}
+
+.stats-card .card-title {
+    font-size: 0.9rem;
+    color: #6c757d;
+    margin-bottom: 10px;
+    font-weight: 500;
+}
+
+.stats-value {
+    font-size: 2rem;
+    font-weight: 700;
+    color: #2c3e50;
+    margin: 5px 0;
+}
+
+.stats-icon {
+    font-size: 2.5rem;
+    color: #3498db;
+    opacity: 0.7;
+}
+
+/* Loading spinner */
+.loading-spinner {
+    width: 30px;
+    height: 30px;
+    border: 3px solid #f3f3f3;
+    border-top: 3px solid #3498db;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    margin: 10px auto;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* Tabs de navegación */
+.nav-tabs {
+    border-bottom: 2px solid #dee2e6;
+    margin-bottom: 20px;
+}
+
+.nav-tabs .nav-link {
+    border: none;
+    color: #6c757d;
+    font-weight: 500;
+    padding: 12px 20px;
+    border-radius: 8px 8px 0 0;
+    transition: all 0.3s;
+}
+
+.nav-tabs .nav-link:hover {
+    border: none;
+    color: #2980b9;
+    background: #f8f9fa;
+}
+
+.nav-tabs .nav-link.active {
+    color: #2980b9;
+    background: white;
+    border: none;
+    border-bottom: 3px solid #2980b9;
+}
+
+/* Tabla moderna */
+.table-modern {
+    background: white;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.table-modern .table {
+    margin-bottom: 0;
+}
+
+.table-modern .table thead th {
+    background: #2c3e50;
+    color: white;
+    border: none;
+    font-weight: 600;
+    padding: 15px;
+    font-size: 0.9rem;
+}
+
+.table-modern .table tbody td {
+    padding: 12px 15px;
+    border-top: 1px solid #dee2e6;
+    vertical-align: middle;
+}
+
+.table-modern .table tbody tr:hover {
+    background: #f8f9fa;
+}
+
+/* DataTables customization */
+.dataTables_wrapper .dataTables_length select {
+    border: 1px solid #dee2e6;
+    border-radius: 6px;
+    padding: 5px 10px;
+}
+
+.dataTables_wrapper .dataTables_filter input {
+    border: 1px solid #dee2e6;
+    border-radius: 6px;
+    padding: 8px 12px;
+    margin-left: 5px;
+}
+
+.dataTables_wrapper .dataTables_paginate .paginate_button {
+    border: 1px solid #dee2e6;
+    border-radius: 6px;
+    margin: 0 2px;
+    padding: 6px 12px;
+    transition: all 0.3s;
+}
+
+.dataTables_wrapper .dataTables_paginate .paginate_button:hover {
+    background: #3498db;
+    color: white;
+    border-color: #3498db;
+}
+
+.dataTables_wrapper .dataTables_paginate .paginate_button.current {
+    background: #2980b9;
+    color: white;
+    border-color: #2980b9;
+}
+
+/* Botones */
+.btn {
+    border-radius: 8px;
+    font-weight: 500;
+    padding: 8px 16px;
+    transition: all 0.3s;
+}
+
+.btn:hover {
+    transform: translateY(-2px);
+}
+
+.btn-outline-primary:hover {
+    background: #3498db;
+    border-color: #3498db;
+}
+
+.btn-outline-success:hover {
+    background: #27ae60;
+    border-color: #27ae60;
+}
+
+/* Badges */
+.badge {
+    font-size: 0.8rem;
+    font-weight: 500;
+    padding: 6px 10px;
+    border-radius: 20px;
+}
+
+/* Charts containers */
+.chart-container {
+    position: relative;
+    height: 300px;
+    background: white;
+    border-radius: 12px;
+    padding: 20px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Alertas personalizadas */
+.alert {
+    border: none;
+    border-radius: 10px;
+    padding: 15px 20px;
+}
+
+.alert-info {
+    background: linear-gradient(135deg, #74b9ff 0%, #0984e3 100%);
+    color: white;
+}
+
+.alert-success {
+    background: linear-gradient(135deg, #00b894 0%, #00a085 100%);
+    color: white;
+}
+
+.alert-warning {
+    background: linear-gradient(135deg, #fdcb6e 0%, #e17055 100%);
+    color: white;
+}
+
+.alert-danger {
+    background: linear-gradient(135deg, #fd79a8 0%, #e84393 100%);
+    color: white;
+}
+
+/* Filtros */
+.filter-section {
+    background: white;
+    border-radius: 12px;
+    padding: 20px;
+    margin-bottom: 20px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.filter-section .form-control,
+.filter-section .form-select {
+    border: 1px solid #dee2e6;
+    border-radius: 8px;
+    padding: 10px 15px;
+    transition: all 0.3s;
+}
+
+.filter-section .form-control:focus,
+.filter-section .form-select:focus {
+    border-color: #3498db;
+    box-shadow: 0 0 0 0.2rem rgba(52, 152, 219, 0.25);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .container-fluid {
+        padding: 15px;
+    }
+    
+    .stats-card .card-body {
+        padding: 15px;
+    }
+    
+    .stats-value {
+        font-size: 1.5rem;
+    }
+    
+    .stats-icon {
+        font-size: 2rem;
+    }
+    
+    .table-modern .table thead th,
+    .table-modern .table tbody td {
+        padding: 10px;
+        font-size: 0.9rem;
+    }
+}
+
+/* Tab content */
+.tab-content {
+    background: transparent;
+}
+
+.tab-pane {
+    animation: fadeIn 0.3s ease-in-out;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+} 

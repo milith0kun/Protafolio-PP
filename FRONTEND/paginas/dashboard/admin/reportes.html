@@ -3,249 +3,521 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Reportes | Portafolio Docente UNSAAC</title>
-    <!-- CSS desde CDN -->
+    <title>📊 Reportes y Analytics - Sistema Portafolio Docente UNSAAC</title>
+    
+    <!-- Bootstrap 5 -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;600;700&display=swap" rel="stylesheet">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css" rel="stylesheet">
-    <link href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css" rel="stylesheet">
-    <link href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap5.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- DataTables -->
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.4/css/dataTables.bootstrap5.min.css">
     
     <!-- Estilos personalizados -->
-    <link rel="stylesheet" href="../../../assets/css/paginas/admin/body.css">
-    <link rel="stylesheet" href="../../../assets/css/paginas/admin/head.css">
-    <link rel="stylesheet" href="../../../assets/css/paginas/admin/footer.css">
-    <link rel="stylesheet" href="../../../assets/css/paginas/admin/dashboard.css">
+    <link rel="stylesheet" href="../../../assets/css/estilos.css">
+    <style>
+        .card-metric {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            transition: all 0.3s ease;
+        }
+        
+        .card-metric:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+        }
+        
+        .metric-icon {
+            font-size: 2.5rem;
+            opacity: 0.8;
+        }
+        
+        .metric-value {
+            font-size: 2rem;
+            font-weight: bold;
+            margin: 0;
+        }
+        
+        .chart-container {
+            position: relative;
+            height: 400px;
+        }
+        
+        .filter-card {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            color: white;
+        }
+        
+        .export-section {
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            color: white;
+            border-radius: 15px;
+            padding: 20px;
+        }
+        
+        .alert-custom {
+            border-left: 4px solid #17a2b8;
+            background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%);
+            border: none;
+        }
+        
+        .table-responsive {
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        
+        .progress-custom {
+            height: 8px;
+            border-radius: 4px;
+        }
+        
+        .btn-action {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border: none;
+            color: white;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-action:hover {
+            transform: scale(1.05);
+            color: white;
+        }
+        
+        .loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(255,255,255,0.9);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+        }
+    </style>
 </head>
+
 <body>
-    <div class="wrapper">
-        <!-- Sidebar -->
-        <nav id="sidebar">
-            <div class="sidebar-header">
-                <h3>Portafolio Docente</h3>
-                <strong>PD</strong>
+    <!-- Loading overlay -->
+    <div id="loading-overlay" class="loading-overlay" style="display: none;">
+        <div class="text-center">
+            <div class="spinner-border text-primary" style="width: 3rem; height: 3rem;" role="status">
+                <span class="visually-hidden">Cargando...</span>
             </div>
+            <div class="mt-3">
+                <h5>Generando reportes...</h5>
+                <p class="text-muted">Por favor espere mientras procesamos los datos</p>
+            </div>
+        </div>
+    </div>
 
-            <ul class="list-unstyled components">
-                <li>
-                    <a href="tablero.html">
-                        <i class="fas fa-tachometer-alt"></i>
-                        <span class="menu-text">Tablero</span>
+    <!-- Header -->
+    <header class="navbar navbar-expand-lg navbar-dark bg-primary shadow-sm">
+        <div class="container-fluid">
+            <a class="navbar-brand d-flex align-items-center" href="/paginas/dashboard/admin/tablero.html">
+                <img src="/assets/imagenes/logo.png" alt="UNSAAC" height="40" class="me-2">
+                <span>Sistema Portafolio Docente</span>
+            </a>
+            
+            <div class="navbar-nav ms-auto">
+                <div class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle d-flex align-items-center" href="#" id="navbarDropdown" 
+                       role="button" data-bs-toggle="dropdown">
+                        <i class="fas fa-user-circle me-2"></i>
+                        <span id="nombreUsuario">Usuario</span>
                     </a>
-                </li>
-                <li>
-                    <a href="ciclos.html">
-                        <i class="fas fa-calendar-alt"></i>
-                        <span class="menu-text">Ciclos Académicos</span>
-                    </a>
-                </li>
-                <li>
-                    <a href="usuarios.html">
-                        <i class="fas fa-users"></i>
-                        <span class="menu-text">Usuarios</span>
-                    </a>
-                </li>
-                <li>
-                    <a href="asignaturas.html">
-                        <i class="fas fa-book"></i>
-                        <span class="menu-text">Asignaturas</span>
-                    </a>
-                </li>
-                <li>
-                    <a href="carga-masiva.html">
-                        <i class="fas fa-upload"></i>
-                        <span class="menu-text">Carga Masiva</span>
-                    </a>
-                </li>
-                <li class="active">
-                    <a href="reportes.html">
-                        <i class="fas fa-chart-bar"></i>
-                        <span class="menu-text">Reportes</span>
-                    </a>
-                </li>
-            </ul>
+                    <ul class="dropdown-menu dropdown-menu-end">
+                        <li><a class="dropdown-item" href="/paginas/dashboard/admin/tablero.html">
+                            <i class="fas fa-tachometer-alt me-2"></i>Dashboard
+                        </a></li>
+                        <li><hr class="dropdown-divider"></li>
+                        <li><a class="dropdown-item" href="#" onclick="cerrarSesion()">
+                            <i class="fas fa-sign-out-alt me-2"></i>Cerrar Sesión
+                        </a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </header>
 
-            <ul class="list-unstyled components sidebar-footer">
-                <li>
-                    <a href="#" id="cerrarSesion">
-                        <i class="fas fa-sign-out-alt"></i>
-                        <span class="menu-text">Cerrar Sesión</span>
-                    </a>
-                </li>
-            </ul>
-        </nav>
-
-        <!-- Page Content -->
-        <div id="content">
-            <nav class="navbar navbar-expand-lg navbar-light bg-light">
-                <div class="container-fluid">
-                    <button type="button" id="sidebarCollapse" class="btn btn-info">
-                        <i class="fas fa-align-left"></i>
-                        <span>Menú</span>
-                    </button>
-                    <div class="ml-auto d-flex align-items-center">
-                        <div class="user-info">
-                            <span id="nombreUsuario">Cargando...</span>
-                            <span id="rolUsuario" class="badge badge-primary">Administrador</span>
-                        </div>
+    <!-- Contenido principal -->
+    <main class="container-fluid mt-4">
+        <!-- Título y breadcrumb -->
+        <div class="row mb-4">
+            <div class="col-12">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <h1 class="h3 mb-0">
+                            <i class="fas fa-chart-line text-primary me-2"></i>
+                            Reportes y Analytics
+                        </h1>
+                        <nav aria-label="breadcrumb">
+                            <ol class="breadcrumb">
+                                <li class="breadcrumb-item"><a href="/paginas/dashboard/admin/tablero.html">Dashboard</a></li>
+                                <li class="breadcrumb-item active">Reportes</li>
+                            </ol>
+                        </nav>
+                    </div>
+                    <div>
+                        <button class="btn btn-outline-primary" id="btn-actualizar-reportes">
+                            <i class="fas fa-sync-alt me-2"></i>Actualizar
+                        </button>
                     </div>
                 </div>
-            </nav>
+            </div>
+        </div>
 
-            <div class="container-fluid">
-                <div class="row mb-4">
-                    <div class="col-12">
-                        <h2>Reportes del Sistema</h2>
-                        <p>Genere y exporte reportes del sistema.</p>
+        <!-- Alertas del sistema -->
+        <div id="alertas-sistema" class="mb-4"></div>
+
+        <!-- Filtros avanzados -->
+        <div class="row mb-4">
+            <div class="col-12">
+                <div class="card filter-card">
+                    <div class="card-header">
+                        <h5 class="mb-0">
+                            <i class="fas fa-filter me-2"></i>Filtros Avanzados
+                        </h5>
                     </div>
-                </div>
-
-                <div class="row mb-4">
-                    <div class="col-md-6">
-                        <div class="form-group">
-                            <label for="selectCiclo">Seleccione un Ciclo Académico:</label>
-                            <select class="form-control" id="selectCiclo">
-                                <option value="">Cargando ciclos...</option>
-                            </select>
-                            <small class="form-text text-muted">Requerido para reportes de asignaturas y asignaciones.</small>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="row">
-                    <div class="col-md-6 mb-4">
-                        <div class="card">
-                            <div class="card-header">
-                                <h5 class="mb-0">Reporte de Usuarios por Rol</h5>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-3 mb-3">
+                                <label for="filtro-ciclo" class="form-label">Ciclo Académico</label>
+                                <select class="form-select" id="filtro-ciclo">
+                                    <option value="">Todos los ciclos</option>
+                                </select>
                             </div>
-                            <div class="card-body">
-                                <p>Genere un reporte de usuarios filtrados por rol.</p>
-                                <div class="form-group">
-                                    <label for="selectRolUsuarios">Seleccione un Rol:</label>
-                                    <select class="form-control" id="selectRolUsuarios">
-                                        <option value="">Todos los roles</option>
-                                        <option value="administrador">Administrador</option>
-                                        <option value="docente">Docente</option>
-                                        <option value="verificador">Verificador</option>
-                                    </select>
-                                </div>
-                                <div class="mt-3">
-                                    <button id="btnGenerarReporteUsuarios" class="btn btn-primary">
-                                        <i class="fas fa-file-alt"></i> Generar Reporte
-                                    </button>
-                                    <button id="btnExportarReporteUsuarios" class="btn btn-success ml-2">
-                                        <i class="fas fa-file-excel"></i> Exportar a Excel
-                                    </button>
-                                </div>
+                            <div class="col-md-3 mb-3">
+                                <label for="filtro-carrera" class="form-label">Carrera</label>
+                                <select class="form-select" id="filtro-carrera">
+                                    <option value="">Todas las carreras</option>
+                                </select>
                             </div>
-                        </div>
-                    </div>
-
-                    <div class="col-md-6 mb-4">
-                        <div class="card">
-                            <div class="card-header">
-                                <h5 class="mb-0">Reporte de Asignaturas por Ciclo</h5>
+                            <div class="col-md-3 mb-3">
+                                <label for="fecha-inicio" class="form-label">Fecha Inicio</label>
+                                <input type="date" class="form-control" id="fecha-inicio">
                             </div>
-                            <div class="card-body">
-                                <p>Genere un reporte de asignaturas para el ciclo académico seleccionado.</p>
-                                <div class="mt-3">
-                                    <button id="btnGenerarReporteAsignaturas" class="btn btn-primary">
-                                        <i class="fas fa-file-alt"></i> Generar Reporte
-                                    </button>
-                                    <button id="btnExportarReporteAsignaturas" class="btn btn-success ml-2">
-                                        <i class="fas fa-file-excel"></i> Exportar a Excel
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="col-md-6 mb-4">
-                        <div class="card">
-                            <div class="card-header">
-                                <h5 class="mb-0">Reporte de Asignaciones por Ciclo</h5>
-                            </div>
-                            <div class="card-body">
-                                <p>Genere un reporte de asignaciones docente-asignatura para el ciclo académico seleccionado.</p>
-                                <div class="mt-3">
-                                    <button id="btnGenerarReporteAsignaciones" class="btn btn-primary">
-                                        <i class="fas fa-file-alt"></i> Generar Reporte
-                                    </button>
-                                    <button id="btnExportarReporteAsignaciones" class="btn btn-success ml-2">
-                                        <i class="fas fa-file-excel"></i> Exportar a Excel
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="col-md-6 mb-4">
-                        <div class="card">
-                            <div class="card-header">
-                                <h5 class="mb-0">Reporte de Asignaturas por Docente</h5>
-                            </div>
-                            <div class="card-body">
-                                <p>Genere un reporte de asignaturas asignadas a un docente específico.</p>
-                                <div class="form-group">
-                                    <label for="selectDocente">Seleccione un Docente:</label>
-                                    <select class="form-control" id="selectDocente">
-                                        <option value="">Cargando docentes...</option>
-                                    </select>
-                                </div>
-                                <div class="mt-3">
-                                    <button id="btnGenerarReporteDocenteAsignaturas" class="btn btn-primary">
-                                        <i class="fas fa-file-alt"></i> Generar Reporte
-                                    </button>
-                                    <button id="btnExportarReporteDocenteAsignaturas" class="btn btn-success ml-2">
-                                        <i class="fas fa-file-excel"></i> Exportar a Excel
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="row">
-                    <div class="col-12">
-                        <div class="card">
-                            <div class="card-header">
-                                <h5 class="mb-0">Resultados del Reporte</h5>
-                            </div>
-                            <div class="card-body">
-                                <div class="table-responsive">
-                                    <table id="tablaReporte" class="table table-striped table-bordered" style="width:100%">
-                                        <thead>
-                                            <!-- Los encabezados se generarán dinámicamente -->
-                                        </thead>
-                                        <tbody>
-                                            <!-- Los datos se cargarán dinámicamente -->
-                                        </tbody>
-                                    </table>
-                                </div>
+                            <div class="col-md-3 mb-3">
+                                <label for="fecha-fin" class="form-label">Fecha Fin</label>
+                                <input type="date" class="form-control" id="fecha-fin">
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
 
-    <!-- Scripts desde CDN -->
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+        <!-- Métricas principales -->
+        <div class="row mb-4">
+            <div class="col-xl-3 col-md-6 mb-3">
+                <div class="card card-metric">
+                    <div class="card-body text-center">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <p class="card-text">Total Usuarios</p>
+                                <h2 class="metric-value" id="total-usuarios">0</h2>
+                            </div>
+                            <i class="fas fa-users metric-icon"></i>
+                        </div>
+                        <div class="mt-2">
+                            <small id="tendencia-usuarios">
+                                <i class="fas fa-arrow-up"></i> 12% desde el mes pasado
+                            </small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-xl-3 col-md-6 mb-3">
+                <div class="card card-metric">
+                    <div class="card-body text-center">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <p class="card-text">Portafolios Activos</p>
+                                <h2 class="metric-value" id="total-portafolios">0</h2>
+                            </div>
+                            <i class="fas fa-folder-open metric-icon"></i>
+                        </div>
+                        <div class="mt-2">
+                            <small id="tendencia-portafolios">
+                                <i class="fas fa-arrow-up"></i> 8% desde el mes pasado
+                            </small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-xl-3 col-md-6 mb-3">
+                <div class="card card-metric">
+                    <div class="card-body text-center">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <p class="card-text">Tasa Completitud</p>
+                                <h2 class="metric-value" id="tasa-completitud">0%</h2>
+                            </div>
+                            <i class="fas fa-check-circle metric-icon"></i>
+                        </div>
+                        <div class="mt-2">
+                            <small id="tendencia-completitud">
+                                <i class="fas fa-arrow-up"></i> 5% desde el mes pasado
+                            </small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-xl-3 col-md-6 mb-3">
+                <div class="card card-metric">
+                    <div class="card-body text-center">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <p class="card-text">Observaciones Pendientes</p>
+                                <h2 class="metric-value" id="observaciones-pendientes">0</h2>
+                            </div>
+                            <i class="fas fa-exclamation-triangle metric-icon"></i>
+                        </div>
+                        <div class="mt-2">
+                            <small id="tendencia-observaciones">
+                                <i class="fas fa-arrow-down"></i> 3% desde el mes pasado
+                            </small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Gráficos principales -->
+        <div class="row mb-4">
+            <div class="col-lg-6 mb-4">
+                <div class="card h-100">
+                    <div class="card-header">
+                        <h5 class="mb-0">
+                            <i class="fas fa-chart-pie text-primary me-2"></i>
+                            Distribución por Roles
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="chart-container">
+                            <canvas id="grafico-roles"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-lg-6 mb-4">
+                <div class="card h-100">
+                    <div class="card-header">
+                        <h5 class="mb-0">
+                            <i class="fas fa-chart-bar text-success me-2"></i>
+                            Asignaturas por Carrera
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="chart-container">
+                            <canvas id="grafico-carreras"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Gráfico de evolución temporal -->
+        <div class="row mb-4">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="mb-0">
+                            <i class="fas fa-chart-line text-info me-2"></i>
+                            Evolución Temporal de Documentos
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="chart-container">
+                            <canvas id="grafico-temporal"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tabla detallada -->
+        <div class="row mb-4">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                        <h5 class="mb-0">
+                            <i class="fas fa-table text-secondary me-2"></i>
+                            Detalle por Carrera
+                        </h5>
+                        <div class="export-section">
+                            <select class="form-select form-select-sm d-inline-block w-auto me-2" id="tipo-exportacion">
+                                <option value="excel">Excel</option>
+                                <option value="pdf">PDF</option>
+                                <option value="csv">CSV</option>
+                            </select>
+                            <button class="btn btn-light btn-sm" id="btn-exportar-reportes">
+                                <i class="fas fa-download me-1"></i>Exportar
+                            </button>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table table-striped table-hover" id="tabla-detallada">
+                                <thead class="table-dark">
+                                    <tr>
+                                        <th>Código</th>
+                                        <th>Carrera</th>
+                                        <th>Facultad</th>
+                                        <th class="text-center">Asignaturas</th>
+                                        <th class="text-center">Docentes</th>
+                                        <th class="text-center">Portafolios</th>
+                                        <th class="text-center">Progreso</th>
+                                        <th class="text-center">Acciones</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <!-- Datos cargados dinámicamente -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Indicadores adicionales -->
+        <div class="row mb-4">
+            <div class="col-lg-4 mb-3">
+                <div class="card">
+                    <div class="card-header">
+                        <h6 class="mb-0">
+                            <i class="fas fa-trending-up text-success me-2"></i>
+                            Tendencia General
+                        </h6>
+                    </div>
+                    <div class="card-body">
+                        <div id="tendencia-general" class="text-center">
+                            <i class="fas fa-arrow-up text-success"></i>
+                            15% respecto al mes anterior
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-lg-4 mb-3">
+                <div class="card">
+                    <div class="card-header">
+                        <h6 class="mb-0">
+                            <i class="fas fa-clock text-warning me-2"></i>
+                            Última Actualización
+                        </h6>
+                    </div>
+                    <div class="card-body">
+                        <div id="ultima-actualizacion" class="text-center">
+                            <span id="fecha-actualizacion">--</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-lg-4 mb-3">
+                <div class="card">
+                    <div class="card-header">
+                        <h6 class="mb-0">
+                            <i class="fas fa-users-cog text-info me-2"></i>
+                            Usuarios Activos Hoy
+                        </h6>
+                    </div>
+                    <div class="card-body">
+                        <div id="usuarios-activos-hoy" class="text-center">
+                            <span id="contador-activos">--</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-light text-center py-3 mt-5">
+        <div class="container">
+            <p class="mb-0 text-muted">
+                © 2024 Universidad Nacional de San Antonio Abad del Cusco - Sistema de Portafolio Docente
+            </p>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
-    <script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap5.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.4/moment.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.4/js/dataTables.bootstrap5.min.js"></script>
     
     <!-- Scripts del sistema -->
     <script src="../../../assets/js/nucleo/configuracion.js"></script>
-    <script src="../../../assets/js/nucleo.js"></script>
-    <script src="../../../assets/js/autenticacion.js"></script>
-    <script src="../../../assets/js/paginas/dashboard/admin/reportes.js"></script>
+    <script src="../../../assets/js/nucleo/auth.js"></script>
+    
+    <!-- Admin Auth System -->
+    <script src="../../../assets/js/paginas/dashboard/admin/admin-auth.js"></script>
+    
+    <script src="../../../assets/js/paginas/dashboard/reportes.js"></script>
+    
+    <script>
+        // Inicialización de la página
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('📊 Inicializando página de reportes...');
+            
+            // Inicializar autenticación de administrador
+            if (!AdminAuth.inicializarAutenticacionAdmin()) {
+                return; // Si la autenticación falla, detener la ejecución
+            }
+
+            // Cargar datos del usuario
+            const usuario = AUTH.obtenerUsuario();
+            if (usuario) {
+                document.getElementById('nombreUsuario').textContent = 
+                    `${usuario.nombres} ${usuario.apellidos}`;
+            }
+
+            // Inicializar DataTable
+            if ($.fn.DataTable) {
+                $('#tabla-detallada').DataTable({
+                    language: {
+                        url: 'https://cdn.datatables.net/plug-ins/1.13.4/i18n/es-ES.json'
+                    },
+                    responsive: true,
+                    pageLength: 10,
+                    order: [[0, 'asc']]
+                });
+            }
+
+            // Mostrar fecha actual
+            document.getElementById('fecha-actualizacion').textContent = 
+                new Date().toLocaleString('es-ES');
+
+            NOTIFICACIONES.info('Reportes', 'Sistema de reportes cargado correctamente');
+        });
+
+        // Función para cerrar sesión
+        function cerrarSesion() {
+            AUTH.cerrarSesion();
+        }
+
+        // Mostrar loading overlay
+        function mostrarLoading() {
+            document.getElementById('loading-overlay').style.display = 'flex';
+        }
+
+        // Ocultar loading overlay
+        function ocultarLoading() {
+            document.getElementById('loading-overlay').style.display = 'none';
+        }
+
+        console.log('✅ Página de reportes inicializada correctamente');
+    </script>
 </body>
 </html>

@@ -2,415 +2,550 @@
    BIENVENIDA FINAL - MODELO INSTITUCIONAL
 =========================== */
 
+.main-content {
+    background-color: #f9fafc;
+    color: #333;
+    line-height: 1.6;
+}
+
 .welcome-banner {
-    background: var(--primary-color);
-    padding: 3rem 2rem;
-    color: var(--text-light);
-  }
-  
-  .banner-container {
+    background: linear-gradient(135deg, var(--primary-color) 0%, #2d2368 100%);
+    padding: 4rem 2rem;
+    color: white;
+    position: relative;
+    overflow: hidden;
+}
+
+.welcome-banner::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiPjxkZWZzPjxwYXR0ZXJuIGlkPSJwYXR0ZXJuIiB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHBhdHRlcm5Vbml0cz0idXNlclNwYWNlT25Vc2UiIHBhdHRlcm5UcmFuc2Zvcm09InJvdGF0ZSg0NSkiPjxyZWN0IHg9IjAiIHk9IjAiIHdpZHRoPSIyMCIgaGVpZ2h0PSIyMCIgZmlsbD0icmdiYSgyNTUsMjU1LDI1NSwwLjAzKSIvPjwvcGF0dGVybj48L2RlZnM+PHJlY3QgeD0iMCIgeT0iMCIgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgZmlsbD0idXJsKCNwYXR0ZXJuKSIvPjwvc3ZnPg==');
+    opacity: 0.5;
+}
+
+.banner-container {
     max-width: 1400px;
     margin: 0 auto;
     display: flex;
     justify-content: space-between;
-    align-items: flex-start;
+    align-items: center;
     flex-wrap: wrap;
     gap: 3rem;
-  }
-  
-  .banner-content {
+    position: relative;
+    z-index: 1;
+}
+
+.banner-content {
     flex: 1;
     min-width: 350px;
-  }
-  
-  .banner-content h1 {
-    font-size: 2rem;
-    font-weight: 700;
+    max-width: 600px;
+}
+
+.banner-content h1 {
+    font-size: 2.5rem;
+    font-weight: 800;
+    color: white;
+    margin-bottom: 1.5rem;
+    line-height: 1.2;
+    text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.banner-content p {
+    font-size: 1.2rem;
+    margin-bottom: 2.5rem;
+    color: rgba(255,255,255,0.9);
+    max-width: 90%;
+}
+
+/* Estado del ciclo */
+.cycle-status-banner {
+    background: rgba(255, 255, 255, 0.15);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    color: white;
+    padding: 1.2rem 1.5rem;
+    border-radius: 12px;
+    margin-bottom: 2.5rem;
+    display: flex;
+    align-items: center;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+}
+
+.status-icon {
+    font-size: 1.8rem;
+    margin-right: 1.2rem;
     color: var(--secondary-color);
-    margin-bottom: 1rem;
-  }
-  
-  .banner-content p {
-    font-size: 1.1rem;
-    margin-bottom: 2rem;
-    color: #e4e4e4;
-  }
-  
-  /* Estado del ciclo */
-  .cycle-status-banner {
-    background: #fff3cd;
-    color: #856404;
-    padding: 1rem 1.5rem;
-    border-radius: 10px;
-    margin-bottom: 2rem;
-    display: flex;
-    align-items: center;
-    box-shadow: var(--shadow);
-  }
-  
-  .status-info {
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-  }
-  
-  .status-icon i {
-    font-size: 2rem;
-    color: #856404;
-  }
-  
-  .status-title {
+}
+
+.status-details {
+    flex: 1;
+}
+
+.status-title {
+    display: block;
     font-weight: 600;
-    font-size: 1rem;
-  }
-  
-  .status-description {
+    margin-bottom: 0.3rem;
+    font-size: 1.1rem;
+}
+
+.status-description {
+    display: block;
     font-size: 0.95rem;
-  }
-  
-  /* Botones Acceder - Guía */
-  .header-buttons {
+    opacity: 0.9;
+}
+
+/* Botones de acción */
+.header-buttons {
     display: flex;
     gap: 1rem;
     flex-wrap: wrap;
-  }
-  
-  .header-buttons .btn {
-    padding: 0.8rem 2rem;
-    border-radius: 8px;
-    font-weight: 600;
-    font-size: 1rem;
+}
+
+.btn {
     display: inline-flex;
     align-items: center;
-    gap: 0.6rem;
-    text-decoration: none;
-    transition: 0.3s;
-  }
-  
-  .btn-primary {
-    background: var(--secondary-color);
-    color: var(--primary-color);
-  }
-  
-  .btn-primary:hover {
-    background: #e0b532;
-  }
-  
-  .btn-secondary {
-    background: #fff;
-    color: var(--primary-color);
-    border: 2px solid var(--primary-color);
-  }
-  
-  .btn-secondary:hover {
-    background: #f2f2f2;
-  }
-  
-  /* Bloque derecho institucional (rectángulos de roles) */
-  .banner-image {
-    flex: 1;
-    min-width: 400px;
-  }
-  
-  .feature-cards {
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
-  }
-  
-  .feature-card {
-    background: #4a4784;
-    padding: 1.2rem 1.5rem;
-    border-radius: 10px;
-    color: white;
-    display: flex;
-    align-items: center;
-    gap: 1.5rem;
-    border: 1px solid rgba(255,255,255,0.1);
-    transition: 0.3s;
-  }
-  
-  .feature-card:hover {
-    background: #3d3a75;
-  }
-  
-  .card-icon i {
-    font-size: 2rem;
-    color: var(--secondary-color);
-  }
-  
-  .feature-card h3 {
-    font-size: 1.3rem;
-    margin-bottom: 0.5rem;
-  }
-  
-  .feature-card p {
-    font-size: 0.95rem;
-    color: #e4e4e4;
-  }
-  
-
-
-
-
-
-
-
-/* ===========================
-   ESTILOS FLUJO DEL PROCESO ACADÉMICO MEJORADO
-=========================== */
-
-.process-flow-section {
-    background: #ffffff;
-    padding: 3rem 2rem;
-  }
-  
-  .process-container {
-    max-width: 1400px;
-    margin: 0 auto;
-  }
-  
-  .section-header {
-    text-align: center;
-    margin-bottom: 3rem;
-  }
-  
-  .section-header h2 {
-    font-size: 2rem;
-    font-weight: 700;
-    color: var(--primary-color);
-    margin-bottom: 0.5rem;
-  }
-  
-  .section-header p {
-    font-size: 1.1rem;
-    color: #555;
-  }
-  
-  /* Mejora de la línea de pasos: sin scroll, adaptativo */
-  .process-timeline {
-    display: flex;
     justify-content: center;
-    align-items: stretch;
-    flex-wrap: wrap;
-    gap: 2rem;
-  }
-  
-  .process-step {
-    background: #f9f9f9;
-    padding: 1.5rem 1.2rem;
-    border-radius: 15px;
-    box-shadow: var(--shadow);
-    flex: 1 1 calc(33.33% - 2rem);
-    max-width: 400px;
-    transition: 0.3s;
+    padding: 0.8rem 1.8rem;
+    border-radius: 8px;
+    font-weight: 600;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    border: none;
+    cursor: pointer;
+    font-size: 1rem;
+}
+
+.btn i {
+    margin-right: 0.5rem;
+    font-size: 1.1em;
+}
+
+.btn-primary {
+    background-color: var(--secondary-color);
+    color: #1a1a2e;
+    box-shadow: 0 4px 15px rgba(240, 214, 90, 0.3);
+}
+
+.btn-primary:hover {
+    background-color: #f0d65a;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(240, 214, 90, 0.4);
+}
+
+/* Tarjetas de características */
+.feature-cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 1.5rem;
+    width: 100%;
+    max-width: 1000px;
+    margin: 0 auto;
+}
+
+.feature-card {
+    background: white;
+    border-radius: 12px;
+    padding: 1.8rem;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    border: 1px solid rgba(0, 0, 0, 0.05);
     display: flex;
     flex-direction: column;
-    align-items: center;
-  }
-  
-  .process-step:hover {
+    height: 100%;
+}
+
+.feature-card:hover {
     transform: translateY(-5px);
-  }
-  
-  .step-icon {
-    background: var(--primary-color);
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.1);
+}
+
+.card-icon {
+    width: 60px;
+    height: 60px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.8rem;
+    margin-bottom: 1.5rem;
     color: white;
-    width: 65px;
-    height: 65px;
+}
+
+.admin-card .card-icon { background-color: var(--primary-color); }
+.docente-card .card-icon { background-color: #2e7d32; }
+.verificador-card .card-icon { background-color: #1565c0; }
+
+.feature-card h3 {
+    font-size: 1.4rem;
+    margin-bottom: 1rem;
+    color: var(--text-dark);
+}
+
+.feature-card p {
+    color: #555;
+    margin-bottom: 1.5rem;
+    flex-grow: 1;
+}
+
+.card-features {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.6rem;
+    margin-top: 1.2rem;
+}
+
+.feature-tag {
+    background: #f5f5f5;
+    padding: 0.4rem 0.8rem;
+    border-radius: 50px;
+    font-size: 0.8rem;
+    color: #555;
+    display: inline-flex;
+    align-items: center;
+}
+
+/* Sección de proceso */
+.process-flow-section {
+    padding: 5rem 2rem;
+    background: white;
+}
+
+.section-header {
+    text-align: center;
+    max-width: 800px;
+    margin: 0 auto 4rem;
+}
+
+.section-header h2 {
+    font-size: 2.2rem;
+    color: var(--primary-color);
+    margin-bottom: 1rem;
+    font-weight: 700;
+}
+
+.section-header p {
+    font-size: 1.2rem;
+    color: #555;
+    margin: 0;
+}
+
+.process-timeline {
+    position: relative;
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 0 1rem;
+}
+
+.process-timeline::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 4px;
+    height: 100%;
+    background: linear-gradient(to bottom, var(--primary-color), #6a50c8);
+    border-radius: 2px;
+}
+
+.process-step {
+    position: relative;
+    margin-bottom: 3rem;
+    width: calc(50% - 2rem);
+    padding: 1.5rem;
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 5px 25px rgba(0, 0, 0, 0.05);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.process-step:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+}
+
+.process-step:nth-child(odd) {
+    margin-right: auto;
+    text-align: right;
+}
+
+.process-step:nth-child(even) {
+    margin-left: auto;
+    text-align: left;
+}
+
+.step-icon {
+    position: absolute;
+    width: 60px;
+    height: 60px;
     border-radius: 50%;
     display: flex;
-    justify-content: center;
     align-items: center;
-    font-size: 2rem;
-    margin-bottom: 1rem;
-  }
-  
-  /* Colores por roles */
-  .admin-color { background: #362B80; }
-  .docente-color { background: #2d8cff; }
-  .verificador-color { background: #2dbe60; }
-  
-  .step-content {
-    text-align: center;
-  }
-  
-  .step-content h3 {
-    font-size: 1.25rem;
-    font-weight: 600;
-    color: var(--primary-color);
-    margin-bottom: 0.8rem;
-  }
-  
-  .step-content p {
-    font-size: 1rem;
-    color: #555;
-    margin-bottom: 1rem;
-  }
-  
-  .step-actions {
-    display: flex;
-    flex-wrap: wrap;
     justify-content: center;
-    gap: 0.5rem;
-  }
-  
-  .action-item {
-    background: #f1f3f5;
-    padding: 0.5rem 1rem;
-    border-radius: 20px;
-    font-size: 0.85rem;
-    color: var(--primary-color);
-  }
-  
+    font-size: 1.8rem;
+    color: white;
+    top: 50%;
+    transform: translateY(-50%);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+}
 
+.process-step:nth-child(odd) .step-icon {
+    right: -85px;
+}
 
+.process-step:nth-child(even) .step-icon {
+    left: -85px;
+}
 
+.step-content {
+    padding: 0.5rem 0;
+}
 
-
-
-
-
-
-
-
-  
-/* ===========================
-   ESTILOS ACCESO POR ROLES MEJORADO CON CONTRASTE
-=========================== */
-
-.quick-access-section {
-    background: #f7f7fb;  /* Color gris muy suave institucional */
-    padding: 3rem 2rem;
-    border-top: 1px solid #e0e0e0;
-    border-bottom: 1px solid #ddd;
-  }
-  
-  .quick-access-container {
-    max-width: 1400px;
-    margin: 0 auto;
-  }
-  
-  .section-header {
-    text-align: center;
-    margin-bottom: 3rem;
-  }
-  
-  .section-header h2 {
-    font-size: 2rem;
-    font-weight: 700;
-    color: var(--primary-color);
-    margin-bottom: 0.5rem;
-  }
-  
-  .section-header p {
-    font-size: 1.1rem;
-    color: #555;
-  }
-  
-  /* Distribución fluida de las tarjetas */
-  .access-cards {
-    display: flex;
-    justify-content: center;
-    align-items: stretch;
-    flex-wrap: wrap;
-    gap: 2rem;
-  }
-  
-  .access-card {
-    background: #ffffff;
-    padding: 2rem 1.5rem;
-    border-radius: 15px;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-    flex: 1 1 calc(33.33% - 2rem);
-    max-width: 100%;
-    min-width: 280px;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    transition: 0.3s;
-  }
-  
-  .access-card:hover {
-    transform: translateY(-5px);
-  }
-  
-  .card-header {
-    text-align: center;
-    margin-bottom: 1rem;
-  }
-  
-  .card-header i {
-    font-size: 2.5rem;
-    margin-bottom: 0.5rem;
-    color: var(--secondary-color);
-  }
-  
-  .card-header h3 {
+.step-content h3 {
     font-size: 1.3rem;
-    margin-bottom: 0.5rem;
-  }
-  
-  .role-badge {
-    display: inline-block;
-    padding: 0.4rem 0.8rem;
-    border-radius: 20px;
-    font-size: 0.85rem;
-    font-weight: 600;
-    margin-top: 0.5rem;
-  }
-  
-  .admin-badge { background: #362B80; color: #fff; }
-  .docente-badge { background: #2d8cff; color: #fff; }
-  .verificador-badge { background: #2dbe60; color: #fff; }
-  
-  .card-content h4 {
-    font-size: 1rem;
-    font-weight: 600;
-    margin-bottom: 0.7rem;
+    margin-bottom: 0.8rem;
     color: var(--primary-color);
-    text-align: center;
-  }
-  
-  .card-content ul {
-    list-style: none;
-    padding: 0;
-    margin: 0;
+}
+
+.step-content p {
+    color: #555;
+    margin-bottom: 1.2rem;
+    line-height: 1.6;
+}
+
+.step-actions {
     display: flex;
     flex-wrap: wrap;
-    justify-content: center;
     gap: 0.5rem;
-  }
-  
-  .card-content li {
-    background: #f1f3f5;
-    padding: 0.5rem 1rem;
-    border-radius: 20px;
-    font-size: 0.95rem;
-    color: #333;
-  }
-  
-  .card-footer {
-    margin-top: 2rem;
-    text-align: center;
-  }
-  
-  .role-card-link {
-    padding: 0.8rem 2rem;
-    border-radius: 8px;
-    font-weight: 600;
-    font-size: 1rem;
+    margin-top: 1rem;
+}
+
+.action-item {
+    background: #f5f5f5;
+    padding: 0.4rem 0.8rem;
+    border-radius: 50px;
+    font-size: 0.8rem;
+    color: #555;
     display: inline-flex;
     align-items: center;
-    gap: 0.6rem;
+}
+
+/* Sección de acceso por roles */
+.quick-access-section {
+    padding: 5rem 2rem;
+    background: #f9fafc;
+}
+
+.access-cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 2rem;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.access-card {
+    background: white;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+.access-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.1);
+}
+
+.card-header {
+    padding: 1.8rem 1.8rem 1.2rem;
+    position: relative;
+    text-align: center;
+    border-bottom: 1px solid #eee;
+}
+
+.card-header i {
+    font-size: 2.5rem;
+    margin-bottom: 1rem;
+    display: block;
+}
+
+.card-header h3 {
+    font-size: 1.5rem;
+    margin: 0.5rem 0;
+    color: var(--text-dark);
+}
+
+.role-badge {
+    display: inline-block;
+    padding: 0.3rem 0.8rem;
+    border-radius: 50px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    margin-top: 0.5rem;
+}
+
+.admin-badge { background: rgba(54, 43, 128, 0.1); color: var(--primary-color); }
+.docente-badge { background: rgba(46, 125, 50, 0.1); color: #2e7d32; }
+.verificador-badge { background: rgba(21, 101, 192, 0.1); color: #1565c0; }
+
+.card-content {
+    padding: 1.8rem;
+    flex-grow: 1;
+}
+
+.card-content h4 {
+    font-size: 1.1rem;
+    margin-bottom: 1rem;
+    color: var(--text-dark);
+}
+
+.card-content ul {
+    list-style: none;
+    padding: 0;
+    margin: 0 0 1.5rem;
+}
+
+.card-content li {
+    padding: 0.5rem 0;
+    color: #555;
+    position: relative;
+    padding-left: 1.5rem;
+}
+
+.card-content li::before {
+    content: '•';
+    color: var(--secondary-color);
+    font-weight: bold;
+    position: absolute;
+    left: 0;
+}
+
+.card-footer {
+    padding: 0 1.8rem 1.8rem;
+    text-align: center;
+}
+
+.role-access-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.8rem 1.8rem;
+    border-radius: 8px;
+    font-weight: 600;
     text-decoration: none;
-    transition: 0.3s;
-    color: #fff;
-  }
-  
-  .btn-admin { background: #362B80; }
-  .btn-docente { background: #2d8cff; }
-  .btn-verificador { background: #2dbe60; }
-  
-  .role-card-link:hover { transform: scale(1.05); }
-  
+    transition: all 0.3s ease;
+    width: 100%;
+    border: none;
+    cursor: pointer;
+    font-size: 1rem;
+}
+
+.btn-admin { background-color: var(--primary-color); color: white; }
+.btn-docente { background-color: #2e7d32; color: white; }
+.btn-verificador { background-color: #1565c0; color: white; }
+
+.role-access-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+}
+
+/* Responsive */
+@media (max-width: 992px) {
+    .banner-container {
+        flex-direction: column;
+        text-align: center;
+    }
+    
+    .banner-content {
+        max-width: 100%;
+        text-align: center;
+        margin-bottom: 2rem;
+    }
+    
+    .banner-content p {
+        margin-left: auto;
+        margin-right: auto;
+    }
+    
+    .header-buttons {
+        justify-content: center;
+    }
+    
+    .process-step {
+        width: 100%;
+        margin-left: 0 !important;
+        margin-right: 0 !important;
+        text-align: left !important;
+        margin-bottom: 2rem;
+    }
+    
+    .process-step:nth-child(odd) .step-icon,
+    .process-step:nth-child(even) .step-icon {
+        left: -75px;
+        right: auto;
+    }
+    
+    .process-timeline::before {
+        left: 15px;
+    }
+}
+
+@media (max-width: 768px) {
+    .banner-content h1 {
+        font-size: 2rem;
+    }
+    
+    .section-header h2 {
+        font-size: 1.8rem;
+    }
+    
+    .feature-cards,
+    .access-cards {
+        grid-template-columns: 1fr;
+    }
+    
+    .process-step {
+        width: calc(100% - 60px);
+        margin-left: 60px !important;
+    }
+    
+    .process-step .step-icon {
+        left: -60px !important;
+        right: auto !important;
+        top: 20px;
+        transform: none;
+    }
+    
+    .process-timeline::before {
+        left: 30px;
+    }
+}
+
+@media (max-width: 576px) {
+    .welcome-banner,
+    .process-flow-section,
+    .quick-access-section {
+        padding: 3rem 1rem;
+    }
+    
+    .banner-content h1 {
+        font-size: 1.8rem;
+    }
+    
+    .header-buttons {
+        flex-direction: column;
+        gap: 1rem;
+    }
+    
+    .btn {
+        width: 100%;
+    }
+}

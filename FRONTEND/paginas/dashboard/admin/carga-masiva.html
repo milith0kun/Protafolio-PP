@@ -3,50 +3,83 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Carga Masiva | Portafolio Docente UNSAAC</title>
-    <meta name="description" content="Carga Masiva - Sistema de Portafolio Docente UNSAAC">
-    <meta name="keywords" content="carga masiva, portafolio, gestión, UNSAAC">
-    <meta name="author" content="UNSAAC">
+    <title>Sistema Inteligente de Carga - Portafolio Docente UNSAAC</title>
+    <meta name="description" content="Sistema Inteligente de Carga - Flujo unificado para la gestión de datos académicos">
     
-    <!-- CSS -->
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="../../../assets/imagenes/logo.png">
+    
+    <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;600;700&display=swap" rel="stylesheet">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css" rel="stylesheet">
-    <link href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css" rel="stylesheet">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/dropzone/5.9.3/min/dropzone.min.css" rel="stylesheet">
     
-    <!-- Estilos personalizados -->
-    <link rel="stylesheet" href="../../../assets/css/paginas/admin/body.css">
-    <link rel="stylesheet" href="../../../assets/css/paginas/admin/head.css">
-    <link rel="stylesheet" href="../../../assets/css/paginas/admin/footer.css">
-    <link rel="stylesheet" href="../../../assets/css/paginas/admin/dashboard.css">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Toastr CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
+    
+    <!-- SweetAlert2 CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+    
+    <!-- Dropzone CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/dropzone/5.9.3/min/dropzone.min.css">
+    
+    <!-- Custom CSS - Carga Masiva -->
+    <link rel="stylesheet" href="../../../assets/css/paginas/admin/carga-masiva/head.css">
+    <link rel="stylesheet" href="../../../assets/css/paginas/admin/carga-masiva/body.css">
+    <link rel="stylesheet" href="../../../assets/css/paginas/admin/carga-masiva/footer.css">
 </head>
+
 <body>
     <div class="wrapper">
         <!-- Sidebar -->
-        <nav id="sidebar">
+        <nav id="sidebar" class="sidebar">
             <div class="sidebar-header">
-                <h3>Portafolio Docente</h3>
-                <p class="user-role">Administrador</p>
+                <h3><i class="fas fa-graduation-cap"></i> UNSAAC</h3>
+                <p>Sistema de Portafolio</p>
             </div>
+
             <ul class="list-unstyled components">
                 <li>
-                    <a href="tablero.html"><i class="fas fa-tachometer-alt"></i> Tablero</a>
-                </li>
-                <li>
-                    <a href="usuarios.html"><i class="fas fa-users"></i> Usuarios</a>
-                </li>
-                <li>
-                    <a href="asignaturas.html"><i class="fas fa-book"></i> Asignaturas</a>
-                </li>
-                <li>
-                    <a href="ciclos.html"><i class="fas fa-calendar-alt"></i> Ciclos Académicos</a>
+                    <a href="tablero.html">
+                        <i class="fas fa-tachometer-alt"></i>
+                        <span class="menu-text">Tablero Principal</span>
+                    </a>
                 </li>
                 <li class="active">
                     <a href="carga-masiva.html">
                         <i class="fas fa-upload"></i>
-                        <span class="menu-text">Carga Masiva</span>
+                        <span class="menu-text">Sistema de Carga</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="verificar-datos.html">
+                        <i class="fas fa-search"></i>
+                        <span class="menu-text">Verificar Datos</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="usuarios.html">
+                        <i class="fas fa-users"></i>
+                        <span class="menu-text">Gestión de Usuarios</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="asignaturas.html">
+                        <i class="fas fa-book"></i>
+                        <span class="menu-text">Asignaturas</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="ciclos.html">
+                        <i class="fas fa-calendar-alt"></i>
+                        <span class="menu-text">Ciclos Académicos</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="portafolios.html">
+                        <i class="fas fa-folder-open"></i>
+                        <span class="menu-text">Portafolios</span>
                     </a>
                 </li>
                 <li>
@@ -57,18 +90,25 @@
                 </li>
             </ul>
 
-            <ul class="list-unstyled components sidebar-footer">
-                <li>
-                    <a href="#" id="cerrarSesion">
-                        <i class="fas fa-sign-out-alt"></i>
-                        <span class="menu-text">Cerrar Sesión</span>
-                    </a>
-                </li>
-            </ul>
+            <div class="sidebar-footer">
+                <div class="user-info">
+                    <div class="user-avatar">
+                        <i class="fas fa-user-circle"></i>
+                    </div>
+                    <div class="user-details">
+                        <span id="sidebar-username">Cargando...</span>
+                        <small id="sidebar-role">Administrador</small>
+                    </div>
+                </div>
+                <a href="#" id="cerrarSesion" class="btn btn-outline-light btn-sm">
+                    <i class="fas fa-sign-out-alt me-1"></i>Cerrar Sesión
+                </a>
+            </div>
         </nav>
 
         <!-- Page Content -->
-        <div id="content">
+        <div id="content" class="content">
+            <!-- Top Navigation -->
             <nav class="navbar navbar-expand-lg navbar-light bg-light">
                 <div class="container-fluid">
                     <button type="button" id="sidebarCollapse" class="btn btn-info">
@@ -85,215 +125,544 @@
             </nav>
 
             <div class="container-fluid">
+                <!-- Header Principal -->
                 <div class="row mb-4">
                     <div class="col-12">
-                        <h2>Carga Masiva de Datos</h2>
-                        <p>Utilice esta herramienta para cargar datos masivamente al sistema.</p>
+                        <div class="page-header">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div>
+                                    <h2><i class="fas fa-brain me-2"></i>Sistema Inteligente de Carga</h2>
+                                    <p class="lead mb-0">Flujo unificado: Carga → Verificación → Inicialización</p>
+                                </div>
+                                <div>
+                                    <button id="btnDescargarPlantillas" class="btn btn-outline-success me-2">
+                                        <i class="fas fa-download me-2"></i>Descargar Plantillas
+                                    </button>
+                                    <button id="btnLimpiarSistema" class="btn btn-outline-danger">
+                                        <i class="fas fa-broom me-2"></i>Limpiar y Empezar de Nuevo
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Indicador de proceso actual -->
+                        <div class="progress-indicator">
+                            <div class="progress" style="height: 8px;">
+                                <div id="procesoProgress" class="progress-bar bg-info" role="progressbar" style="width: 33%"></div>
+                            </div>
+                            <div class="progress-steps">
+                                <small class="text-muted"><i class="fas fa-upload"></i> Carga de Datos</small>
+                                <small class="text-muted"><i class="fas fa-check-circle"></i> Verificación</small>
+                                <small class="text-muted"><i class="fas fa-rocket"></i> Inicialización</small>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
+                <!-- Panel de Estado del Sistema -->
                 <div class="row mb-4">
-                    <div class="col-md-6">
-                        <div class="form-group">
-                            <label for="selectCiclo">Seleccione un Ciclo Académico:</label>
-                            <select class="form-control" id="selectCiclo">
-                                <option value="">Cargando ciclos...</option>
-                            </select>
-                            <small class="form-text text-muted">Requerido para carga de asignaturas y asignaciones.</small>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="row">
-                    <div class="col-md-6 mb-4">
-                        <div class="card">
-                            <div class="card-header">
-                                <h5 class="mb-0">Carga de Usuarios</h5>
-                            </div>
-                            <div class="card-body">
-                                <p>Cargue un archivo Excel con la lista de usuarios a crear en el sistema.</p>
-                                <div class="alert alert-info">
-                                    <i class="fas fa-info-circle"></i> El archivo debe contener las columnas: nombre, apellidos, email, dni, rol (administrador, docente, verificador).
-                                </div>
-                                <form class="dropzone" id="dropzoneUsuarios">
-                                    <div class="fallback">
-                                        <input name="file" type="file" />
-                                    </div>
-                                </form>
-                                <div class="mt-3">
-                                    <button id="btnDescargarPlantillaUsuarios" class="btn btn-outline-primary btn-sm">
-                                        <i class="fas fa-download"></i> Descargar Plantilla
-                                    </button>
-                                    <button id="btnProcesarUsuarios" class="btn btn-primary float-right">
-                                        <i class="fas fa-upload"></i> Procesar Archivo
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="col-md-6 mb-4">
-                        <div class="card">
-                            <div class="card-header">
-                                <h5 class="mb-0">Carga de Asignaturas</h5>
-                            </div>
-                            <div class="card-body">
-                                <p>Cargue un archivo Excel con la lista de asignaturas a crear en el sistema.</p>
-                                <div class="alert alert-info">
-                                    <i class="fas fa-info-circle"></i> El archivo debe contener las columnas: codigo, nombre, carrera, semestre, creditos, tipo (obligatorio, electivo).
-                                </div>
-                                <form class="dropzone" id="dropzoneAsignaturas">
-                                    <div class="fallback">
-                                        <input name="file" type="file" />
-                                    </div>
-                                </form>
-                                <div class="mt-3">
-                                    <button id="btnDescargarPlantillaAsignaturas" class="btn btn-outline-primary btn-sm">
-                                        <i class="fas fa-download"></i> Descargar Plantilla
-                                    </button>
-                                    <button id="btnProcesarAsignaturas" class="btn btn-primary float-right">
-                                        <i class="fas fa-upload"></i> Procesar Archivo
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="col-md-6 mb-4">
-                        <div class="card">
-                            <div class="card-header">
-                                <h5 class="mb-0">Carga de Asignaciones Docente-Asignatura</h5>
-                            </div>
-                            <div class="card-body">
-                                <p>Cargue un archivo Excel con las asignaciones de docentes a asignaturas.</p>
-                                <div class="alert alert-info">
-                                    <i class="fas fa-info-circle"></i> El archivo debe contener las columnas: codigo_asignatura, email_docente.
-                                </div>
-                                <form class="dropzone" id="dropzoneAsignaciones">
-                                    <div class="fallback">
-                                        <input name="file" type="file" />
-                                    </div>
-                                </form>
-                                <div class="mt-3">
-                                    <button id="btnDescargarPlantillaAsignaciones" class="btn btn-outline-primary btn-sm">
-                                        <i class="fas fa-download"></i> Descargar Plantilla
-                                    </button>
-                                    <button id="btnProcesarAsignaciones" class="btn btn-primary float-right">
-                                        <i class="fas fa-upload"></i> Procesar Archivo
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                
-                <!-- Sección de inicialización completa del sistema -->
-                <div class="row mt-4">
                     <div class="col-12">
-                        <div class="card">
+                        <div class="status-panel">
                             <div class="card-header bg-primary text-white">
-                                <h5 class="mb-0">Inicialización Completa del Sistema</h5>
+                                <h5 class="mb-0"><i class="fas fa-dashboard me-2"></i>Estado Actual del Sistema</h5>
                             </div>
                             <div class="card-body">
-                                <div class="alert alert-warning">
-                                    <i class="fas fa-exclamation-triangle"></i> <strong>Advertencia:</strong> Esta acción inicializará el sistema completo. Debe seleccionar exactamente 8 archivos Excel en el orden correcto.
-                                </div>
-                                
-                                <p>Los archivos requeridos son:</p>
-                                <ol>
-                                    <li>Ciclos académicos</li>
-                                    <li>Roles</li>
-                                    <li>Usuarios</li>
-                                    <li>Carreras</li>
-                                    <li>Asignaturas</li>
-                                    <li>Asignaciones docente-asignatura</li>
-                                    <li>Criterios de evaluación</li>
-                                    <li>Configuración del sistema</li>
-                                </ol>
-                                
-                                <div class="form-group">
-                                    <label for="archivosInicializacion">Seleccione los 8 archivos Excel:</label>
-                                    <input type="file" class="form-control-file" id="archivosInicializacion" multiple accept=".xlsx,.xls">
-                                    <small class="form-text text-muted">Seleccione exactamente 8 archivos en el orden indicado arriba.</small>
-                                </div>
-                                
-                                <div id="uploadProgress" class="progress mt-3" style="display: none;">
-                                    <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" style="width: 0%"></div>
-                                </div>
-                                <p class="progress-text mt-2" style="display: none;"></p>
-                                
-                                <div id="uploadLog" class="mt-3" style="display: none;">
-                                    <h6>Log de inicialización:</h6>
-                                    <div class="log-entries p-2 bg-light" style="max-height: 200px; overflow-y: auto; border: 1px solid #ddd;">
-                                        <!-- Los logs se cargarán dinámicamente -->
+                                <div id="estadoArchivos">
+                                    <!-- Se generará dinámicamente -->
+                                    <div class="text-center py-3">
+                                        <div class="spinner-border text-primary" role="status">
+                                            <span class="visually-hidden">Cargando estado...</span>
+                                        </div>
+                                        <p class="mt-2 text-muted">Verificando estado del sistema...</p>
                                     </div>
                                 </div>
                                 
-                                <div class="mt-3">
-                                    <button id="startUploadBtn" class="btn btn-danger" onclick="inicializarSistema()">
-                                        <i class="fas fa-cogs"></i> Inicializar Sistema
-                                    </button>
-                                </div>
+                                <!-- Contenedor para alertas de progresión -->
+                                <div id="alertaProgresion"></div>
                             </div>
                         </div>
                     </div>
                 </div>
-            </div>
-        </div>
-    </div>
 
-    <!-- Modal de Resultados -->
-    <div class="modal fade" id="modalResultados" tabindex="-1" role="dialog" aria-labelledby="modalResultadosLabel" aria-hidden="true">
-        <div class="modal-dialog modal-lg" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="modalResultadosLabel">Resultados de la Carga</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <div class="alert alert-success mb-3" id="alertaExito">
-                        <i class="fas fa-check-circle"></i> <span id="mensajeExito"></span>
+                <!-- Selector de Ciclo Académico -->
+                <div class="selector-section row mb-4">
+                    <div class="col-md-6">
+                        <div class="card border-info">
+                            <div class="card-body">
+                                <h6><i class="fas fa-calendar-alt me-2"></i>Ciclo Académico</h6>
+                                <select class="form-select" id="selectCiclo">
+                                    <option value="">🔄 Cargando ciclos académicos...</option>
+                                </select>
+                                <small class="form-text text-muted">
+                                    <i class="fas fa-info-circle"></i> Seleccione el ciclo para cargar o verificar datos
+                                </small>
+                            </div>
+                        </div>
                     </div>
-                    <div class="alert alert-danger mb-3" id="alertaError">
-                        <i class="fas fa-exclamation-triangle"></i> <span id="mensajeError"></span>
+                    <div class="col-md-6">
+                        <div class="card border-secondary">
+                            <div class="card-body">
+                                <h6><i class="fas fa-info-circle me-2"></i>Estado de Conexión</h6>
+                                <div id="estadoConexion">
+                                    <span class="badge bg-warning">🔄 Verificando...</span>
+                                </div>
+                                <small class="form-text text-muted">
+                                    El sistema guarda los datos por ciclo académico seleccionado
+                                </small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Pestañas Inteligentes -->
+                <ul class="nav nav-pills nav-fill mb-4" id="sistemaNav" role="tablist">
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link active fw-bold" id="carga-tab" data-bs-toggle="tab" data-bs-target="#carga-datos" type="button" role="tab">
+                            <i class="fas fa-file-upload me-2"></i>
+                            <div>Carga de Datos</div>
+                            <small>Individual o Masiva</small>
+                        </button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link fw-bold" id="verificacion-tab" data-bs-toggle="tab" data-bs-target="#verificacion-datos" type="button" role="tab">
+                            <i class="fas fa-check-circle me-2"></i>
+                            <div>Verificación</div>
+                            <small>Validación Automática</small>
+                        </button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link fw-bold" id="init-tab" data-bs-toggle="tab" data-bs-target="#inicializacion" type="button" role="tab">
+                            <i class="fas fa-rocket me-2"></i>
+                            <div>Inicialización</div>
+                            <small>Configuración Final</small>
+                        </button>
+                    </li>
+                </ul>
+                
+                <!-- Contenido de las Pestañas -->
+                <div class="tab-content" id="sistemaTabContent">
+                    
+                    <!-- ========================================== -->
+                    <!-- PESTAÑA 1: CARGA DE DATOS -->
+                    <!-- ========================================== -->
+                    <div class="tab-pane fade show active" id="carga-datos" role="tabpanel">
+                        
+                        <!-- Sub-pestañas para carga individual y masiva -->
+                        <ul class="nav nav-tabs mb-3" role="tablist">
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link active" id="single-tab" data-bs-toggle="tab" data-bs-target="#single-upload" type="button" role="tab">
+                                    <i class="fas fa-file me-2"></i>Carga Individual
+                                </button>
+                            </li>
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link" id="bulk-tab" data-bs-toggle="tab" data-bs-target="#bulk-upload" type="button" role="tab">
+                                    <i class="fas fa-files me-2"></i>Carga Masiva
+                                </button>
+                            </li>
+                        </ul>
+                        
+                        <div class="tab-content">
+                            <!-- Carga Individual -->
+                            <div class="tab-pane fade show active" id="single-upload" role="tabpanel">
+                                <div class="content-card">
+                                    <div class="card-header bg-gradient-primary text-white">
+                                        <h5 class="mb-0"><i class="fas fa-file-upload me-2"></i>Carga Individual</h5>
+                                        <small>Cargar archivos uno por uno con control detallado</small>
+                                    </div>
+                                    <div class="card-body">
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <!-- Tipo de archivo -->
+                                                <div class="mb-3">
+                                                    <label for="fileType" class="form-label fw-bold">
+                                                        <i class="fas fa-list me-2"></i>Tipo de Archivo
+                                                    </label>
+                                                    <select class="form-select form-select-lg" id="fileType">
+                                                        <option value="">📁 Seleccione el tipo de archivo...</option>
+                                                        <option value="usuarios">👥 Usuarios del Sistema</option>
+                                                        <option value="carreras">🎓 Carreras Académicas</option>
+                                                        <option value="asignaturas">📚 Asignaturas</option>
+                                                        <option value="carga_academica">📋 Carga Académica</option>
+                                                        <option value="verificaciones">✅ Verificaciones</option>
+                                                        <option value="codigos_institucionales">🏛️ Códigos Institucionales</option>
+                                                    </select>
+                                                </div>
+                                                
+                                                <!-- Área de drag & drop -->
+                                                <div class="drag-drop-area" id="dragDropSingle">
+                                                    <div class="drag-drop-content">
+                                                        <i class="fas fa-cloud-upload-alt fa-4x text-muted mb-3"></i>
+                                                        <h6>Arrastre el archivo aquí</h6>
+                                                        <p class="text-muted mb-3">o haga clic para seleccionar</p>
+                                                        <label for="singleFileInput" class="btn-file-select">
+                                                            <i class="fas fa-folder-open me-2"></i>Seleccionar Archivo
+                                                        </label>
+                                                        <input class="d-none" type="file" id="singleFileInput" accept=".xlsx, .xls, .csv">
+                                                        <div class="mt-3">
+                                                            <small class="text-muted">
+                                                                <i class="fas fa-info-circle"></i>
+                                                                Formatos: .xlsx, .xls, .csv | Máximo: 10MB
+                                                            </small>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                
+                                                <!-- Información del archivo -->
+                                                <div id="fileInfoSingle" class="mt-3" style="display: none;">
+                                                    <!-- Se generará dinámicamente -->
+                                                </div>
+                                                
+                                                <!-- CARGA AUTOMÁTICA: El archivo se carga automáticamente al seleccionar -->
+                                            </div>
+                                            
+                                            <div class="col-md-6">
+                                                <!-- Progreso -->
+                                                <div id="uploadProgressSingle" class="progress-container" style="display: none;">
+                                                    <div class="mb-2">
+                                                        <strong>Progreso de Carga</strong>
+                                                    </div>
+                                                    <div class="progress mb-2" style="height: 25px;">
+                                                        <div class="progress-bar progress-bar-striped progress-bar-animated bg-success" role="progressbar" style="width: 0%">
+                                                            <span class="progress-text">0%</span>
+                                                        </div>
+                                                    </div>
+                                                    <div id="currentFileSingle" class="text-center">
+                                                        <small>Preparando...</small>
+                                                    </div>
+                                                </div>
+                                                
+                                                <!-- Log -->
+                                                <div id="uploadLogSingle" class="upload-log">
+                                                    <div class="d-flex justify-content-between align-items-center mb-2">
+                                                        <h6 class="mb-0"><i class="fas fa-list-ul me-2"></i>Log de Proceso</h6>
+                                                        <button id="clearLogSingleBtn" class="btn btn-sm btn-outline-danger">
+                                                            <i class="fas fa-trash-alt"></i>
+                                                        </button>
+                                                    </div>
+                                                    <div class="log-entries">
+                                                        <div class="text-muted text-center">
+                                                            <i class="fas fa-info-circle me-2"></i>Listo para procesar archivos...
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Carga Masiva -->
+                            <div class="tab-pane fade" id="bulk-upload" role="tabpanel">
+                                <div class="content-card">
+                                    <div class="card-header bg-gradient-info text-white">
+                                        <h5 class="mb-0"><i class="fas fa-files me-2"></i>Carga Masiva</h5>
+                                        <small>Cargar múltiples archivos simultáneamente</small>
+                                    </div>
+                                    <div class="card-body">
+                                        <div class="row">
+                                            <div class="col-md-8">
+                                                                                <!-- Instrucciones -->
+                                <div class="alert-special alert-info mb-4">
+                                                    <h6><i class="fas fa-lightbulb me-2"></i>Carga Inteligente</h6>
+                                                    <div class="row">
+                                                        <div class="col-md-6">
+                                                            <h6 class="text-info">✨ Características:</h6>
+                                                            <ul class="list-unstyled">
+                                                                <li><i class="fas fa-check text-success"></i> Detección automática de tipos</li>
+                                                                <li><i class="fas fa-check text-success"></i> Prevención de duplicados</li>
+                                                                <li><i class="fas fa-check text-success"></i> Validación de integridad</li>
+                                                                <li><i class="fas fa-check text-success"></i> Progreso en tiempo real</li>
+                                                            </ul>
+                                                        </div>
+                                                        <div class="col-md-6">
+                                                            <h6 class="text-info">📋 Archivos Esperados:</h6>
+                                                            <ul class="list-unstyled">
+                                                                <li><i class="fas fa-file-excel text-success"></i> 01_usuarios_masivos.xlsx</li>
+                                                                <li><i class="fas fa-file-excel text-success"></i> 02_carreras_completas.xlsx</li>
+                                                                <li><i class="fas fa-file-excel text-success"></i> 03_asignaturas_completas.xlsx</li>
+                                                                <li><i class="fas fa-file-excel text-info"></i> 04_carga_academica.xlsx (opcional)</li>
+                                                                <li><i class="fas fa-file-excel text-info"></i> 05_verificaciones.xlsx (opcional)</li>
+                                                                <li><i class="fas fa-file-excel text-info"></i> 06_codigos_institucionales.xlsx (opcional)</li>
+                                                            </ul>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                
+                                                <!-- Área de drag & drop masiva -->
+                                                <div class="drag-drop-area-bulk" id="dragDropBulk">
+                                                    <div class="drag-drop-content">
+                                                        <i class="fas fa-file-upload fa-4x text-muted mb-3"></i>
+                                                        <h5>Arrastre múltiples archivos aquí</h5>
+                                                        <p class="text-muted mb-3">El sistema detectará automáticamente los tipos</p>
+                                                        <label for="bulkFileInput" class="btn-file-select">
+                                                            <i class="fas fa-folder-open me-2"></i>Seleccionar Archivos
+                                                        </label>
+                                                        <input class="d-none" type="file" id="bulkFileInput" multiple accept=".xlsx, .xls, .csv">
+                                                        <div class="mt-3">
+                                                            <small class="text-muted">
+                                                                <i class="fas fa-info-circle"></i>
+                                                                Seleccione todos los archivos a la vez para procesamiento optimizado
+                                                            </small>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                
+                                                <!-- Lista de archivos seleccionados -->
+                                                <div id="fileListBulk" class="file-list" style="display: none;">
+                                                    <h6><i class="fas fa-list me-2"></i>Archivos Detectados:</h6>
+                                                    <div id="fileItemsBulk" class="list-group">
+                                                        <!-- Se generará dinámicamente -->
+                                                    </div>
+                                                </div>
+                                                
+                                                <!-- CARGA AUTOMÁTICA: Los archivos se procesan automáticamente al detectar tipos -->
+                                                <div class="alert-special alert-success mt-4" style="display: none;" id="autoUploadInfo">
+                                                    <div class="d-flex align-items-center">
+                                                        <i class="fas fa-magic fa-2x text-success me-3"></i>
+                                                        <div>
+                                                            <h6 class="mb-1">🚀 Carga Automática Activada</h6>
+                                                            <small>Los archivos se procesarán automáticamente cuando estén listos</small>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            
+                                            <div class="col-md-4">
+                                                <!-- Progreso masivo -->
+                                                <div id="uploadProgressBulk" class="progress-container" style="display: none;">
+                                                    <div class="mb-2">
+                                                        <strong>Progreso General</strong>
+                                                        <span id="progressCountBulk" class="float-end">0/0</span>
+                                                    </div>
+                                                    <div class="progress mb-3" style="height: 25px;">
+                                                        <div class="progress-bar progress-bar-striped progress-bar-animated bg-info" role="progressbar" style="width: 0%">
+                                                            <span class="progress-text">0%</span>
+                                                        </div>
+                                                    </div>
+                                                    <div id="currentFileBulk" class="text-center mb-3">
+                                                        <small>Preparando...</small>
+                                                    </div>
+                                                </div>
+                                                
+                                                <!-- Log masivo -->
+                                                <div id="uploadLogBulk" class="upload-log">
+                                                    <div class="d-flex justify-content-between align-items-center mb-2">
+                                                        <h6 class="mb-0"><i class="fas fa-terminal me-2"></i>Log Masivo</h6>
+                                                        <button id="clearLogBulkBtn" class="btn btn-sm btn-outline-danger">
+                                                            <i class="fas fa-trash-alt"></i>
+                                                        </button>
+                                                    </div>
+                                                    <div class="log-entries">
+                                                        <div class="text-muted text-center">
+                                                            <i class="fas fa-info-circle me-2"></i>Sistema listo para carga masiva...
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                     
-                    <div id="contenedorDetalles">
-                        <h6>Detalles:</h6>
-                        <div class="table-responsive">
-                            <table class="table table-sm table-bordered" id="tablaResultados">
-                                <thead>
-                                    <tr>
-                                        <th>Fila</th>
-                                        <th>Estado</th>
-                                        <th>Mensaje</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <!-- Los datos se cargarán dinámicamente -->
-                                </tbody>
-                            </table>
+                    <!-- ========================================== -->
+                    <!-- PESTAÑA 2: VERIFICACIÓN AUTOMÁTICA -->
+                    <!-- ========================================== -->
+                    <div class="tab-pane fade" id="verificacion-datos" role="tabpanel">
+                        <div class="content-card">
+                            <div class="card-header bg-gradient-success text-white">
+                                <h5 class="mb-0"><i class="fas fa-check-circle me-2"></i>Verificación Automática</h5>
+                                <small>Validación de integridad y consistencia de datos</small>
+                            </div>
+                            <div class="card-body">
+                                <div class="alert-special alert-info">
+                                    <h6><i class="fas fa-info-circle me-2"></i>Verificación Inteligente</h6>
+                                    <p>Esta fase se activa automáticamente cuando se han cargado los archivos requeridos. El sistema verificará:</p>
+                                    <ul class="mb-0">
+                                        <li>✅ Integridad de los datos cargados</li>
+                                        <li>✅ Consistencia entre tablas relacionadas</li>
+                                        <li>✅ Validación de formatos y tipos</li>
+                                        <li>✅ Detección de duplicados y conflictos</li>
+                                    </ul>
+                                </div>
+                                
+                                <div id="verificacionContent">
+                                    <div class="text-center py-5">
+                                        <i class="fas fa-clock fa-3x text-muted mb-3"></i>
+                                        <h5>Esperando Datos para Verificar</h5>
+                                        <p class="text-muted">Complete la carga de archivos requeridos para proceder con la verificación</p>
+                                    </div>
+                                </div>
+                                
+                                <!-- Resultados de verificación -->
+                                <div id="resultadosVerificacion" style="display: none;">
+                                    <div id="contenidoResultados">
+                                        <!-- Se generará dinámicamente -->
+                                    </div>
+                                </div>
+                                
+                                <!-- Log de verificación -->
+                                <div id="verificacionLog" class="upload-log mt-3">
+                                    <div class="d-flex justify-content-between align-items-center mb-2">
+                                        <h6 class="mb-0"><i class="fas fa-search me-2"></i>Log de Verificación</h6>
+                                        <button id="clearVerificacionLogBtn" class="btn btn-sm btn-outline-danger">
+                                            <i class="fas fa-trash-alt"></i>
+                                        </button>
+                                    </div>
+                                    <div class="log-entries">
+                                        <div class="text-muted text-center">
+                                            <i class="fas fa-info-circle me-2"></i>Listo para verificar datos...
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                    
+                    <!-- ========================================== -->
+                    <!-- PESTAÑA 3: INICIALIZACIÓN DEL SISTEMA -->
+                    <!-- ========================================== -->
+                    <div class="tab-pane fade" id="inicializacion" role="tabpanel">
+                        <div class="content-card">
+                            <div class="card-header bg-gradient-warning text-dark">
+                                <h5 class="mb-0"><i class="fas fa-rocket me-2"></i>Inicialización del Sistema</h5>
+                                <small>Configuración final y puesta en marcha</small>
+                            </div>
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-md-8">
+                                        <!-- Información de inicialización -->
+                                        <div class="alert-special alert-warning">
+                                            <h6><i class="fas fa-exclamation-triangle me-2"></i>⚠️ Proceso de Inicialización</h6>
+                                            <p class="mb-3">Esta fase configura el sistema con los datos cargados y verificados. Es un proceso <strong>automático</strong> que:</p>
+                                            
+                                            <div class="row">
+                                                <div class="col-md-6">
+                                                    <h6 class="text-warning">🔧 Configuraciones:</h6>
+                                                    <ul class="list-unstyled">
+                                                        <li><i class="fas fa-cog text-info"></i> Estructura de base de datos</li>
+                                                        <li><i class="fas fa-link text-info"></i> Relaciones entre entidades</li>
+                                                        <li><i class="fas fa-key text-info"></i> Índices y constraints</li>
+                                                        <li><i class="fas fa-shield-alt text-info"></i> Permisos y roles</li>
+                                                    </ul>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <h6 class="text-warning">⚡ Validaciones Finales:</h6>
+                                                    <ul class="list-unstyled">
+                                                        <li><i class="fas fa-check text-success"></i> Integridad referencial</li>
+                                                        <li><i class="fas fa-check text-success"></i> Consistencia de datos</li>
+                                                        <li><i class="fas fa-check text-success"></i> Configuración de ciclos</li>
+                                                        <li><i class="fas fa-check text-success"></i> Estados del sistema</li>
+                                                    </ul>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        
+                                        <!-- Estado de inicialización -->
+                                        <div id="inicializacionStatus">
+                                            <div class="text-center py-5">
+                                                <i class="fas fa-hourglass-half fa-3x text-muted mb-3"></i>
+                                                <h5>Esperando Verificación</h5>
+                                                <p class="text-muted">La inicialización comenzará automáticamente una vez que se complete la verificación de datos</p>
+                                            </div>
+                                        </div>
+                                        
+                                        <!-- Estadísticas del sistema -->
+                                        <div id="systemStats" class="mt-4" style="display: none;">
+                                            <!-- Se generará dinámicamente -->
+                                        </div>
+                                        
+                                        <!-- Progreso de inicialización -->
+                                        <div id="initProgress" class="progress-container" style="display: none;">
+                                            <div class="mb-3">
+                                                <strong>Progreso de Inicialización</strong>
+                                                <span id="initStepCount" class="float-end">0/6</span>
+                                            </div>
+                                            <div class="progress mb-3" style="height: 30px;">
+                                                <div class="progress-bar progress-bar-striped progress-bar-animated bg-warning" role="progressbar" style="width: 0%">
+                                                    <span class="progress-text fw-bold">0%</span>
+                                                </div>
+                                            </div>
+                                            <div id="currentStepInit" class="text-center mb-3">
+                                                <small>Preparando inicialización...</small>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="col-md-4">
+                                        <!-- Log de inicialización -->
+                                        <div id="initLog" class="upload-log">
+                                            <div class="d-flex justify-content-between align-items-center mb-2">
+                                                <h6 class="mb-0"><i class="fas fa-rocket me-2"></i>Log de Inicialización</h6>
+                                                <button id="clearInitLogBtn" class="btn btn-sm btn-outline-danger">
+                                                    <i class="fas fa-trash-alt"></i>
+                                                </button>
+                                            </div>
+                                            <div class="log-entries">
+                                                <div class="text-muted text-center">
+                                                    <i class="fas fa-info-circle me-2"></i>Listo para inicialización...
+                                                </div>
+                                            </div>
+                                        </div>
+                                        
+                                        <!-- Acciones post-inicialización -->
+                                        <div id="postInitActions" class="post-init-actions" style="display: none;">
+                                            <div class="card border-success">
+                                                <div class="card-header bg-success text-white">
+                                                    <h6 class="mb-0"><i class="fas fa-check-circle me-2"></i>¡Inicialización Completada!</h6>
+                                                </div>
+                                                <div class="card-body">
+                                                    <p class="card-text">El sistema ha sido inicializado exitosamente. ¿Qué desea hacer ahora?</p>
+                                                    <div class="d-grid gap-2">
+                                                        <button id="btn-verificar-datos" class="btn btn-success">
+                                                            <i class="fas fa-chart-bar me-2"></i>Verificar Datos Cargados
+                                                        </button>
+                                                        <button id="btn-continuar-tablero" class="btn btn-primary">
+                                                            <i class="fas fa-tachometer-alt me-2"></i>Ir al Tablero Principal
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 
     <!-- Scripts -->
-    <script src="../../../assets/js/nucleo/configuracion.js"></script>
-    <script src="../../../assets/js/nucleo.js"></script>
-    <script src="../../../assets/js/autenticacion.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/dropzone/5.9.3/min/dropzone.min.js"></script>
-    <script src="../../../assets/js/paginas/dashboard/admin/carga-masiva.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    
+    <!-- Core Scripts - Sistema Núcleo -->
+    <script src="../../../assets/js/nucleo/configuracion.js"></script>
+    <script src="../../../assets/js/nucleo/auth.js"></script>
+    <script src="../../../assets/js/nucleo/gestion-sesiones.js"></script>
+    <script src="../../../assets/js/nucleo/navegacion.js"></script>
+    <script src="../../../assets/js/nucleo/gestion-usuario-ui.js"></script>
+
+    <!-- Admin Auth System -->
+    <script src="../../../assets/js/paginas/dashboard/admin/admin-auth.js"></script>
+
+    <!-- Page Script -->
+    <script src="../../../assets/js/paginas/dashboard/admin/carga-masiva/index.js"></script>
+
+    <!-- Inicialización Admin -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            AdminAuth.inicializarAutenticacionAdmin();
+        });
+    </script>
+
+
 </body>
 </html>

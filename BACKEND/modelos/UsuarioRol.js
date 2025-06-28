@@ -47,6 +47,14 @@ const UsuarioRol = sequelize.define('UsuarioRol', {
   observaciones: {
     type: DataTypes.TEXT,
     allowNull: true
+  },
+  creado_en: {
+    type: DataTypes.DATE,
+    defaultValue: DataTypes.NOW
+  },
+  actualizado_en: {
+    type: DataTypes.DATE,
+    defaultValue: DataTypes.NOW
   }
 }, {
   tableName: 'usuarios_roles',

@@ -121,9 +121,13 @@
     gap: 1rem;
 }
 
-.logo-img img {
+.logo-img {
+    width: 60px;
     height: 60px;
-    max-width: 100%;
+    background-image: url("../../../imagenes/logo-unsaac2.png");
+    background-size: contain;
+    background-position: center;
+    background-repeat: no-repeat;
 }
 
 .logo-text-container {

@@ -11,6 +11,10 @@ const Semestre = sequelize.define('Semestre', {
     primaryKey: true,
     autoIncrement: true
   },
+  nombre: {
+    type: DataTypes.STRING(50),
+    allowNull: false
+  },
   ciclo_id: {
     type: DataTypes.INTEGER,
     allowNull: false,
@@ -19,58 +23,32 @@ const Semestre = sequelize.define('Semestre', {
       key: 'id'
     }
   },
-  nombre: {
-    type: DataTypes.STRING(100),
-    allowNull: false
-  },
-  codigo: {
-    type: DataTypes.STRING(20),
-    allowNull: false
-  },
-  fecha_inicio: {
-    type: DataTypes.DATEONLY,
-    allowNull: false
-  },
-  fecha_fin: {
-    type: DataTypes.DATEONLY,
-    allowNull: false
-  },
   activo: {
     type: DataTypes.BOOLEAN,
     defaultValue: true
   },
-  creado_por: {
-    type: DataTypes.INTEGER,
-    allowNull: false,
-    references: {
-      model: 'usuarios',
-      key: 'id'
-    }
+  fecha_inicio: {
+    type: DataTypes.DATEONLY,
+    allowNull: true
   },
-  creado_en: {
-    type: DataTypes.DATE,
-    defaultValue: DataTypes.NOW
-  },
-  actualizado_en: {
-    type: DataTypes.DATE,
-    defaultValue: DataTypes.NOW
+  fecha_fin: {
+    type: DataTypes.DATEONLY,
+    allowNull: true
   }
 }, {
   tableName: 'semestres',
-  timestamps: false,
+  timestamps: true,
+  createdAt: 'creado_en',
+  updatedAt: false,
   indexes: [
     {
       unique: true,
-      fields: ['ciclo_id', 'codigo'],
-      name: 'unique_ciclo_codigo'
+      fields: ['nombre', 'ciclo_id'],
+      name: 'unique_nombre_ciclo'
     },
     {
-      fields: ['ciclo_id'],
-      name: 'idx_ciclo_id'
-    },
-    {
-      fields: ['activo'],
-      name: 'idx_activo'
+      fields: ['ciclo_id', 'activo'],
+      name: 'idx_ciclo_activo'
     }
   ]
 });

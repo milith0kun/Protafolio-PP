@@ -231,7 +231,7 @@ function generarReporteUsuarios() {
                 { title: 'Nombre', data: 'nombre' },
                 { title: 'Apellidos', data: 'apellidos' },
                 { title: 'Email', data: 'email' },
-                { title: 'DNI', data: 'dni' },
+
                 { title: 'Rol', data: 'rol' },
                 { 
                     title: 'Fecha Registro', 

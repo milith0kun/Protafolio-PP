@@ -1,5 +1,5 @@
 :root {
-    --primary-color: #362B80;     /* Azul oscuro */
+    --primary-color: linear-gradient(135deg, #3A4B8C 0%, #2C3A6B 100%);     /* Azul oscuro */
     --secondary-color: #F0C63B;   /* Amarillo dorado */
     --background-color: #f4f6f9;  /* Gris claro para fondos */
     --text-dark: #1f2937;         /* Gris oscuro para texto */
@@ -121,11 +121,11 @@
     gap: 1rem;
 }
 
-.logo-img img {
+.logo-img {
+    width: 60px;
     height: 60px;
-    max-width: 100%;
-    background-color: url("../../../imagenes/logo-unsaac2.png");
-    background-size: cover;
+    background-image: url("../../../imagenes/logo-unsaac2.png");
+    background-size: contain;
     background-position: center;
     background-repeat: no-repeat;
 }

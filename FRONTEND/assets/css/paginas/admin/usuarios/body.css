@@ -1,0 +1,803 @@
+/* ========================================
+   CONTENIDO PRINCIPAL - GESTIÓN DE USUARIOS
+   ======================================== */
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  font-family: var(--font-family);
+  background: var(--light-gray);
+  color: var(--text-dark);
+  line-height: 1.6;
+  margin: 0;
+  padding: 0;
+}
+
+.container-fluid {
+  padding: 1.5rem;
+}
+
+/* ========================================
+   ALERTAS Y NOTIFICACIONES
+   ======================================== */
+#notificacionesContainer {
+  margin-bottom: 1rem;
+}
+
+.alert {
+  border: none;
+  border-radius: var(--border-radius-md);
+  box-shadow: var(--shadow-sm);
+  padding: 1rem 1.25rem;
+  margin-bottom: 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  transition: all var(--transition-normal);
+}
+
+.alert-danger {
+  background: linear-gradient(135deg, #f8d7da 0%, #f5c6cb 100%);
+  border-left: 4px solid #dc3545;
+  color: #721c24;
+}
+
+.alert-success {
+  background: linear-gradient(135deg, #d4edda 0%, #c3e6cb 100%);
+  border-left: 4px solid #28a745;
+  color: #155724;
+}
+
+.alert .btn-close {
+  background: none;
+  border: none;
+  opacity: 0.7;
+  transition: opacity var(--transition-normal);
+}
+
+.alert .btn-close:hover {
+  opacity: 1;
+}
+
+/* ========================================
+   HEADER DE PÁGINA
+   ======================================== */
+.page-header {
+  margin-bottom: 2rem;
+}
+
+.page-header h2 {
+  color: var(--text-dark);
+  font-size: 2rem;
+  font-weight: 700;
+  margin: 0 0 0.5rem 0;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.page-header h2::before {
+  content: '';
+  width: 4px;
+  height: 2rem;
+  background: var(--usuarios-gradient);
+  border-radius: 2px;
+}
+
+.page-header p {
+  color: var(--text-muted);
+  font-size: 1.1rem;
+  margin: 0;
+}
+
+/* Botón Nuevo Usuario */
+#btnNuevoUsuario {
+  background: var(--usuarios-gradient);
+  border: none;
+  color: white;
+  padding: 0.75rem 1.5rem;
+  border-radius: var(--border-radius-md);
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  transition: all var(--transition-normal);
+  box-shadow: var(--shadow-sm);
+}
+
+#btnNuevoUsuario:hover {
+  background: var(--usuarios-dark);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+  color: white;
+}
+
+#btnNuevoUsuario i {
+  font-size: 1rem;
+}
+
+/* ========================================
+   CARDS Y CONTENEDORES
+   ======================================== */
+.card {
+  background: white;
+  border-radius: var(--border-radius-lg);
+  box-shadow: var(--shadow-sm);
+  border: 1px solid var(--border-color);
+  margin-bottom: 2rem;
+  overflow: hidden;
+  transition: all var(--transition-normal);
+}
+
+.card:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+}
+
+.card-header {
+  background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+  border-bottom: 1px solid var(--border-color);
+  padding: 1rem 1.5rem;
+}
+
+.card-header h5 {
+  margin: 0;
+  color: var(--text-dark);
+  font-weight: 600;
+  font-size: 1.1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.card-header h5::before {
+  content: '';
+  width: 3px;
+  height: 1.2rem;
+  background: var(--usuarios-gradient);
+  border-radius: 2px;
+}
+
+.card-body {
+  padding: 1.5rem;
+}
+
+/* ========================================
+   FORMULARIOS Y FILTROS
+   ======================================== */
+.form-group {
+  margin-bottom: 1.25rem;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-weight: 600;
+  color: var(--text-dark);
+  font-size: 0.9rem;
+}
+
+.form-control {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  border: 1px solid var(--border-color);
+  border-radius: var(--border-radius-md);
+  font-size: 0.95rem;
+  transition: all var(--transition-normal);
+  background: white;
+}
+
+.form-control:focus {
+  outline: none;
+  border-color: var(--usuarios-gradient);
+  box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.15);
+}
+
+.form-control::placeholder {
+  color: var(--text-muted);
+  opacity: 0.7;
+}
+
+/* Botones de filtros */
+#btnAplicarFiltros,
+#btnLimpiarFiltros {
+  padding: 0.75rem 1.5rem;
+  border-radius: var(--border-radius-md);
+  font-weight: 500;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  transition: all var(--transition-normal);
+  border: none;
+  margin-right: 0.5rem;
+}
+
+#btnAplicarFiltros {
+  background: linear-gradient(135deg, #17a2b8 0%, #138496 100%);
+  color: white;
+}
+
+#btnAplicarFiltros:hover {
+  background: linear-gradient(135deg, #138496 0%, #0c5460 100%);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+}
+
+#btnLimpiarFiltros {
+  background: linear-gradient(135deg, #6c757d 0%, #495057 100%);
+  color: white;
+}
+
+#btnLimpiarFiltros:hover {
+  background: linear-gradient(135deg, #495057 0%, #343a40 100%);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+}
+
+/* ========================================
+   TABLA DE USUARIOS
+   ======================================== */
+.table-responsive {
+  border-radius: var(--border-radius-md);
+  overflow: hidden;
+  box-shadow: var(--shadow-sm);
+}
+
+#tablaUsuarios {
+  margin: 0;
+  background: white;
+}
+
+#tablaUsuarios thead th {
+  background: var(--usuarios-gradient);
+  color: white;
+  font-weight: 600;
+  border: none;
+  padding: 1rem 0.75rem;
+  text-align: center;
+  vertical-align: middle;
+  font-size: 0.9rem;
+  letter-spacing: 0.5px;
+}
+
+#tablaUsuarios tbody td {
+  padding: 0.875rem 0.75rem;
+  vertical-align: middle;
+  border-bottom: 1px solid #f8f9fa;
+  font-size: 0.9rem;
+}
+
+#tablaUsuarios tbody tr:hover {
+  background: var(--usuarios-light);
+  transition: background-color var(--transition-fast);
+}
+
+/* Badges en la tabla */
+.badge {
+  padding: 0.4rem 0.75rem;
+  border-radius: var(--border-radius-md);
+  font-size: 0.8rem;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-right: 0.25rem;
+  margin-bottom: 0.25rem;
+  display: inline-block;
+}
+
+.badge-primary {
+  background: linear-gradient(135deg, #007bff 0%, #0056b3 100%);
+  color: white;
+}
+
+.badge-danger {
+  background: linear-gradient(135deg, #dc3545 0%, #c82333 100%);
+  color: white;
+}
+
+.badge-info {
+  background: linear-gradient(135deg, #17a2b8 0%, #138496 100%);
+  color: white;
+}
+
+.badge-success {
+  background: linear-gradient(135deg, #28a745 0%, #1e7e34 100%);
+  color: white;
+}
+
+.badge-secondary {
+  background: linear-gradient(135deg, #6c757d 0%, #495057 100%);
+  color: white;
+}
+
+/* Botones de acción en tabla */
+.btn-sm {
+  padding: 0.375rem 0.75rem;
+  font-size: 0.8rem;
+  border-radius: var(--border-radius-sm);
+  margin-right: 0.25rem;
+  transition: all var(--transition-normal);
+}
+
+.btn-editar {
+  background: linear-gradient(135deg, #17a2b8 0%, #138496 100%);
+  border: none;
+  color: white;
+}
+
+.btn-editar:hover {
+  background: linear-gradient(135deg, #138496 0%, #0c5460 100%);
+  transform: translateY(-1px);
+  color: white;
+}
+
+.btn-eliminar {
+  background: linear-gradient(135deg, #dc3545 0%, #c82333 100%);
+  border: none;
+  color: white;
+}
+
+.btn-eliminar:hover {
+  background: linear-gradient(135deg, #c82333 0%, #a71e2a 100%);
+  transform: translateY(-1px);
+  color: white;
+}
+
+.btn-asignar-verificador {
+  background: linear-gradient(135deg, #007bff 0%, #0056b3 100%);
+  border: none;
+  color: white;
+}
+
+.btn-asignar-verificador:hover {
+  background: linear-gradient(135deg, #0056b3 0%, #004085 100%);
+  transform: translateY(-1px);
+  color: white;
+}
+
+/* ========================================
+   MODALES
+   ======================================== */
+.modal-dialog {
+  margin: 1.75rem auto;
+}
+
+.modal-content {
+  border: none;
+  border-radius: var(--border-radius-lg);
+  box-shadow: var(--shadow-lg);
+  overflow: hidden;
+}
+
+.modal-header {
+  background: var(--usuarios-gradient);
+  color: white;
+  padding: 1.25rem 1.5rem;
+  border-bottom: none;
+}
+
+.modal-header .modal-title {
+  font-weight: 600;
+  font-size: 1.2rem;
+  margin: 0;
+}
+
+.modal-header .close {
+  color: white;
+  opacity: 0.8;
+  font-size: 1.5rem;
+  border: none;
+  background: none;
+  padding: 0;
+  margin: 0;
+  line-height: 1;
+}
+
+.modal-header .close:hover {
+  opacity: 1;
+  color: white;
+}
+
+.modal-body {
+  padding: 1.5rem;
+  background: white;
+}
+
+.modal-footer {
+  background: #f8f9fa;
+  border-top: 1px solid var(--border-color);
+  padding: 1rem 1.5rem;
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.75rem;
+}
+
+/* Botones del modal */
+.modal-footer .btn {
+  padding: 0.75rem 1.5rem;
+  border-radius: var(--border-radius-md);
+  font-weight: 500;
+  transition: all var(--transition-normal);
+  border: none;
+}
+
+.modal-footer .btn-secondary {
+  background: linear-gradient(135deg, #6c757d 0%, #495057 100%);
+  color: white;
+}
+
+.modal-footer .btn-secondary:hover {
+  background: linear-gradient(135deg, #495057 0%, #343a40 100%);
+  transform: translateY(-1px);
+  color: white;
+}
+
+.modal-footer .btn-primary {
+  background: var(--usuarios-gradient);
+  color: white;
+}
+
+.modal-footer .btn-primary:hover {
+  background: var(--usuarios-dark);
+  transform: translateY(-1px);
+  color: white;
+}
+
+/* ========================================
+   FORMULARIO DEL MODAL
+   ======================================== */
+.modal-body .form-group label {
+  font-weight: 600;
+  color: var(--text-dark);
+}
+
+.modal-body .form-group label .text-danger {
+  color: #dc3545;
+}
+
+.modal-body .form-control {
+  border: 1px solid var(--border-color);
+  border-radius: var(--border-radius-md);
+  padding: 0.75rem 1rem;
+}
+
+.modal-body .form-control:focus {
+  border-color: var(--usuarios-gradient);
+  box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.15);
+}
+
+.modal-body .form-text {
+  color: var(--text-muted);
+  font-size: 0.85rem;
+  margin-top: 0.25rem;
+}
+
+/* Checkboxes personalizados */
+.custom-control {
+  position: relative;
+  display: block;
+  min-height: 1.5rem;
+  padding-left: 1.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.custom-control-input {
+  position: absolute;
+  left: 0;
+  z-index: -1;
+  width: 1rem;
+  height: 1.25rem;
+  opacity: 0;
+}
+
+.custom-control-label {
+  position: relative;
+  margin-bottom: 0;
+  vertical-align: top;
+  font-weight: 500;
+  color: var(--text-dark);
+}
+
+.custom-control-label::before {
+  position: absolute;
+  top: 0.25rem;
+  left: -1.5rem;
+  display: block;
+  width: 1rem;
+  height: 1rem;
+  pointer-events: none;
+  content: "";
+  background-color: #fff;
+  border: 1px solid var(--border-color);
+  border-radius: var(--border-radius-sm);
+  transition: all var(--transition-normal);
+}
+
+.custom-control-input:checked ~ .custom-control-label::before {
+  background: var(--usuarios-gradient);
+  border-color: var(--usuarios-gradient);
+}
+
+.custom-control-input:checked ~ .custom-control-label::after {
+  position: absolute;
+  top: 0.25rem;
+  left: -1.5rem;
+  display: block;
+  width: 1rem;
+  height: 1rem;
+  content: "";
+  background: no-repeat 50%/50% 50%;
+  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' width='8' height='8' viewBox='0 0 8 8'%3e%3cpath fill='%23fff' d='m6.564.75-3.59 3.612-1.538-1.55L0 4.26 2.974 7.25 8 2.193z'/%3e%3c/svg%3e");
+}
+
+/* ========================================
+   SELECT2 PERSONALIZADO
+   ======================================== */
+.select2-container--default .select2-selection--single {
+  border: 1px solid var(--border-color);
+  border-radius: var(--border-radius-md);
+  height: calc(2.25rem + 2px);
+  padding: 0.375rem 0.75rem;
+}
+
+.select2-container--default .select2-selection--single .select2-selection__rendered {
+  color: var(--text-dark);
+  line-height: 1.5;
+  padding-left: 0;
+  padding-right: 20px;
+}
+
+.select2-container--default .select2-selection--single:focus {
+  border-color: var(--usuarios-gradient);
+  box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.15);
+}
+
+.select2-dropdown {
+  border: 1px solid var(--border-color);
+  border-radius: var(--border-radius-md);
+  box-shadow: var(--shadow-md);
+}
+
+.select2-container--default .select2-results__option--highlighted[aria-selected] {
+  background-color: var(--usuarios-gradient);
+}
+
+/* ========================================
+   DATATABLES PERSONALIZADO
+   ======================================== */
+.dataTables_wrapper .dataTables_length,
+.dataTables_wrapper .dataTables_filter,
+.dataTables_wrapper .dataTables_info,
+.dataTables_wrapper .dataTables_paginate {
+  margin-bottom: 1rem;
+}
+
+.dataTables_wrapper .dataTables_filter input {
+  border: 1px solid var(--border-color);
+  border-radius: var(--border-radius-md);
+  padding: 0.5rem 0.75rem;
+  margin-left: 0.5rem;
+}
+
+.dataTables_wrapper .dataTables_paginate .paginate_button {
+  border: 1px solid var(--border-color);
+  border-radius: var(--border-radius-md);
+  padding: 0.5rem 0.75rem;
+  margin: 0 0.25rem;
+  background: white;
+  color: var(--text-dark);
+  transition: all var(--transition-normal);
+}
+
+.dataTables_wrapper .dataTables_paginate .paginate_button:hover {
+  background: var(--usuarios-light);
+  border-color: var(--usuarios-gradient);
+  color: var(--usuarios-dark);
+}
+
+.dataTables_wrapper .dataTables_paginate .paginate_button.current {
+  background: var(--usuarios-gradient);
+  border-color: var(--usuarios-gradient);
+  color: white;
+}
+
+/* ========================================
+   LOADING Y ESTADOS
+   ======================================== */
+.loading-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+  opacity: 0;
+  visibility: hidden;
+  transition: all var(--transition-normal);
+}
+
+.loading-overlay.show {
+  opacity: 1;
+  visibility: visible;
+}
+
+.loading-spinner {
+  width: 3rem;
+  height: 3rem;
+  border: 0.3em solid rgba(255, 255, 255, 0.3);
+  border-radius: 50%;
+  border-top-color: white;
+  animation: spin 1s ease-in-out infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* ========================================
+   RESPONSIVE DESIGN
+   ======================================== */
+
+/* Tablets */
+@media (max-width: 992px) {
+  .container-fluid {
+    padding: 1rem;
+  }
+  
+  .page-header h2 {
+    font-size: 1.75rem;
+  }
+  
+  .page-header .d-flex {
+    flex-direction: column;
+    gap: 1rem;
+    text-align: center;
+  }
+  
+  #tablaUsuarios thead th,
+  #tablaUsuarios tbody td {
+    padding: 0.75rem 0.5rem;
+    font-size: 0.85rem;
+  }
+}
+
+/* Móviles */
+@media (max-width: 768px) {
+  .container-fluid {
+    padding: 0.75rem;
+  }
+  
+  .page-header h2 {
+    font-size: 1.5rem;
+    text-align: center;
+  }
+  
+  .card-body {
+    padding: 1rem;
+  }
+  
+  .modal-dialog {
+    margin: 0.5rem;
+    max-width: calc(100% - 1rem);
+  }
+  
+  .modal-body {
+    padding: 1rem;
+  }
+  
+  .btn-sm {
+    padding: 0.25rem 0.5rem;
+    font-size: 0.75rem;
+    margin-bottom: 0.25rem;
+  }
+  
+  .table-responsive {
+    font-size: 0.8rem;
+  }
+  
+  #tablaUsuarios thead th,
+  #tablaUsuarios tbody td {
+    padding: 0.5rem 0.25rem;
+  }
+}
+
+/* Móviles pequeños */
+@media (max-width: 576px) {
+  .page-header h2 {
+    font-size: 1.3rem;
+  }
+  
+  .page-header p {
+    font-size: 1rem;
+  }
+  
+  .card-header,
+  .card-body {
+    padding: 0.75rem;
+  }
+  
+  .form-control {
+    padding: 0.5rem 0.75rem;
+  }
+  
+  .btn {
+    padding: 0.5rem 1rem;
+    font-size: 0.875rem;
+  }
+  
+  .modal-footer {
+    flex-direction: column;
+  }
+  
+  .modal-footer .btn {
+    width: 100%;
+    margin-bottom: 0.5rem;
+  }
+}
+
+/* ========================================
+   ANIMACIONES ADICIONALES
+   ======================================== */
+@keyframes slideInUp {
+  from {
+    transform: translateY(30px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.card {
+  animation: slideInUp 0.3s ease-out;
+}
+
+.modal-content {
+  animation: slideInUp 0.3s ease-out;
+}
+
+/* Efectos hover mejorados */
+.card:hover {
+  transform: translateY(-4px);
+}
+
+.btn:hover {
+  transform: translateY(-1px);
+}
+
+/* Scrollbar personalizado */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--usuarios-gradient);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--usuarios-dark);
+}

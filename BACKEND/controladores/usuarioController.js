@@ -1,4 +1,4 @@
-const { Usuario, UsuarioRol } = require('../modelos');
+const { Usuario, UsuarioRol, VerificadorDocente, CicloAcademico } = require('../modelos');
 const { Op } = require('sequelize');
 const bcrypt = require('bcryptjs');
 
@@ -25,7 +25,7 @@ exports.obtenerUsuarios = async (req, res) => {
       include: [
         {
           model: UsuarioRol,
-          as: 'rolesAsignados',
+          as: 'roles',
           where: { activo: true },
           required: false
         }
@@ -36,16 +36,22 @@ exports.obtenerUsuarios = async (req, res) => {
     });
 
     res.status(200).json({
-      usuarios: rows,
-      total: count,
-      totalPaginas: Math.ceil(count / limite),
-      paginaActual: parseInt(pagina)
+      success: true,
+      data: rows,
+      meta: {
+        total: count,
+        totalPaginas: Math.ceil(count / limite),
+        paginaActual: parseInt(pagina),
+        limite: parseInt(limite)
+      },
+      message: 'Usuarios obtenidos correctamente'
     });
 
   } catch (error) {
     console.error('Error al obtener usuarios:', error);
     res.status(500).json({
-      mensaje: 'Error al obtener la lista de usuarios',
+      success: false,
+      message: 'Error al obtener la lista de usuarios',
       error: error.message
     });
   }
@@ -59,7 +65,7 @@ exports.obtenerUsuario = async (req, res) => {
       include: [
         {
           model: UsuarioRol,
-          as: 'rolesAsignados',
+          as: 'roles',
           where: { activo: true },
           required: false
         }
@@ -68,17 +74,22 @@ exports.obtenerUsuario = async (req, res) => {
 
     if (!usuario) {
       return res.status(404).json({
-        mensaje: 'Usuario no encontrado',
-        error: true
+        success: false,
+        message: 'Usuario no encontrado'
       });
     }
 
-    res.status(200).json(usuario);
+    res.status(200).json({
+      success: true,
+      data: usuario,
+      message: 'Usuario obtenido correctamente'
+    });
 
   } catch (error) {
     console.error('Error al obtener usuario:', error);
     res.status(500).json({
-      mensaje: 'Error al obtener el usuario',
+      success: false,
+      message: 'Error al obtener el usuario',
       error: error.message
     });
   }
@@ -93,8 +104,8 @@ exports.crearUsuario = async (req, res) => {
     const existeUsuario = await Usuario.findOne({ where: { correo } });
     if (existeUsuario) {
       return res.status(400).json({
-        mensaje: 'El correo electrónico ya está en uso',
-        error: true
+        success: false,
+        message: 'El correo electrónico ya está en uso'
       });
     }
 
@@ -102,8 +113,8 @@ exports.crearUsuario = async (req, res) => {
     const rolesValidos = ['docente', 'verificador', 'administrador'];
     if (rol && !rolesValidos.includes(rol)) {
       return res.status(400).json({
-        mensaje: 'El rol especificado no es válido',
-        error: true
+        success: false,
+        message: 'El rol especificado no es válido'
       });
     }
 
@@ -131,15 +142,16 @@ exports.crearUsuario = async (req, res) => {
     delete usuarioCreado.contrasena;
 
     res.status(201).json({
-      mensaje: 'Usuario creado exitosamente',
-      usuario: usuarioCreado,
-      error: false
+      success: true,
+      data: usuarioCreado,
+      message: 'Usuario creado exitosamente'
     });
 
   } catch (error) {
     console.error('Error al crear usuario:', error);
     res.status(500).json({
-      mensaje: 'Error al crear el usuario',
+      success: false,
+      message: 'Error al crear el usuario',
       error: error.message
     });
   }
@@ -155,8 +167,8 @@ exports.actualizarUsuario = async (req, res) => {
     const usuario = await Usuario.findByPk(id);
     if (!usuario) {
       return res.status(404).json({
-        mensaje: 'Usuario no encontrado',
-        error: true
+        success: false,
+        message: 'Usuario no encontrado'
       });
     }
 
@@ -171,8 +183,8 @@ exports.actualizarUsuario = async (req, res) => {
 
       if (existeEmail) {
         return res.status(400).json({
-          mensaje: 'El correo electrónico ya está en uso por otro usuario',
-          error: true
+          success: false,
+          message: 'El correo electrónico ya está en uso por otro usuario'
         });
       }
     }
@@ -182,8 +194,8 @@ exports.actualizarUsuario = async (req, res) => {
       const rolesValidos = ['docente', 'verificador', 'administrador'];
       if (!rolesValidos.includes(rol)) {
         return res.status(400).json({
-          mensaje: 'El rol especificado no es válido',
-          error: true
+          success: false,
+          message: 'El rol especificado no es válido'
         });
       }
     }
@@ -242,15 +254,16 @@ exports.actualizarUsuario = async (req, res) => {
     });
 
     res.status(200).json({
-      mensaje: 'Usuario actualizado exitosamente',
-      usuario: usuarioActualizado,
-      error: false
+      success: true,
+      data: usuarioActualizado,
+      message: 'Usuario actualizado exitosamente'
     });
 
   } catch (error) {
     console.error('Error al actualizar usuario:', error);
     res.status(500).json({
-      mensaje: 'Error al actualizar el usuario',
+      success: false,
+      message: 'Error al actualizar el usuario',
       error: error.message
     });
   }
@@ -277,14 +290,16 @@ exports.obtenerRolesUsuario = async (req, res) => {
     const roles = rolesUsuario.map(ur => ur.rolesAsignados);
 
     res.status(200).json({
-      roles,
-      error: false
+      success: true,
+      data: roles,
+      message: 'Roles obtenidos correctamente'
     });
 
   } catch (error) {
     console.error('Error al obtener roles del usuario:', error);
     res.status(500).json({
-      mensaje: 'Error al obtener los roles del usuario',
+      success: false,
+      message: 'Error al obtener los roles del usuario',
       error: error.message
     });
   }
@@ -298,30 +313,31 @@ exports.eliminarUsuario = async (req, res) => {
     // No permitir eliminar al propio usuario
     if (parseInt(id) === req.usuario.id) {
       return res.status(400).json({
-        mensaje: 'No puedes eliminar tu propia cuenta',
-        error: true
+        success: false,
+        message: 'No puedes eliminar tu propia cuenta'
       });
     }
 
     const usuario = await Usuario.findByPk(id);
     if (!usuario) {
       return res.status(404).json({
-        mensaje: 'Usuario no encontrado',
-        error: true
+        success: false,
+        message: 'Usuario no encontrado'
       });
     }
 
     await usuario.destroy();
 
     res.status(200).json({
-      mensaje: 'Usuario eliminado exitosamente',
-      error: false
+      success: true,
+      message: 'Usuario eliminado exitosamente'
     });
 
   } catch (error) {
     console.error('Error al eliminar usuario:', error);
     res.status(500).json({
-      mensaje: 'Error al eliminar el usuario',
+      success: false,
+      message: 'Error al eliminar el usuario',
       error: error.message
     });
   }
@@ -347,8 +363,8 @@ exports.actualizarPerfil = async (req, res) => {
       const esValida = await usuario.validarPassword(contrasena);
       if (!esValida) {
         return res.status(400).json({
-          mensaje: 'La contraseña actual es incorrecta',
-          error: true
+          success: false,
+          message: 'La contraseña actual es incorrecta'
         });
       }
     }
@@ -364,8 +380,8 @@ exports.actualizarPerfil = async (req, res) => {
 
       if (existeEmail) {
         return res.status(400).json({
-          mensaje: 'El correo electrónico ya está en uso por otro usuario',
-          error: true
+          success: false,
+          message: 'El correo electrónico ya está en uso por otro usuario'
         });
       }
     }
@@ -393,16 +409,322 @@ exports.actualizarPerfil = async (req, res) => {
     });
 
     res.status(200).json({
-      mensaje: 'Perfil actualizado exitosamente',
-      usuario: usuarioActualizado,
-      error: false
+      success: true,
+      data: usuarioActualizado,
+      message: 'Perfil actualizado exitosamente'
     });
 
   } catch (error) {
     console.error('Error al actualizar perfil:', error);
     res.status(500).json({
-      mensaje: 'Error al actualizar el perfil',
+      success: false,
+      message: 'Error al actualizar el perfil',
       error: error.message
+    });
+  }
+};
+
+// Obtener usuarios por rol
+exports.obtenerUsuariosPorRol = async (req, res) => {
+  try {
+    const { rol } = req.params;
+    
+    // Verificar que el rol sea válido
+    const rolesValidos = ['docente', 'verificador', 'administrador'];
+    if (!rolesValidos.includes(rol)) {
+      return res.status(400).json({
+        success: false,
+        message: 'El rol especificado no es válido'
+      });
+    }
+
+    const usuarios = await Usuario.findAll({
+      attributes: { exclude: ['contrasena'] },
+      include: [
+        {
+          model: UsuarioRol,
+          as: 'roles',
+          where: { 
+            rol: rol,
+            activo: true 
+          },
+          required: true
+        }
+      ],
+      where: { activo: true },
+      order: [['apellidos', 'ASC'], ['nombres', 'ASC']]
+    });
+
+    res.status(200).json({
+      success: true,
+      data: usuarios,
+      message: `Usuarios con rol ${rol} obtenidos correctamente`
+    });
+
+  } catch (error) {
+    console.error(`Error al obtener usuarios con rol ${req.params.rol}:`, error);
+    res.status(500).json({
+      success: false,
+      message: 'Error al obtener los usuarios',
+      error: error.message
+    });
+  }
+};
+
+// Asignar verificador a docente
+exports.asignarVerificador = async (req, res) => {
+  try {
+    const { docenteId, verificadorId } = req.params;
+
+    // Verificar que el docente existe y tiene rol de docente
+    const docente = await Usuario.findByPk(docenteId, {
+      include: [
+        {
+          model: UsuarioRol,
+          as: 'roles',
+          where: { 
+            rol: 'docente',
+            activo: true 
+          },
+          required: true
+        }
+      ]
+    });
+
+    if (!docente) {
+      return res.status(404).json({
+        success: false,
+        message: 'Docente no encontrado o no tiene rol de docente activo'
+      });
+    }
+
+    // Verificar que el verificador existe y tiene rol de verificador
+    const verificador = await Usuario.findByPk(verificadorId, {
+      include: [
+        {
+          model: UsuarioRol,
+          as: 'roles',
+          where: { 
+            rol: 'verificador',
+            activo: true 
+          },
+          required: true
+        }
+      ]
+    });
+
+    if (!verificador) {
+      return res.status(404).json({
+        success: false,
+        message: 'Verificador no encontrado o no tiene rol de verificador activo'
+      });
+    }
+
+    // Obtener el ciclo académico activo
+    const cicloActivo = await CicloAcademico.findOne({
+      where: { activo: true },
+      order: [['creado_en', 'DESC']]
+    });
+
+    if (!cicloActivo) {
+      return res.status(400).json({
+        success: false,
+        message: 'No hay un ciclo académico activo para realizar la asignación'
+      });
+    }
+
+    // Verificar si ya existe una asignación activa para este ciclo
+    const asignacionExistente = await VerificadorDocente.findOne({
+      where: {
+        docente_id: docenteId,
+        verificador_id: verificadorId,
+        ciclo_id: cicloActivo.id,
+        activo: true
+      }
+    });
+
+    if (asignacionExistente) {
+      return res.status(400).json({
+        success: false,
+        message: 'El verificador ya está asignado a este docente en el ciclo actual'
+      });
+    }
+
+    // Crear la relación docente-verificador
+    const nuevaAsignacion = await VerificadorDocente.create({
+      docente_id: docenteId,
+      verificador_id: verificadorId,
+      ciclo_id: cicloActivo.id,
+      asignado_por: req.usuario.id,
+      activo: true
+    });
+
+    console.log('✅ Asignación creada:', nuevaAsignacion.toJSON());
+
+    res.status(200).json({
+      success: true,
+      message: `Verificador ${verificador.nombres} ${verificador.apellidos} asignado correctamente al docente ${docente.nombres} ${docente.apellidos}`,
+      data: {
+        docente: {
+          id: docente.id,
+          nombres: docente.nombres,
+          apellidos: docente.apellidos
+        },
+        verificador: {
+          id: verificador.id,
+          nombres: verificador.nombres,
+          apellidos: verificador.apellidos
+        }
+      }
+    });
+
+  } catch (error) {
+    console.error('Error al asignar verificador:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Error al asignar el verificador',
+      error: error.message
+    });
+  }
+};
+
+// Obtener asignaciones de verificadores
+exports.obtenerAsignacionesVerificadores = async (req, res) => {
+  try {
+    const { cicloId } = req.query;
+    
+    const whereClause = { activo: true };
+    if (cicloId) {
+      whereClause.ciclo_id = cicloId;
+    }
+
+    const asignaciones = await VerificadorDocente.findAll({
+      where: whereClause,
+      include: [
+        {
+          model: Usuario,
+          as: 'verificador',
+          attributes: ['id', 'nombres', 'apellidos', 'correo']
+        },
+        {
+          model: Usuario,
+          as: 'docente',
+          attributes: ['id', 'nombres', 'apellidos', 'correo']
+        },
+        {
+          model: CicloAcademico,
+          as: 'ciclo',
+          attributes: ['id', 'nombre', 'activo']
+        },
+        {
+          model: Usuario,
+          as: 'asignador',
+          attributes: ['id', 'nombres', 'apellidos']
+        }
+      ],
+      order: [['fecha_asignacion', 'DESC']]
+    });
+
+    res.status(200).json({
+      success: true,
+      data: asignaciones,
+      message: 'Asignaciones de verificadores obtenidas correctamente'
+    });
+
+  } catch (error) {
+    console.error('Error al obtener asignaciones de verificadores:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Error al obtener las asignaciones de verificadores',
+      error: error.message
+    });
+  }
+};
+
+// Obtener estadísticas de usuarios
+exports.obtenerEstadisticasUsuarios = async (req, res) => {
+  try {
+    // Estadísticas básicas de usuarios
+    const totalUsuarios = await Usuario.count({
+      where: { activo: true }
+    });
+
+    const usuariosActivos = await Usuario.count({
+      where: { 
+        activo: true,
+        ultima_conexion: {
+          [Op.gte]: new Date(Date.now() - 30 * 24 * 60 * 60 * 1000) // Últimos 30 días
+        }
+      }
+    });
+
+    // Contar usuarios por rol
+    const verificadores = await UsuarioRol.count({
+      where: { 
+        rol: 'verificador',
+        activo: true 
+      },
+      include: [{
+        model: Usuario,
+        as: 'usuario',
+        where: { activo: true },
+        required: true
+      }]
+    });
+
+    const administradores = await UsuarioRol.count({
+      where: { 
+        rol: 'administrador',
+        activo: true 
+      },
+      include: [{
+        model: Usuario,
+        as: 'usuario',
+        where: { activo: true },
+        required: true
+      }]
+    });
+
+    const docentes = await UsuarioRol.count({
+      where: { 
+        rol: 'docente',
+        activo: true 
+      },
+      include: [{
+        model: Usuario,
+        as: 'usuario',
+        where: { activo: true },
+        required: true
+      }]
+    });
+
+    res.status(200).json({
+      success: true,
+      data: {
+        totalUsuarios,
+        usuariosActivos,
+        verificadores,
+        administradores,
+        docentes,
+        porcentajeActivos: totalUsuarios > 0 ? Math.round((usuariosActivos / totalUsuarios) * 100) : 0
+      },
+      message: 'Estadísticas de usuarios obtenidas correctamente'
+    });
+
+  } catch (error) {
+    console.error('Error al obtener estadísticas de usuarios:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Error al obtener las estadísticas de usuarios',
+      error: error.message,
+      data: {
+        totalUsuarios: 0,
+        usuariosActivos: 0,
+        verificadores: 0,
+        administradores: 0,
+        docentes: 0,
+        porcentajeActivos: 0
+      }
     });
   }
 };

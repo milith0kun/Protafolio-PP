@@ -15,10 +15,10 @@
   <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;600;700&display=swap" rel="stylesheet">
   
   <!-- Estilos personalizados -->
-  <link rel="stylesheet" href="../../../assets/css/paginas/admin/body.css">
-  <link rel="stylesheet" href="../../../assets/css/paginas/admin/head.css">
-  <link rel="stylesheet" href="../../../assets/css/paginas/admin/footer.css">
-  <link rel="stylesheet" href="../../../assets/css/paginas/admin/dashboard.css">
+  <link rel="stylesheet" href="../../../assets/css/paginas/admin/tablero/head.css">
+  <link rel="stylesheet" href="../../../assets/css/paginas/admin/tablero/body.css">
+  <link rel="stylesheet" href="../../../assets/css/paginas/admin/tablero/footer.css">
+ 
   
 </head>
 
@@ -38,10 +38,6 @@
             <a href="https://www.instagram.com/unsaac_oficial" target="_blank" class="social-icon"><i class="fab fa-instagram"></i></a>
             <a href="https://www.youtube.com/channel/UCunsaac" target="_blank" class="social-icon"><i class="fab fa-youtube"></i></a>
           </div>
-          <div class="user-menu">
-            <div class="user-icon"><i class="fas fa-user-shield"></i></div>
-            <span class="user-name">Administrador</span>
-          </div>
         </div>
       </div>
     </div>
@@ -49,15 +45,70 @@
     <div class="header-middle">
       <div class="header-middle-container">
         <div class="logo-container">
-          <div class="logo-img">
-           
-          </div>
+          <div class="logo-img"></div>
           <div class="logo-text-container">
             <span class="logo-title">Sistema de Portafolio</span>
             <span class="logo-subtitle">Panel Administrador</span>
           </div>
         </div>
-      </div>
+
+        <div class="user-menu" id="userMenu">
+          <div class="user-icon">
+            <i class="fas fa-user-shield"></i>
+          </div>
+          <div class="user-info">
+            <div class="user-name" id="nombreUsuario">Cargando...</div>
+            <div class="user-role" id="rolUsuario">Administrador</div>
+          </div>
+          <div class="user-actions">
+            <div class="role-selector" id="roleSelector">
+              <select id="userRoleSelect" class="role-select" title="Cambiar rol">
+                <option value="">Cargando roles...</option>
+              </select>
+              <i class="fas fa-exchange-alt role-icon"></i>
+            </div>
+            <button type="button" class="dropdown-toggle" id="userDropdownToggle" title="Opciones de usuario">
+              <i class="fas fa-chevron-down"></i>
+            </button>
+          </div>
+          
+          <!-- Dropdown del usuario -->
+          <div class="user-dropdown" id="userDropdown">
+            <div class="dropdown-header">
+              <div class="dropdown-user-info">
+                <div class="dropdown-user-icon">
+                  <i class="fas fa-user-shield"></i>
+                </div>
+                <div class="dropdown-user-details">
+                  <span class="dropdown-user-name" id="dropdownUserName">Administrador Sistema</span>
+                  <span class="dropdown-user-email" id="dropdownUserEmail">admin@unsaac.edu.pe</span>
+                </div>
+              </div>
+            </div>
+            <div class="dropdown-divider"></div>
+            <div class="dropdown-body">
+              <a href="#" class="dropdown-item" id="profileOption">
+                <i class="fas fa-user"></i>
+                <span>Mi Perfil</span>
+              </a>
+              <a href="#" class="dropdown-item" id="settingsOption">
+                <i class="fas fa-cog"></i>
+                <span>Configuración</span>
+              </a>
+              <a href="#" class="dropdown-item" id="helpOption">
+                <i class="fas fa-question-circle"></i>
+                <span>Ayuda</span>
+              </a>
+            </div>
+            <div class="dropdown-divider"></div>
+            <div class="dropdown-footer">
+              <button type="button" class="dropdown-item logout-item" id="logoutOption">
+                <i class="fas fa-sign-out-alt"></i>
+                <span>Cerrar Sesión</span>
+              </button>
+            </div>
+          </div>
+        </div>
     </div>
 
     <div class="header-bottom">
@@ -65,17 +116,10 @@
         <button class="menu-toggle" aria-label="Abrir menú">
           <i class="fas fa-bars"></i>
         </button>
+        <!-- Navegación dinámica - se generará automáticamente por el sistema de navegación -->
         <nav class="main-nav">
-          <ul class="nav-list">
-            <li><a href="tablero.html" class="active">Inicio</a></li>
-            <li><a href="usuarios.html">Gestión de Usuarios</a></li>
-            <li><a href="ciclos.html">Ciclos Académicos</a></li>
-            <li><a href="asignaciones.html">Asignaciones</a></li>
-            <li><a href="reportes.html">Reportes</a></li>
-            <li><a href="configuracion.html">Configuración</a></li>
-            <li><a href="../compartidas/notificaciones.html">Notificaciones</a></li>
-            <li><a href="../compartidas/ayuda.html">Ayuda</a></li>
-            <li><a href="#" onclick="cerrarSesion()">Cerrar sesión</a></li>
+          <ul class="nav-list" id="sidebarMenu">
+            <!-- El menú se generará dinámicamente por navegacion.js -->
           </ul>
         </nav>
       </div>
@@ -93,10 +137,61 @@
           </div>
           <div class="status-text">
             <h3>Estado del Sistema</h3>
-            <p id="systemStatusMessage">Ciclo académico activo: 2025-I. Período de subida de documentos activo.</p>
+            <p id="systemStatusMessage">Cargando información del sistema...</p>
+            <div class="system-state-info">
+              <span class="state-label">Estado actual:</span>
+              <span class="system-status" id="estadoSistema">Configuración</span>
+            </div>
           </div>
           <div class="status-indicator">
-            <span class="status-badge active" id="systemStatusBadge">Sistema Operativo</span>
+            <span class="status-badge active" id="systemStatusBadge">Verificando...</span>
+          </div>
+        </div>
+        
+        <!-- Información del ciclo académico -->
+        <div class="cycle-info">
+          <div class="cycle-details">
+            <div class="cycle-name-section">
+              <span class="cycle-label">Ciclo Activo:</span>
+              <span class="cycle-value" id="nombreCiclo">Cargando...</span>
+            </div>
+            <div class="cycle-dates-section">
+              <div class="date-info">
+                <i class="fas fa-calendar-start"></i>
+                <span class="date-label">Inicio:</span>
+                <span class="date-value" id="fechaInicioCiclo">--/--/----</span>
+              </div>
+              <span class="date-separator">|</span>
+              <div class="date-info">
+                <i class="fas fa-calendar-end"></i>
+                <span class="date-label">Fin:</span>
+                <span class="date-value" id="fechaFinCiclo">--/--/----</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Selector de ciclo académico para administradores -->
+        <div class="cycle-management">
+          <div class="cycle-selector" id="selectorCiclo">
+            <label for="selectCiclo">Cambiar Ciclo Académico:</label>
+            <select id="selectCiclo" class="form-control">
+              <option value="">Cargando ciclos...</option>
+            </select>
+          </div>
+          <div class="cycle-actions">
+            <button id="btnNuevoCiclo" class="btn btn-outline-primary btn-sm">
+              <i class="fas fa-plus"></i> Nuevo Ciclo
+            </button>
+            <button id="btnLimpiarDatos" class="btn btn-outline-warning btn-sm">
+              <i class="fas fa-broom"></i> Limpiar Datos Anteriores
+            </button>
+            <button id="btnInicializarPortafolios" class="btn btn-outline-success btn-sm">
+              <i class="fas fa-folder-plus"></i> Inicializar Portafolios
+            </button>
+                                    <a href="ciclos.html" class="btn btn-secondary btn-sm">
+              <i class="fas fa-cog"></i> Gestionar Ciclos
+            </a>
           </div>
         </div>
       </div>
@@ -112,70 +207,39 @@
           <div class="card-content">
             <div class="stats-container">
               <div class="stat-item">
-                <div class="stat-value" id="totalUsers">248</div>
+                <div class="stat-value" id="totalUsers">0</div>
                 <div class="stat-label">Total Usuarios</div>
               </div>
               <div class="stat-item">
-                <div class="stat-value" id="activeUsers">215</div>
+                <div class="stat-value" id="activeUsers">0</div>
                 <div class="stat-label">Activos</div>
               </div>
               <div class="stat-item">
-                <div class="stat-value" id="pendingUsers">12</div>
+                <div class="stat-value" id="pendingUsers">0</div>
                 <div class="stat-label">Pendientes</div>
               </div>
             </div>
             <div class="roles-distribution">
               <div class="role-item">
                 <span class="role-name">Docentes:</span>
-                <span class="role-count" id="teacherCount">180</span>
+                <span class="role-count" id="teacherCount">0</span>
               </div>
               <div class="role-item">
                 <span class="role-name">Verificadores:</span>
-                <span class="role-count" id="verifierCount">45</span>
+                <span class="role-count" id="verifierCount">0</span>
               </div>
               <div class="role-item">
                 <span class="role-name">Administradores:</span>
-                <span class="role-count" id="adminCount">23</span>
+                <span class="role-count" id="adminCount">0</span>
               </div>
             </div>
           </div>
           <div class="card-action">
-            <a href="usuarios.html" class="btn btn-primary">Gestionar Usuarios</a>
+                                <a href="usuarios.html" class="btn btn-primary">Gestionar Usuarios</a>
           </div>
         </div>
 
-        <div class="dashboard-card cycles-card">
-          <div class="card-header">
-            <h3><i class="fas fa-calendar-alt"></i> Ciclos Académicos</h3>
-          </div>
-          <div class="card-content">
-            <div class="current-cycle">
-              <h4>Ciclo Actual: <span id="currentCycle">2025-I</span></h4>
-              <div class="cycle-dates">
-                <div class="date-item">
-                  <span class="date-label">Inicio:</span>
-                  <span class="date-value" id="cycleStartDate">01/04/2025</span>
-                </div>
-                <div class="date-item">
-                  <span class="date-label">Fin:</span>
-                  <span class="date-value" id="cycleEndDate">31/07/2025</span>
-                </div>
-              </div>
-              <div class="cycle-progress">
-                <div class="progress-bar">
-                  <div class="progress-fill" style="width: 45%;"></div>
-                </div>
-                <span class="progress-text">45% completado</span>
-              </div>
-            </div>
-            <div class="cycles-list" id="recentCycles">
-              <!-- Se cargará dinámicamente -->
-            </div>
-          </div>
-          <div class="card-action">
-            <a href="ciclos.html" class="btn btn-secondary">Gestionar Ciclos</a>
-          </div>
-        </div>
+
 
         <div class="dashboard-card notifications-card">
           <div class="card-header">
@@ -200,35 +264,70 @@
               <div class="stat-box">
                 <div class="stat-icon"><i class="fas fa-file-upload"></i></div>
                 <div class="stat-info">
-                  <div class="stat-value" id="totalDocuments">1,245</div>
+                  <div class="stat-value" id="totalDocuments">0</div>
                   <div class="stat-label">Documentos</div>
                 </div>
               </div>
               <div class="stat-box">
                 <div class="stat-icon"><i class="fas fa-check-circle"></i></div>
                 <div class="stat-info">
-                  <div class="stat-value" id="approvedDocuments">876</div>
+                  <div class="stat-value" id="approvedDocuments">0</div>
                   <div class="stat-label">Aprobados</div>
                 </div>
               </div>
               <div class="stat-box">
                 <div class="stat-icon"><i class="fas fa-clock"></i></div>
                 <div class="stat-info">
-                  <div class="stat-value" id="pendingDocuments">289</div>
+                  <div class="stat-value" id="pendingDocuments">0</div>
                   <div class="stat-label">Pendientes</div>
                 </div>
               </div>
               <div class="stat-box">
                 <div class="stat-icon"><i class="fas fa-comment-dots"></i></div>
                 <div class="stat-info">
-                  <div class="stat-value" id="observedDocuments">80</div>
+                  <div class="stat-value" id="observedDocuments">0</div>
                   <div class="stat-label">Observados</div>
                 </div>
               </div>
             </div>
           </div>
           <div class="card-action">
-            <a href="reportes.html" class="btn btn-warning">Ver Reportes</a>
+                                <a href="reportes.html" class="btn btn-warning">Ver Reportes</a>
+          </div>
+        </div>
+
+        <div class="dashboard-card portafolios-card">
+          <div class="card-header">
+            <h3><i class="fas fa-folder-open"></i> Gestión de Portafolios</h3>
+          </div>
+          <div class="card-content">
+            <div class="stats-container">
+              <div class="stat-item">
+                <div class="stat-value" id="totalPortafolios">0</div>
+                <div class="stat-label">Total Portafolios</div>
+              </div>
+              <div class="stat-item">
+                <div class="stat-value" id="activePortafolios">0</div>
+                <div class="stat-label">Activos</div>
+              </div>
+              <div class="stat-item">
+                <div class="stat-value" id="completedPortafolios">0</div>
+                <div class="stat-label">Completados</div>
+              </div>
+            </div>
+            <div class="portafolios-summary">
+              <div class="summary-item">
+                <span class="summary-label">Progreso promedio:</span>
+                <span class="summary-value" id="averageProgress">0%</span>
+              </div>
+              <div class="summary-item">
+                <span class="summary-label">En verificación:</span>
+                <span class="summary-value" id="inVerificationPortafolios">0</span>
+              </div>
+            </div>
+          </div>
+          <div class="card-action">
+            <a href="portafolios.html" class="btn btn-success">Gestionar Portafolios</a>
           </div>
         </div>
       </div>
@@ -278,7 +377,7 @@
     <section class="quick-actions">
       <h2>Acciones Rápidas</h2>
       <div class="actions-grid">
-        <a href="usuarios.html" class="action-card users-action">
+                        <a href="usuarios.html" class="action-card users-action">
           <div class="action-icon">
             <i class="fas fa-user-plus"></i>
           </div>
@@ -288,7 +387,7 @@
           </div>
         </a>
 
-        <a href="ciclos.html" class="action-card cycle-action">
+                  <a href="ciclos.html" class="action-card cycle-action">
           <div class="action-icon">
             <i class="fas fa-calendar-plus"></i>
           </div>
@@ -298,17 +397,17 @@
           </div>
         </a>
 
-        <a href="asignaciones.html" class="action-card assignment-action">
+                  <a href="asignaturas.html" class="action-card assignment-action">
           <div class="action-icon">
             <i class="fas fa-tasks"></i>
           </div>
           <div class="action-content">
-            <h3>Asignaciones</h3>
-            <p>Gestionar asignaciones de cursos</p>
+            <h3>Asignaturas</h3>
+            <p>Gestionar asignaturas del sistema</p>
           </div>
         </a>
 
-        <a href="reportes.html" class="action-card reports-action">
+                  <a href="reportes.html" class="action-card reports-action">
           <div class="action-icon">
             <i class="fas fa-chart-pie"></i>
           </div>
@@ -322,75 +421,88 @@
 
 
     
-  <!-- Sección de Inicialización del Sistema -->
-  <section class="system-init-section">
-    <h2>🔧 Inicialización del Sistema</h2>
-    <div class="init-container">
-      <div class="init-card">
-        <div class="init-icon">
-          <i class="fas fa-file-excel"></i>
-        </div>
-        <div class="init-content">
-          <h3>Carga Masiva Inicial</h3>
-          <p>Suba los archivos Excel para inicializar el sistema con datos iniciales. Asegúrese de subir los archivos en el orden correcto.</p>
-          
-          <div class="upload-instructions">
-            <h4>Archivos Requeridos:</h4>
-            <ol>
-              <li>01_usuarios.xlsx - Lista de usuarios del sistema</li>
-              <li>02_ciclos.xlsx - Configuración de ciclos académicos</li>
-              <li>03_asignaturas.xlsx - Catálogo de asignaturas</li>
-              <li>04_docentes.xlsx - Información de docentes</li>
-              <li>05_verificadores.xlsx - Asignación de verificadores</li>
-              <li>06_estructura_portafolio.xlsx - Estructura jerárquica</li>
-              <li>07_asignaciones.xlsx - Asignación de cursos</li>
-              <li>08_parametros.xlsx - Parámetros del sistema</li>
-            </ol>
+    <!-- Sección de Inicialización del Sistema -->
+    <section class="system-init-section">
+      <h2>🔧 Inicialización del Sistema</h2>
+      <div class="init-container">
+        <div class="init-card">
+          <div class="init-icon">
+            <i class="fas fa-file-excel"></i>
           </div>
-          
-          <div id="uploadProgress" class="progress-container" style="display: none;">
-            <div class="progress">
-              <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" style="width: 0%"></div>
+          <div class="init-content">
+            <h3>Inicialización del Sistema</h3>
+            <p>Realice la carga masiva de datos del sistema a través de la sección de Carga Masiva. Aquí puede cargar archivos Excel con información de usuarios, asignaturas, ciclos académicos y más.</p>
+            
+            <div class="init-action">
+                                  <a href="carga-masiva.html" class="btn btn-primary btn-lg">
+                <i class="fas fa-upload"></i>Ir a Carga Masiva
+              </a>
             </div>
-            <div class="progress-text text-center mt-2">Preparando carga...</div>
-          </div>
-          
-          <div class="text-center mt-4">
-            <button id="startUploadBtn" class="btn btn-primary btn-lg">
-              <i class="fas fa-upload me-2"></i>Iniciar Carga Masiva
-            </button>
-          </div>
-          
-          <div id="uploadLog" class="upload-log mt-3" style="display: none;">
-            <h5>Registro de Proceso:</h5>
-            <div class="log-entries"></div>
           </div>
         </div>
       </div>
-    </div>
-  </section>
+    </section>
   </main>
 
   <!-- Pie de página -->
   <footer class="main-footer">
     <div class="footer-container">
-      <div class="footer-info">
-        <p>&copy; 2025 Sistema de Portafolio Docente. Todos los derechos reservados.</p>
+      <div class="footer-content">
+        <div class="footer-info">
+          <p>2025 Sistema de Portafolio Docente. Todos los derechos reservados.</p>
+        </div>
+        <div class="footer-links">
+          <a href="#">Términos y Condiciones</a>
+          <a href="#">Política de Privacidad</a>  
+          <a href="../compartidas/ayuda.html">Ayuda</a>
+        </div>
       </div>
-      <div class="footer-links">
-        <a href="#">Términos y Condiciones</a>
-        <a href="#">Política de Privacidad</a>  
-        <a href="../compartidas/ayuda.html">Ayuda</a>
+      
+      <div class="footer-additional">
+        <div class="footer-additional-content">
+          <div class="system-info">
+            <div class="status-indicator">Sistema Operativo</div>
+            <span>Última actualización: <span class="timestamp" id="lastUpdate">Cargando...</span></span>
+          </div>
+          <div class="additional-links">
+            <a href="#"><i class="fas fa-question-circle"></i> Soporte</a>
+            <a href="#"><i class="fas fa-book"></i> Documentación</a>
+          </div>
+        </div>
+      </div>
+      
+      <div class="footer-bottom">
+        <div class="footer-bottom-content">
+          <p>Universidad Nacional de San Antonio Abad del Cusco - UNSAAC</p>
+        </div>
       </div>
     </div>
   </footer>
 
+  <!-- Indicador de carga -->
+  <div id="loadingOverlay" class="loading-overlay">
+    <div class="spinner-border text-light" role="status">
+      <span class="visually-hidden">Cargando...</span>
+    </div>
+  </div>
 
-  <!-- Scripts -->
+  <!-- Scripts Core -->
   <script src="../../../assets/js/nucleo/configuracion.js"></script>
-  <script src="../../../assets/js/nucleo.js"></script>
-  <script src="../../../assets/js/autenticacion.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-  <script src="../../../assets/js/paginas/dashboard/admin/tablero.js"></script>
+  <script src="../../../assets/js/nucleo/auth.js"></script>
+  <script src="../../../assets/js/nucleo/gestion-usuario-ui.js"></script>
+  <script src="../../../assets/js/nucleo/navegacion.js"></script>
+  <script src="../../../assets/js/nucleo/gestion-sesiones.js"></script>
+  
+  <!-- Admin Auth System -->
+  <script src="../../../assets/js/paginas/dashboard/admin/admin-auth.js"></script>
+  
+  <!-- Sistema Tablero Modular -->
+  <script src="../../../assets/js/paginas/dashboard/admin/tablero/core.js"></script>
+  <script src="../../../assets/js/paginas/dashboard/admin/tablero/data.js"></script>
+  <script src="../../../assets/js/paginas/dashboard/admin/tablero/ui.js"></script>
+  <script src="../../../assets/js/paginas/dashboard/admin/tablero/eventos.js"></script>
+  <script src="../../../assets/js/paginas/dashboard/admin/tablero/index.js"></script>
+
+
 </body>
 </html>

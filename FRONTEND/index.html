@@ -8,7 +8,7 @@
   <meta name="author" content="UNSAAC">
   <title>Sistema de Portafolio Docente - UNSAAC</title>
 
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" integrity="sha512-... (puede variar)" crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" integrity="sha512-Avb2QiuDEEvB4bZJYdft2mNjVShBftLdPG8FJ0V7irTLQ8Uo0qcPxh4Plq7G5tGm0rU+1SPhVotteLpBERwTkw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 
  <!-- Estilos principales -->
  <link rel="stylesheet" href="./assets/css/index/head.css">
@@ -24,28 +24,23 @@
     <!-- Sección superior -->
     <div class="header-top">
       <div class="header-top-container">
-        <!-- Búsqueda -->
-        <div class="search-container">
-          <input type="text" class="search-input" placeholder="Buscar documentos, usuarios...">
-          <button class="search-btn"><i class="fas fa-search"></i></button>
+        <!-- Información institucional -->
+        <div class="institution-info">
+          <span class="institution-name">UNSAAC</span>
         </div>
 
-        <!-- Redes y usuario -->
+        <!-- Acciones de usuario -->
         <div class="header-actions">
           <div class="social-icons">
-            <a href="https://www.facebook.com/unsaac.oficial" target="_blank" class="social-icon"><i class="fab fa-facebook-f"></i></a>
-            <a href="https://twitter.com/unsaac_oficial" target="_blank" class="social-icon"><i class="fab fa-twitter"></i></a>
-            <a href="https://www.instagram.com/unsaac_oficial" target="_blank" class="social-icon"><i class="fab fa-instagram"></i></a>
-            <a href="https://www.youtube.com/channel/UCunsaac" target="_blank" class="social-icon"><i class="fab fa-youtube"></i></a>
+            <a href="https://www.facebook.com/unsaac.oficial" target="_blank" class="social-icon" aria-label="Facebook UNSAAC"><i class="fab fa-facebook-f"></i></a>
+            <a href="https://twitter.com/unsaac_oficial" target="_blank" class="social-icon" aria-label="Twitter UNSAAC"><i class="fab fa-twitter"></i></a>
+            <a href="https://www.instagram.com/unsaac_oficial" target="_blank" class="social-icon" aria-label="Instagram UNSAAC"><i class="fab fa-instagram"></i></a>
+            <a href="https://www.youtube.com/channel/UCunsaac" target="_blank" class="social-icon" aria-label="YouTube UNSAAC"><i class="fab fa-youtube"></i></a>
           </div>
 
           <div class="user-menu" id="userMenu">
             <div class="user-icon"><i class="fas fa-user"></i></div>
             <span class="user-name" id="userName">Entrar</span>
-            <div class="dropdown-menu" id="dropdownMenu">
-              <a href="#" data-action="login" class="nav-link">Iniciar Sesión</a>
-              <a href="#" data-action="ayuda" class="nav-link">Ayuda</a>
-            </div>
           </div>
         </div>
       </div>
@@ -56,7 +51,6 @@
       <div class="header-middle-container">
         <div class="logo-container">
           <div class="logo-img">
-            
           </div>
           <div class="logo-text-container">
             <span class="logo-title">Sistema de Portafolio</span>
@@ -67,9 +61,9 @@
         <!-- Estado del sistema -->
         <div class="header-info">
           <div class="cycle-info" id="cycleInfo">
-            <span class="cycle-label">Ciclo Actual:</span>
-            <span class="cycle-name" id="currentCycle">2025-I</span>
-            <span class="cycle-status" id="cycleStatus">Configuración</span>
+            <span class="cycle-label">Estado:</span>
+            <span class="cycle-name" id="currentCycle">Sistema Activo</span>
+            <span class="cycle-status" id="cycleStatus"></span>
           </div>
         </div>
       </div>
@@ -84,9 +78,10 @@
 
         <nav class="main-nav">
           <ul class="nav-list">
-            <li><a href="#" data-action="inicio" class="nav-link active">Inicio</a></li>
-            <li><a href="#" data-action="ayuda" class="nav-link">Ayuda</a></li>
-            <li><a href="#" data-action="login" class="nav-link">Acceder al Sistema</a></li>
+            <li><a href="#inicio" class="nav-link active">Inicio</a></li>
+            <li><a href="#roles" class="nav-link">Roles</a></li>
+            <li><a href="#proceso" class="nav-link">Proceso</a></li>
+            <li><a href="#" id="btn-nav-login" class="nav-link btn-login">Acceder al Sistema</a></li>
           </ul>
         </nav>
       </div>
@@ -95,7 +90,8 @@
 
   <!-- Contenido principal -->
   <main class="main-content">
-    <section class="welcome-banner">
+    <!-- Sección de bienvenida -->
+    <section id="inicio" class="welcome-banner">
       <div class="banner-container">
         <!-- Bloque de bienvenida -->
         <div class="banner-content">
@@ -105,11 +101,11 @@
           <!-- Estado del ciclo académico -->
           <div class="cycle-status-banner" id="cycleStatusBanner">
             <div class="status-info">
-              <span class="status-icon"><i class="fas fa-calendar-alt"></i></span>
+              <span class="status-icon"><i class="fas fa-info-circle"></i></span>
               <div class="status-details">
-                <span class="status-title">Estado Actual del Sistema</span>
+                <span class="status-title">Estado del Sistema</span>
                 <span class="status-description" id="statusDescription">
-                  Sistema en configuración - Los administradores están configurando el ciclo académico
+                  Sistema disponible para el uso de docentes, verificadores y administradores
                 </span>
               </div>
             </div>
@@ -118,10 +114,7 @@
           <!-- Botones de acción -->
           <div class="header-buttons">
             <a href="#" id="btn-acceder" class="btn btn-primary">
-              <i class="fas fa-sign-in-alt"></i> Acceder
-            </a>
-            <a href="#" id="btn-registrarse" class="btn btn-secondary">
-              <i class="fas fa-user-plus"></i> Registrarse
+              <i class="fas fa-sign-in-alt"></i> Acceder al Sistema
             </a>
           </div>
         </div>
@@ -176,10 +169,9 @@
         </div>
       </div>
     </section>
-    
 
     <!-- Flujo del proceso académico -->
-    <section class="process-flow-section">
+    <section id="proceso" class="process-flow-section">
       <div class="process-container">
         <div class="section-header">
           <h2>Flujo del Proceso Académico</h2>
@@ -281,7 +273,7 @@
     </section>
 
     <!-- Acceso rápido por roles -->
-    <section class="quick-access-section">
+    <section id="roles" class="quick-access-section">
       <div class="quick-access-container">
         <div class="section-header">
           <h2>Acceso por Roles</h2>
@@ -307,7 +299,7 @@
               </ul>
             </div>
             <div class="card-footer">
-              <a href="#" data-role="administrador" class="btn btn-admin role-card-link">
+              <a href="#" data-role="administrador" class="btn btn-admin role-access-btn">
                 <i class="fas fa-sign-in-alt"></i> Acceder como Administrador
               </a>
             </div>
@@ -331,7 +323,7 @@
               </ul>
             </div>
             <div class="card-footer">
-              <a href="#" data-role="docente" class="btn btn-docente role-card-link">
+              <a href="#" data-role="docente" class="btn btn-docente role-access-btn">
                 <i class="fas fa-sign-in-alt"></i> Acceder como Docente
               </a>
             </div>
@@ -355,7 +347,7 @@
               </ul>
             </div>
             <div class="card-footer">
-              <a href="#" data-role="verificador" class="btn btn-verificador role-card-link">
+              <a href="#" data-role="verificador" class="btn btn-verificador role-access-btn">
                 <i class="fas fa-sign-in-alt"></i> Acceder como Verificador
               </a>
             </div>
@@ -373,28 +365,16 @@
           <h4>Sistema de Portafolio Docente</h4>
           <p>Universidad Nacional de San Antonio Abad del Cusco</p>
           <div class="footer-social">
-            <a href="https://www.facebook.com/unsaac.oficial" target="_blank"><i class="fab fa-facebook-f"></i></a>
-            <a href="https://twitter.com/unsaac_oficial" target="_blank"><i class="fab fa-twitter"></i></a>
+            <a href="https://www.facebook.com/unsaac.oficial" target="_blank" aria-label="Facebook UNSAAC"><i class="fab fa-facebook-f"></i></a>
+            <a href="https://twitter.com/unsaac_oficial" target="_blank" aria-label="Twitter UNSAAC"><i class="fab fa-twitter"></i></a>
           </div>
         </div>
 
         <div class="footer-section">
           <h4>Enlaces Útiles</h4>
           <ul class="footer-links">
-            <li><a href="#" data-action="login" class="nav-link">Iniciar Sesión</a></li>
-            <li><a href="#" data-action="ayuda" class="nav-link">Centro de Ayuda</a></li>
-            <li><a href="#" data-action="recuperar" class="nav-link">Recuperar Contraseña</a></li>
-            <li><a href="#" data-action="soporte" class="nav-link">Soporte Técnico</a></li>
-          </ul>
-        </div>
-
-        <div class="footer-section">
-          <h4>Información Legal</h4>
-          <ul class="footer-links">
-            <li><a href="#" data-action="terminos" class="nav-link">Términos y Condiciones</a></li>
-            <li><a href="#" data-action="privacidad" class="nav-link">Política de Privacidad</a></li>
-            <li><a href="#" data-action="cookies" class="nav-link">Política de Cookies</a></li>
-            <li><a href="#" data-action="accesibilidad" class="nav-link">Accesibilidad</a></li>
+            <li><a href="#" id="footer-login">Iniciar Sesión</a></li>
+            <li><a href="mailto:portafolio@unsaac.edu.pe">Soporte Técnico</a></li>
           </ul>
         </div>
 
@@ -416,11 +396,9 @@
     </div>
   </footer>
 
-  
   <!-- JavaScript Principal -->
   <script src="assets/js/nucleo/configuracion.js"></script>
-  <script src="assets/js/nucleo.js"></script>
-  <script src="assets/js/autenticacion.js"></script>
+  <script src="assets/js/nucleo/auth.js"></script>
   <script src="assets/js/paginas/index.js"></script>
 </body>
 </html>

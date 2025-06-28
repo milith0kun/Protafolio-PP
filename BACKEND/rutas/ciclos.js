@@ -18,6 +18,20 @@ router.get('/', verificarToken, verificarRol(['administrador']), ciclosControlle
 router.get('/activo', verificarToken, ciclosController.obtenerCicloActivo);
 
 /**
+ * @route   GET /api/ciclos/:id/estadisticas
+ * @desc    Obtener estadísticas específicas de un ciclo académico
+ * @access  Privado (Admin)
+ */
+router.get('/:id/estadisticas', verificarToken, verificarRol(['administrador']), ciclosController.obtenerEstadisticasCiclo);
+
+/**
+ * @route   GET /api/ciclos/:id/archivos-carga
+ * @desc    Obtener archivos de carga masiva asociados a un ciclo académico
+ * @access  Privado (Admin)
+ */
+router.get('/:id/archivos-carga', verificarToken, verificarRol(['administrador']), ciclosController.obtenerArchivosCargaPorCiclo);
+
+/**
  * @route   GET /api/ciclos/:id
  * @desc    Obtener un ciclo académico por su ID
  * @access  Privado (Admin)
@@ -39,11 +53,25 @@ router.post('/', verificarToken, verificarRol(['administrador']), ciclosControll
 router.put('/:id', verificarToken, verificarRol(['administrador']), ciclosController.actualizarCiclo);
 
 /**
+ * @route   GET /api/ciclos/:ciclo_id/estados
+ * @desc    Obtener los estados de los módulos para un ciclo específico
+ * @access  Privado (Admin)
+ */
+router.get('/:ciclo_id/estados', verificarToken, verificarRol(['administrador']), ciclosController.obtenerEstadosModulos);
+
+/**
  * @route   PUT /api/ciclos/:ciclo_id/modulos/:modulo
  * @desc    Actualizar el estado de un módulo del sistema para un ciclo específico
  * @access  Privado (Admin)
  */
 router.put('/:ciclo_id/modulos/:modulo', verificarToken, verificarRol(['administrador']), ciclosController.actualizarEstadoModulo);
+
+/**
+ * @route   PUT /api/ciclos/:id/estado
+ * @desc    Cambiar el estado de un ciclo académico
+ * @access  Privado (Admin)
+ */
+router.put('/:id/estado', verificarToken, verificarRol(['administrador']), ciclosController.cambiarEstadoCiclo);
 
 /**
  * @route   DELETE /api/ciclos/:id

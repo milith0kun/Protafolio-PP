@@ -13,10 +13,9 @@
     <link href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap5.min.css" rel="stylesheet">
     
     <!-- Estilos personalizados -->
-    <link rel="stylesheet" href="../../../assets/css/paginas/admin/body.css">
-    <link rel="stylesheet" href="../../../assets/css/paginas/admin/head.css">
-    <link rel="stylesheet" href="../../../assets/css/paginas/admin/footer.css">
-    <link rel="stylesheet" href="../../../assets/css/paginas/admin/dashboard.css">
+    <link rel="stylesheet" href="../../../assets/css/paginas/admin/ciclos/head.css">
+    <link rel="stylesheet" href="../../../assets/css/paginas/admin/ciclos/body.css">
+    <link rel="stylesheet" href="../../../assets/css/paginas/admin/ciclos/footer.css">
 </head>
 <body>
     <div class="wrapper">
@@ -31,7 +30,31 @@
                 <li>
                     <a href="tablero.html">
                         <i class="fas fa-tachometer-alt"></i>
-                        <span class="menu-text">Tablero</span>
+                        <span class="menu-text">Tablero Principal</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="carga-masiva.html">
+                        <i class="fas fa-upload"></i>
+                        <span class="menu-text">Sistema de Carga</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="verificar-datos.html">
+                        <i class="fas fa-search"></i>
+                        <span class="menu-text">Verificar Datos</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="usuarios.html">
+                        <i class="fas fa-users"></i>
+                        <span class="menu-text">Gestión de Usuarios</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="asignaturas.html">
+                        <i class="fas fa-book"></i>
+                        <span class="menu-text">Asignaturas</span>
                     </a>
                 </li>
                 <li class="active">
@@ -41,21 +64,9 @@
                     </a>
                 </li>
                 <li>
-                    <a href="usuarios.html">
-                        <i class="fas fa-users"></i>
-                        <span class="menu-text">Usuarios</span>
-                    </a>
-                </li>
-                <li>
-                    <a href="asignaturas.html">
-                        <i class="fas fa-book"></i>
-                        <span class="menu-text">Asignaturas</span>
-                    </a>
-                </li>
-                <li>
-                    <a href="carga-masiva.html">
-                        <i class="fas fa-upload"></i>
-                        <span class="menu-text">Carga Masiva</span>
+                    <a href="portafolios.html">
+                        <i class="fas fa-folder-open"></i>
+                        <span class="menu-text">Portafolios</span>
                     </a>
                 </li>
                 <li>
@@ -94,10 +105,23 @@
             </nav>
 
             <div class="container-fluid">
+                <!-- Alerta de estado del sistema -->
+                <div id="sistemaAlert" class="sistema-alert d-none">
+                    <div class="d-flex align-items-center">
+                        <i class="fas fa-info-circle alert-icon"></i>
+                        <div>
+                            <h5 id="sistemaAlertTitle">Estado del Sistema</h5>
+                            <p id="sistemaAlertMessage" class="mb-0">Información del ciclo académico activo</p>
+                        </div>
+                    </div>
+                </div>
+
                 <div class="row mb-4">
                     <div class="col-12">
-                        <h2>Gestión de Ciclos Académicos</h2>
-                        <p>Administre los ciclos académicos del sistema.</p>
+                        <div class="page-header">
+                            <h2>Gestión de Ciclos Académicos</h2>
+                            <p>Administre los ciclos académicos y controle el flujo del sistema de portafolios docentes.</p>
+                        </div>
                     </div>
                 </div>
 
@@ -135,6 +159,71 @@
                 </div>
             </div>
         </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="sistema-info">
+                <div class="info-section">
+                    <h6>Sistema de Portafolios</h6>
+                    <p>Estado: <span class="highlight" id="estadoSistema">Operativo</span></p>
+                    <p>Usuarios Conectados: <span class="highlight" id="usuariosConectados">1</span></p>
+                    <p>Última Actualización: <span class="highlight" id="ultimaActualizacion">Ahora</span></p>
+                </div>
+                
+                <div class="info-section ciclo-activo" id="infoCicloActivo">
+                    <h6>Ciclo Académico Activo</h6>
+                    <p>Nombre: <span class="highlight" id="nombreCicloActivo">Cargando...</span></p>
+                    <p>Período: <span class="highlight" id="periodoCicloActivo">-</span></p>
+                    <div class="modulos-estado" id="modulosEstado">
+                        <!-- Se llenarán dinámicamente -->
+                    </div>
+                </div>
+                
+                <div class="info-section">
+                    <h6>Información Técnica</h6>
+                    <p>Versión: <span class="highlight">2.0.0</span></p>
+                    <p>Base de Datos: <span class="highlight">MySQL 8.0</span></p>
+                    <p>Servidor: <span class="highlight">Node.js</span></p>
+                </div>
+            </div>
+            
+            <div class="info-institucional">
+                <div class="logo-institucional">
+                    <img src="../../../assets/imagenes/logoInstitucional.png" alt="UNSAAC">
+                    <div class="info-texto">
+                        <h5>Universidad Nacional de San Antonio Abad del Cusco</h5>
+                        <p>Sistema de Gestión de Portafolios Docentes</p>
+                    </div>
+                </div>
+                
+                <div class="enlaces-soporte">
+                    <a href="#" class="enlace-soporte">
+                        <i class="fas fa-question-circle"></i>
+                        Ayuda
+                    </a>
+                    <a href="#" class="enlace-soporte">
+                        <i class="fas fa-book"></i>
+                        Manual
+                    </a>
+                    <a href="#" class="enlace-soporte">
+                        <i class="fas fa-envelope"></i>
+                        Soporte
+                    </a>
+                </div>
+            </div>
+            
+            <div class="copyright">
+                <p>&copy; 2024 UNSAAC. Todos los derechos reservados. | Sistema de Portafolios Docentes v2.0</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Indicador de conexión -->
+    <div class="connection-status online" id="connectionStatus">
+        <div class="status-dot"></div>
+        <span>Conectado</span>
     </div>
 
     <!-- Modal para Crear/Editar Ciclo -->
@@ -264,20 +353,35 @@
         </div>
     </div>
 
-    <!-- Scripts desde CDN -->
+    <!-- Scripts -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
     <script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap5.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.4/moment.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/moment@2.29.1/moment.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/moment-timezone@0.5.34/moment-timezone-with-data-10-year-range.min.js"></script>
     
-    <!-- Scripts del sistema -->
+    <!-- Core Scripts -->
     <script src="../../../assets/js/nucleo/configuracion.js"></script>
-    <script src="../../../assets/js/nucleo.js"></script>
-    <script src="../../../assets/js/autenticacion.js"></script>
-    <script src="../../../assets/js/paginas/dashboard/admin/ciclos.js"></script>
+    <script src="../../../assets/js/nucleo/auth.js"></script>
+    <script src="../../../assets/js/navegacion.js"></script>
+    
+    <!-- Admin Auth System -->
+    <script src="../../../assets/js/paginas/dashboard/admin/admin-auth.js"></script>
+    
+    <!-- Sistema Modular de Ciclos -->
+    <script type="module" src="../../../assets/js/paginas/dashboard/admin/ciclos/index.js"></script>
+
+    <!-- Inicialización Admin -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            AdminAuth.inicializarAutenticacionAdmin();
+        });
+    </script>
+    
+   
 </body>
 </html>

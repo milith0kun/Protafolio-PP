@@ -35,16 +35,18 @@ const procesar = async (archivo, transaction) => {
 
         const adminId = admin.id;
 
-        // Obtener todos los ciclos académicos para referencia
-        const ciclos = await CicloAcademico.findAll({
+        // Obtener el ciclo académico activo
+        const cicloActivo = await CicloAcademico.findOne({
+            where: { estado: 'activo' },
             attributes: ['id', 'nombre'],
             transaction
         });
 
-        const ciclosPorNombre = {};
-        ciclos.forEach(ciclo => {
-            ciclosPorNombre[ciclo.nombre] = ciclo.id;
-        });
+        if (!cicloActivo) {
+            throw new Error('No hay un ciclo académico activo configurado');
+        }
+
+        console.log(`📅 Usando ciclo académico activo: ${cicloActivo.nombre} (ID: ${cicloActivo.id})`);
 
         for (let i = 0; i < data.length; i++) {
             try {
@@ -52,36 +54,23 @@ const procesar = async (archivo, transaction) => {
                 const { 
                     codigo,
                     nombre,
-                    carrera,
-                    semestre,
-                    anio,
+                    carrera_codigo,
+                    ciclo,
                     creditos,
-                    tipo = 'obligatorio',
-                    ciclo_academico,
-                    prerequisitos = '',
-                    estado = 'activo'
+                    horas_teoricas,
+                    horas_practicas,
+                    pre_requisitos = '',
+                    tipo = 'OBLIGATORIO',
+                    activo = 'SI'
                 } = fila;
 
                 // Validar campos requeridos
-                if (!codigo || !nombre || !creditos || !ciclo_academico) {
-                    throw new Error('Faltan campos requeridos (codigo, nombre, creditos, ciclo_academico)');
+                if (!codigo || !nombre || !creditos) {
+                    throw new Error('Faltan campos requeridos (codigo, nombre, creditos)');
                 }
 
-                // Validar que el ciclo académico exista
-                let cicloId = null;
-                
-                if (typeof ciclo_academico === 'number') {
-                    // Si es un ID numérico
-                    const ciclo = ciclos.find(c => c.id === ciclo_academico);
-                    if (ciclo) cicloId = ciclo.id;
-                } else if (typeof ciclo_academico === 'string') {
-                    // Si es un nombre de ciclo
-                    cicloId = ciclosPorNombre[ciclo_academico];
-                }
-
-                if (!cicloId) {
-                    throw new Error(`No se encontró el ciclo académico: ${ciclo_academico}`);
-                }
+                // Usar el ciclo académico activo
+                const cicloId = cicloActivo.id;
 
                 // Validar valores numéricos
                 if (isNaN(parseInt(creditos))) {
@@ -97,35 +86,61 @@ const procesar = async (archivo, transaction) => {
                     defaults: {
                         nombre,
                         codigo,
-                        carrera: carrera || '',
-                        semestre: semestre || 0,
-                        anio: anio || new Date().getFullYear(),
+                        carrera: carrera_codigo || '',
+                        semestre: ciclo || '',
+                        anio: new Date().getFullYear(),
                         creditos: parseInt(creditos),
-                        tipo,
+                        horas_teoricas: parseInt(horas_teoricas) || 0,
+                        tipo: determinarTipo(tipo, horas_teoricas, horas_practicas),
                         ciclo_id: cicloId,
-                        prerequisitos,
-                        activo: estado === 'activo' ? 1 : 0,
-                        creado_por: adminId
+                        prerequisitos: pre_requisitos || null,
+                        activo: activo === 'SI' ? true : false
                     },
                     transaction
                 });
 
                 // Si la asignatura ya existe, actualizarla
                 if (!created) {
-                    await asignatura.update({
+                    const updateData = {
                         nombre,
-                        carrera: carrera || asignatura.carrera,
-                        semestre: semestre || asignatura.semestre,
-                        anio: anio || asignatura.anio,
+                        carrera: carrera_codigo || asignatura.carrera,
+                        semestre: ciclo || asignatura.semestre,
+                        anio: new Date().getFullYear(),
                         creditos: parseInt(creditos),
-                        tipo: tipo || asignatura.tipo,
-                        prerequisitos: prerequisitos || asignatura.prerequisitos,
-                        activo: estado === 'activo' ? 1 : 0,
-                        actualizado_por: adminId
-                    }, { transaction });
-                    resultados.actualizadas++;
+                        horas_teoricas: parseInt(horas_teoricas) || asignatura.horas_teoricas || 0,
+                        tipo: determinarTipo(tipo, horas_teoricas, horas_practicas) || asignatura.tipo,
+                        prerequisitos: pre_requisitos || asignatura.prerequisitos,
+                        activo: activo === 'SI' ? true : false
+                    };
+                    
+                    // Actualizar asignatura con verificación explícita
+                    try {
+                        const [updateCount] = await asignatura.update(updateData, { transaction });
+                        logger.info(`Asignatura actualizada: ${codigo} - ${nombre}`, { updateData: Object.keys(updateData) });
+                        
+                        // Verificar que la actualización se haya realizado correctamente
+                        const asignaturaActualizada = await Asignatura.findByPk(asignatura.id, { transaction });
+                        if (!asignaturaActualizada) {
+                            throw new Error(`No se pudo verificar la actualización de la asignatura: ${codigo}`);
+                        }
+                        resultados.actualizadas++;
+                    } catch (updateError) {
+                        logger.error(`Error al actualizar asignatura ${codigo}:`, updateError);
+                        throw new Error(`Error al actualizar asignatura ${codigo}: ${updateError.message}`);
+                    }
                 } else {
-                    resultados.creadas++;
+                    // Verificar que la asignatura creada exista en la base de datos
+                    try {
+                        const asignaturaCreada = await Asignatura.findByPk(asignatura.id, { transaction });
+                        if (!asignaturaCreada) {
+                            throw new Error(`No se pudo verificar la creación de la asignatura: ${codigo}`);
+                        }
+                        logger.info(`Asignatura creada: ${codigo} - ${nombre}`);
+                        resultados.creadas++;
+                    } catch (verifyError) {
+                        logger.error(`Error al verificar la creación de la asignatura ${codigo}:`, verifyError);
+                        throw new Error(`Error al verificar la creación de la asignatura ${codigo}: ${verifyError.message}`);
+                    }
                 }
             } catch (error) {
                 logger.error(`Error en fila ${i + 2} de asignaturas:`, error);
@@ -144,6 +159,31 @@ const procesar = async (archivo, transaction) => {
         throw new Error(`Error al procesar el archivo de asignaturas: ${error.message}`);
     }
 };
+
+/**
+ * Determina el tipo de asignatura basado en las horas teóricas y prácticas
+ * @param {string} tipoOriginal - Tipo original del CSV (OBLIGATORIO, ELECTIVO, etc.)
+ * @param {number} horasTeoricas - Horas teóricas
+ * @param {number} horasPracticas - Horas prácticas
+ * @returns {string} Tipo válido para el ENUM ('teoria', 'practica', 'laboratorio')
+ */
+function determinarTipo(tipoOriginal, horasTeoricas, horasPracticas) {
+    const teoricas = parseInt(horasTeoricas) || 0;
+    const practicas = parseInt(horasPracticas) || 0;
+    
+    // Si tiene más horas prácticas que teóricas, es práctica/laboratorio
+    if (practicas > teoricas && practicas > 0) {
+        return 'laboratorio';
+    }
+    // Si tiene horas prácticas pero más teóricas, es práctica
+    else if (practicas > 0) {
+        return 'practica';
+    }
+    // Solo horas teóricas o por defecto
+    else {
+        return 'teoria';
+    }
+}
 
 module.exports = {
     procesar

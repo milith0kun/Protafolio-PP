@@ -1,0 +1,424 @@
+/* ========================================
+   FOOTER DEL TABLERO ADMINISTRADOR
+   ======================================== */
+
+:root {
+  /* Colores principales */
+  --primary-color: #3A4B8C;
+  --primary-dark: #2C3A6B;
+  --secondary-color: #F0C63B;
+  --accent-color: #E67E22;
+  
+  /* Colores neutros */
+  --white: #FFFFFF;
+  --light-gray: #F8F9FA;
+  --gray: #6C757D;
+  --text-dark: #1f2937;
+  --text-muted: #6c757d;
+  --border-color: #DEE2E6;
+  
+  /* Gradientes */
+  --admin-gradient: linear-gradient(135deg, #2C3A6B 0%, #3A4B8C 50%, #4A5B9C 100%);
+  --footer-gradient: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f172a 100%);
+  
+  /* Tipografía */
+  --font-family: 'Nunito', 'Segoe UI', system-ui, -apple-system, sans-serif;
+  
+  /* Transiciones */
+  --transition-normal: 0.3s ease-in-out;
+}
+
+/* ========================================
+   FOOTER PRINCIPAL
+   ======================================== */
+
+.main-footer {
+  background: var(--footer-gradient);
+  color: #f8f9fa;
+  padding: 2rem 0 0;
+  font-family: var(--font-family);
+  position: relative;
+  margin-top: 3rem;
+  z-index: 10;
+  box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.1);
+}
+
+.main-footer::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: var(--admin-gradient);
+  box-shadow: 0 2px 8px rgba(58, 75, 140, 0.3);
+}
+
+.main-footer::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiPjxkZWZzPjxwYXR0ZXJuIGlkPSJwYXR0ZXJuIiB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHBhdHRlcm5Vbml0cz0idXNlclNwYWNlT25Vc2UiIHBhdHRlcm5UcmFuc2Zvcm09InJvdGF0ZSg0NSkiPjxyZWN0IHg9IjAiIHk9IjAiIHdpZHRoPSIyMCIgaGVpZ2h0PSIyMCIgZmlsbD0icmdiYSgyNTUsMjU1LDI1NSwwLjAyKSIvPjwvcGF0dGVybj48L2RlZnM+PHJlY3QgeD0iMCIgeT0iMCIgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgZmlsbD0idXJsKCNwYXR0ZXJuKSIvPjwvc3ZnPg==');
+  opacity: 0.1;
+  pointer-events: none;
+}
+
+/* ========================================
+   CONTENEDOR DEL FOOTER
+   ======================================== */
+
+.footer-container {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 0 2rem;
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+/* ========================================
+   CONTENIDO PRINCIPAL DEL FOOTER
+   ======================================== */
+
+.footer-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1.5rem 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  gap: 2rem;
+}
+
+/* Información institucional */
+.footer-info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.footer-info p {
+  color: #c9c9c9;
+  font-size: 0.9rem;
+  line-height: 1.6;
+  margin: 0;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.footer-info p::before {
+  content: '©';
+  font-weight: 700;
+  color: var(--secondary-color);
+  font-size: 1.1rem;
+}
+
+/* Enlaces del footer */
+.footer-links {
+  display: flex;
+  gap: 2rem;
+  align-items: center;
+}
+
+.footer-links a {
+  color: #c9c9c9;
+  text-decoration: none;
+  font-size: 0.9rem;
+  font-weight: 500;
+  transition: var(--transition-normal);
+  position: relative;
+  padding: 0.5rem 0;
+}
+
+.footer-links a::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 0;
+  height: 2px;
+  background: var(--secondary-color);
+  transition: width 0.3s ease;
+}
+
+.footer-links a:hover {
+  color: var(--secondary-color);
+  transform: translateY(-1px);
+}
+
+.footer-links a:hover::after {
+  width: 100%;
+}
+
+/* ========================================
+   INFORMACIÓN ADICIONAL
+   ======================================== */
+
+.footer-additional {
+  padding: 1.5rem 0;
+  background: rgba(0, 0, 0, 0.2);
+  border-top: 1px solid rgba(255, 255, 255, 0.05);
+  margin-top: 1rem;
+}
+
+.footer-additional-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 2rem;
+}
+
+/* Información del sistema */
+.system-info {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  color: #8a8a8a;
+  font-size: 0.85rem;
+}
+
+.system-info .status-indicator {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.3rem 0.8rem;
+  background: rgba(40, 167, 69, 0.1);
+  border: 1px solid rgba(40, 167, 69, 0.2);
+  border-radius: 20px;
+  color: #28a745;
+  font-weight: 500;
+}
+
+.system-info .status-indicator::before {
+  content: '';
+  width: 8px;
+  height: 8px;
+  background: #28a745;
+  border-radius: 50%;
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.7;
+    transform: scale(1.1);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* Enlaces adicionales */
+.additional-links {
+  display: flex;
+  gap: 1.5rem;
+  align-items: center;
+}
+
+.additional-links a {
+  color: #8a8a8a;
+  text-decoration: none;
+  font-size: 0.8rem;
+  transition: var(--transition-normal);
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.additional-links a:hover {
+  color: var(--secondary-color);
+}
+
+.additional-links a i {
+  font-size: 0.9rem;
+}
+
+/* ========================================
+   PIE FINAL
+   ======================================== */
+
+.footer-bottom {
+  background: rgba(0, 0, 0, 0.3);
+  padding: 1rem 0;
+  text-align: center;
+  border-top: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.footer-bottom-content {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 2rem;
+  flex-wrap: wrap;
+}
+
+.footer-bottom p {
+  color: #8a8a8a;
+  font-size: 0.8rem;
+  margin: 0;
+  line-height: 1.5;
+}
+
+.footer-bottom a {
+  color: var(--secondary-color);
+  text-decoration: none;
+  transition: var(--transition-normal);
+  font-weight: 500;
+}
+
+.footer-bottom a:hover {
+  color: #fff;
+  text-decoration: underline;
+}
+
+/* Marca de tiempo */
+.timestamp {
+  color: #666;
+  font-size: 0.75rem;
+  font-style: italic;
+}
+
+/* ========================================
+   ESTILOS RESPONSIVOS
+   ======================================== */
+
+@media (max-width: 992px) {
+  .footer-content {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 1.5rem;
+  }
+  
+  .footer-info {
+    align-items: center;
+    text-align: center;
+  }
+  
+  .footer-links {
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 1.5rem;
+  }
+  
+  .footer-additional-content {
+    flex-direction: column;
+    gap: 1rem;
+  }
+  
+  .system-info {
+    justify-content: center;
+  }
+  
+  .additional-links {
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+}
+
+@media (max-width: 768px) {
+  .main-footer {
+    margin-top: 2rem;
+    padding: 1.5rem 0 0;
+  }
+  
+  .footer-container {
+    padding: 0 1rem;
+  }
+  
+  .footer-content {
+    padding: 1rem 0;
+  }
+  
+  .footer-links {
+    gap: 1rem;
+  }
+  
+  .footer-additional {
+    padding: 1rem 0;
+  }
+  
+  .system-info {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+  
+  .additional-links {
+    gap: 1rem;
+  }
+}
+
+@media (max-width: 576px) {
+  .footer-content {
+    gap: 1rem;
+  }
+  
+  .footer-info p {
+    font-size: 0.8rem;
+  }
+  
+  .footer-links {
+    flex-direction: column;
+    gap: 0.8rem;
+  }
+  
+  .footer-links a {
+    font-size: 0.8rem;
+  }
+  
+  .footer-bottom-content {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+  
+  .system-info .status-indicator {
+    padding: 0.2rem 0.6rem;
+    font-size: 0.75rem;
+  }
+  
+  .additional-links a {
+    font-size: 0.75rem;
+  }
+}
+
+/* ========================================
+   ANIMACIONES ADICIONALES
+   ======================================== */
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.main-footer {
+  animation: fadeInUp 0.6s ease-out;
+}
+
+/* Efecto hover para el footer completo */
+.main-footer:hover::before {
+  background: linear-gradient(90deg, var(--primary-color), var(--secondary-color), var(--accent-color), var(--primary-color));
+  background-size: 200% 100%;
+  animation: gradientShift 3s ease infinite;
+}
+
+@keyframes gradientShift {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}

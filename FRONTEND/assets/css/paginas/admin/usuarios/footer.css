@@ -1,0 +1,455 @@
+/* ========================================
+   FOOTER - GESTIÓN DE USUARIOS
+   ======================================== */
+
+.footer {
+  background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+  border-top: 1px solid var(--border-color);
+  padding: 2rem 0 1rem;
+  margin-top: auto;
+  position: relative;
+  overflow: hidden;
+}
+
+.footer::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: var(--usuarios-gradient);
+}
+
+.footer-content {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 1.5rem;
+}
+
+/* ========================================
+   INFORMACIÓN DEL SISTEMA
+   ======================================== */
+.footer-info {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 2rem;
+  margin-bottom: 1.5rem;
+}
+
+.footer-section h4 {
+  color: var(--text-dark);
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin-bottom: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.footer-section h4::before {
+  content: '';
+  width: 3px;
+  height: 1.2rem;
+  background: var(--usuarios-gradient);
+  border-radius: 2px;
+}
+
+.footer-section p,
+.footer-section li {
+  color: var(--text-muted);
+  font-size: 0.9rem;
+  line-height: 1.6;
+  margin-bottom: 0.5rem;
+}
+
+.footer-section ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.footer-section ul li {
+  padding: 0.25rem 0;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.footer-section ul li i {
+  width: 16px;
+  color: var(--usuarios-gradient);
+  font-size: 0.9rem;
+}
+
+/* ========================================
+   ESTADO DEL SISTEMA
+   ======================================== */
+.system-status {
+  background: white;
+  border-radius: var(--border-radius-md);
+  padding: 1rem;
+  box-shadow: var(--shadow-sm);
+  border: 1px solid var(--border-color);
+}
+
+.status-indicator {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 0.75rem;
+}
+
+.status-dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: var(--usuarios-gradient);
+  animation: pulse 2s infinite;
+}
+
+.status-dot.error {
+  background: #dc3545;
+}
+
+.status-dot.warning {
+  background: #ffc107;
+}
+
+@keyframes pulse {
+  0% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(1.1);
+    opacity: 0.7;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+.status-text {
+  font-weight: 500;
+  color: var(--text-dark);
+  font-size: 0.9rem;
+}
+
+.status-details {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  margin-top: 0.25rem;
+}
+
+/* ========================================
+   ESTADÍSTICAS RÁPIDAS
+   ======================================== */
+.footer-stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.stat-item {
+  background: white;
+  padding: 1rem;
+  border-radius: var(--border-radius-md);
+  box-shadow: var(--shadow-sm);
+  border: 1px solid var(--border-color);
+  text-align: center;
+  transition: all var(--transition-normal);
+}
+
+.stat-item:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+}
+
+.stat-number {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--usuarios-gradient);
+  display: block;
+  margin-bottom: 0.25rem;
+}
+
+.stat-label {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+/* ========================================
+   ENLACES RÁPIDOS
+   ======================================== */
+.quick-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  justify-content: center;
+  margin-bottom: 1.5rem;
+}
+
+.quick-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  background: white;
+  border: 1px solid var(--border-color);
+  border-radius: var(--border-radius-md);
+  color: var(--text-dark);
+  text-decoration: none;
+  font-size: 0.9rem;
+  font-weight: 500;
+  transition: all var(--transition-normal);
+  box-shadow: var(--shadow-sm);
+}
+
+.quick-link:hover {
+  background: var(--usuarios-gradient);
+  color: white;
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+  text-decoration: none;
+}
+
+.quick-link i {
+  font-size: 0.9rem;
+}
+
+/* ========================================
+   COPYRIGHT Y INFORMACIÓN LEGAL
+   ======================================== */
+.footer-bottom {
+  border-top: 1px solid var(--border-color);
+  padding-top: 1rem;
+  text-align: center;
+}
+
+.footer-bottom p {
+  color: var(--text-muted);
+  font-size: 0.85rem;
+  margin: 0;
+  line-height: 1.5;
+}
+
+.footer-bottom .version {
+  font-weight: 600;
+  color: var(--usuarios-gradient);
+}
+
+.footer-bottom .institution {
+  font-weight: 600;
+  color: var(--text-dark);
+}
+
+/* ========================================
+   RESPONSIVE DESIGN
+   ======================================== */
+
+/* Tablets */
+@media (max-width: 992px) {
+  .footer-content {
+    padding: 0 1rem;
+  }
+  
+  .footer-info {
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1.5rem;
+  }
+  
+  .footer-stats {
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  }
+  
+  .quick-links {
+    justify-content: flex-start;
+  }
+}
+
+/* Móviles */
+@media (max-width: 768px) {
+  .footer {
+    padding: 1.5rem 0 1rem;
+  }
+  
+  .footer-content {
+    padding: 0 0.75rem;
+  }
+  
+  .footer-info {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+  
+  .footer-stats {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.75rem;
+  }
+  
+  .stat-item {
+    padding: 0.75rem;
+  }
+  
+  .stat-number {
+    font-size: 1.25rem;
+  }
+  
+  .quick-links {
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .quick-link {
+    width: 100%;
+    max-width: 250px;
+    justify-content: center;
+  }
+}
+
+/* Móviles pequeños */
+@media (max-width: 576px) {
+  .footer {
+    padding: 1rem 0 0.75rem;
+  }
+  
+  .footer-content {
+    padding: 0 0.5rem;
+  }
+  
+  .footer-section h4 {
+    font-size: 1rem;
+  }
+  
+  .footer-stats {
+    grid-template-columns: 1fr;
+  }
+  
+  .stat-item {
+    padding: 0.5rem;
+  }
+  
+  .stat-number {
+    font-size: 1.1rem;
+  }
+  
+  .stat-label {
+    font-size: 0.8rem;
+  }
+  
+  .footer-bottom p {
+    font-size: 0.8rem;
+  }
+}
+
+/* ========================================
+   ANIMACIONES ADICIONALES
+   ======================================== */
+@keyframes slideInUp {
+  from {
+    transform: translateY(20px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+.footer-section,
+.stat-item {
+  animation: slideInUp 0.5s ease-out;
+}
+
+.footer-section:nth-child(2) {
+  animation-delay: 0.1s;
+}
+
+.footer-section:nth-child(3) {
+  animation-delay: 0.2s;
+}
+
+.stat-item:nth-child(2) {
+  animation-delay: 0.1s;
+}
+
+.stat-item:nth-child(3) {
+  animation-delay: 0.2s;
+}
+
+.stat-item:nth-child(4) {
+  animation-delay: 0.3s;
+}
+
+/* ========================================
+   TEMA ESPECÍFICO PARA USUARIOS
+   ======================================== */
+.footer-usuarios {
+  background: linear-gradient(135deg, #f8f9fa 0%, #e3f2fd 100%);
+}
+
+.footer-usuarios .footer-section h4::before {
+  background: var(--usuarios-gradient);
+}
+
+.footer-usuarios .status-dot {
+  background: var(--usuarios-gradient);
+}
+
+.footer-usuarios .stat-number {
+  color: var(--usuarios-gradient);
+}
+
+.footer-usuarios .quick-link:hover {
+  background: var(--usuarios-gradient);
+}
+
+/* ========================================
+   UTILIDADES ADICIONALES
+   ======================================== */
+.text-usuarios {
+  color: var(--usuarios-gradient) !important;
+}
+
+.bg-usuarios {
+  background: var(--usuarios-gradient) !important;
+}
+
+.border-usuarios {
+  border-color: var(--usuarios-gradient) !important;
+}
+
+/* Efectos de hover mejorados */
+.footer-section:hover h4::before {
+  animation: pulse 1s ease-in-out;
+}
+
+.stat-item:hover .stat-number {
+  transform: scale(1.1);
+  transition: transform var(--transition-normal);
+}
+
+/* Scrollbar para elementos con overflow */
+.footer-section::-webkit-scrollbar {
+  width: 4px;
+}
+
+.footer-section::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 2px;
+}
+
+.footer-section::-webkit-scrollbar-thumb {
+  background: var(--usuarios-gradient);
+  border-radius: 2px;
+}
+
+.footer-section::-webkit-scrollbar-thumb:hover {
+  background: var(--usuarios-dark);
+}

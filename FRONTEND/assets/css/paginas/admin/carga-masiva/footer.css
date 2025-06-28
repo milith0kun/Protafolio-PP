@@ -1,0 +1,358 @@
+/* ========================================
+   FOOTER - CARGA MASIVA
+   ======================================== */
+
+/* Nota: La página de carga masiva usa un layout diferente con sidebar,
+   por lo que no tiene un footer tradicional como las otras páginas.
+   Estos estilos están disponibles por si se necesita agregar un footer. */
+
+.main-footer {
+  background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+  color: #f8f9fa;
+  padding: 1.5rem 0;
+  font-family: var(--font-family);
+  position: relative;
+  margin-top: auto;
+  z-index: 10;
+  margin-left: 280px;
+  width: calc(100% - 280px);
+  transition: all var(--transition-normal);
+}
+
+/* Ajuste cuando el sidebar está colapsado */
+.sidebar.collapsed ~ .content .main-footer {
+  margin-left: 70px;
+  width: calc(100% - 70px);
+}
+
+.main-footer::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: var(--carga-gradient);
+}
+
+.footer-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 1.5rem;
+  position: relative;
+  z-index: 1;
+}
+
+.footer-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* Información del sistema */
+.footer-info {
+  display: flex;
+  flex-direction: column;
+}
+
+.footer-system-name {
+  color: white;
+  font-size: 1rem;
+  font-weight: 600;
+  margin-bottom: 0.25rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.footer-system-name i {
+  color: var(--secondary-color);
+  font-size: 1.1rem;
+}
+
+.footer-description {
+  color: rgba(255, 255, 255, 0.8);
+  font-size: 0.85rem;
+  margin: 0;
+}
+
+/* Estado del sistema en el footer */
+.footer-status {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.status-indicator {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: var(--border-radius-md);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.status-indicator.online {
+  border-color: #28a745;
+}
+
+.status-indicator.offline {
+  border-color: #dc3545;
+}
+
+.status-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #28a745;
+  box-shadow: 0 0 0 2px rgba(40, 167, 69, 0.3);
+  animation: pulse-dot 2s infinite;
+}
+
+.status-dot.offline {
+  background: #dc3545;
+  box-shadow: 0 0 0 2px rgba(220, 53, 69, 0.3);
+}
+
+.status-text {
+  color: white;
+  font-size: 0.85rem;
+  font-weight: 500;
+}
+
+/* Información de progreso */
+.footer-progress {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.4rem 0.8rem;
+  background: rgba(23, 162, 184, 0.2);
+  border-radius: var(--border-radius-md);
+  border: 1px solid rgba(23, 162, 184, 0.3);
+}
+
+.footer-progress i {
+  color: var(--secondary-color);
+  font-size: 0.9rem;
+}
+
+.footer-progress-text {
+  color: white;
+  font-size: 0.85rem;
+  font-weight: 500;
+}
+
+/* Footer bottom */
+.footer-bottom {
+  padding-top: 1rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.footer-copyright {
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 0.8rem;
+  margin: 0;
+}
+
+.footer-links {
+  display: flex;
+  gap: 1.5rem;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.footer-links a {
+  color: rgba(255, 255, 255, 0.8);
+  text-decoration: none;
+  font-size: 0.85rem;
+  transition: color var(--transition-normal);
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.footer-links a:hover {
+  color: var(--secondary-color);
+}
+
+.footer-links i {
+  font-size: 0.8rem;
+}
+
+/* Version info */
+.footer-version {
+  color: rgba(255, 255, 255, 0.6);
+  font-size: 0.75rem;
+  font-family: 'Monaco', 'Menlo', 'Consolas', monospace;
+}
+
+/* Efecto de patrón sutil en el fondo */
+.main-footer::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI0MCIgaGVpZ2h0PSI0MCI+PGRlZnM+PHBhdHRlcm4gaWQ9InBhdHRlcm4iIHdpZHRoPSI0MCIgaGVpZ2h0PSI0MCIgcGF0dGVyblVuaXRzPSJ1c2VyU3BhY2VPblVzZSI+PGNpcmNsZSBjeD0iMjAiIGN5PSIyMCIgcj0iMS41IiBmaWxsPSJyZ2JhKDI1NSwyNTUsMjU1LC4wMykiLz48L3BhdHRlcm4+PC9kZWZzPjxyZWN0IHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIGZpbGw9InVybCgjcGF0dGVybikiLz48L3N2Zz4=');
+  opacity: 0.1;
+  pointer-events: none;
+}
+
+/* ========================================
+   ANIMACIONES
+   ======================================== */
+@keyframes pulse-dot {
+  0%, 100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.7;
+    transform: scale(1.1);
+  }
+}
+
+/* ========================================
+   RESPONSIVE DESIGN
+   ======================================== */
+
+/* Tablets */
+@media (max-width: 992px) {
+  .main-footer {
+    margin-left: 250px;
+    width: calc(100% - 250px);
+  }
+  
+  .sidebar.collapsed ~ .content .main-footer {
+    margin-left: 60px;
+    width: calc(100% - 60px);
+  }
+  
+  .footer-content {
+    flex-direction: column;
+    gap: 1rem;
+    text-align: center;
+  }
+  
+  .footer-status {
+    justify-content: center;
+  }
+}
+
+/* Móviles */
+@media (max-width: 768px) {
+  .main-footer {
+    margin-left: 0;
+    width: 100%;
+  }
+  
+  .sidebar.collapsed ~ .content .main-footer {
+    margin-left: 0;
+    width: 100%;
+  }
+  
+  .footer-container {
+    padding: 0 1rem;
+  }
+  
+  .footer-content {
+    padding-bottom: 0.75rem;
+  }
+  
+  .footer-status {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+  
+  .footer-bottom {
+    flex-direction: column;
+    text-align: center;
+    gap: 0.75rem;
+  }
+  
+  .footer-links {
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 1rem;
+  }
+}
+
+/* Móviles pequeños */
+@media (max-width: 576px) {
+  .main-footer {
+    padding: 1rem 0;
+  }
+  
+  .footer-system-name {
+    font-size: 0.9rem;
+  }
+  
+  .footer-description {
+    font-size: 0.8rem;
+  }
+  
+  .status-indicator {
+    padding: 0.4rem 0.8rem;
+  }
+  
+  .footer-links {
+    gap: 0.75rem;
+  }
+  
+  .footer-links a {
+    font-size: 0.8rem;
+  }
+}
+
+/* ========================================
+   UTILIDADES ESPECÍFICAS
+   ======================================== */
+
+/* Footer sticky para páginas con poco contenido */
+.content-with-footer {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.content-with-footer .main-footer {
+  margin-top: auto;
+}
+
+/* Footer flotante para casos especiales */
+.footer-floating {
+  position: fixed;
+  bottom: 0;
+  right: 0;
+  background: rgba(26, 26, 46, 0.95);
+  backdrop-filter: blur(10px);
+  padding: 0.75rem 1rem;
+  border-radius: var(--border-radius-md) 0 0 0;
+  border-top: 2px solid var(--carga-gradient);
+  border-left: 1px solid rgba(255, 255, 255, 0.1);
+  z-index: 1001;
+  margin-left: 280px;
+  transition: all var(--transition-normal);
+}
+
+.sidebar.collapsed ~ .content .footer-floating {
+  margin-left: 70px;
+}
+
+@media (max-width: 768px) {
+  .footer-floating {
+    margin-left: 0;
+    left: 0;
+    right: 0;
+    border-radius: 0;
+  }
+}

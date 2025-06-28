@@ -23,7 +23,7 @@ exports.reporteUsuariosPorRol = async (req, res) => {
         
         // Obtener usuarios con el rol especificado
         const usuarios = await sequelize.query(
-            `SELECT u.id, u.nombres, u.apellidos, u.email, u.dni, u.telefono, u.activo, u.creado_en
+            `SELECT u.id, u.nombres, u.apellidos, u.correo, u.telefono, u.activo, u.creado_en
              FROM usuarios u
              INNER JOIN usuarios_roles ur ON u.id = ur.usuario_id
              WHERE ur.rol = ?
@@ -118,7 +118,7 @@ exports.reporteAsignacionesPorCiclo = async (req, res) => {
             `SELECT 
                 u.id as docente_id, 
                 CONCAT(u.apellidos, ', ', u.nombres) as docente_nombre,
-                u.email as docente_email,
+                u.correo as docente_email,
                 a.id as asignatura_id,
                 a.codigo as asignatura_codigo,
                 a.nombre as asignatura_nombre,
@@ -209,7 +209,7 @@ exports.reporteAsignaturasPorDocente = async (req, res) => {
                     id: docente.id,
                     nombres: docente.nombres,
                     apellidos: docente.apellidos,
-                    email: docente.email
+                    email: docente.docente_email
                 },
                 asignaturas
             }
@@ -247,7 +247,7 @@ exports.exportarReporteExcel = async (req, res) => {
                 }
                 
                 datos = await sequelize.query(
-                    `SELECT u.id, u.nombres, u.apellidos, u.email, u.dni, u.telefono, 
+                    `SELECT u.id, u.nombres, u.apellidos, u.correo, u.telefono, 
                      CASE WHEN u.activo = 1 THEN 'Activo' ELSE 'Inactivo' END as estado,
                      DATE_FORMAT(u.creado_en, '%d/%m/%Y') as fecha_registro
                      FROM usuarios u
@@ -299,7 +299,7 @@ exports.exportarReporteExcel = async (req, res) => {
                 datos = await sequelize.query(
                     `SELECT 
                         CONCAT(u.apellidos, ', ', u.nombres) as docente,
-                        u.email as email_docente,
+                        u.correo as email_docente,
                         a.codigo as codigo_asignatura,
                         a.nombre as nombre_asignatura,
                         a.carrera,

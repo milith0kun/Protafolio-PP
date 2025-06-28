@@ -1,0 +1,436 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Portafolios a Verificar - Verificador</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="../../../assets/css/paginas/verificador/head.css">
+  <link rel="stylesheet" href="../../../assets/css/paginas/verificador/body.css">
+  <link rel="stylesheet" href="../../../assets/css/paginas/verificador/footer.css">
+</head>
+
+<body>
+  <!-- Encabezado -->
+  <header class="main-header">
+    <div class="header-top">
+      <div class="header-top-container">
+        <div class="search-container">
+          <input type="text" class="search-input" placeholder="Buscar portafolios...">
+        </div>
+        <div class="header-actions">
+          <div class="social-icons">
+            <a href="https://www.facebook.com/unsaac.oficial" target="_blank" class="social-icon"><i class="fab fa-facebook-f"></i></a>
+            <a href="https://twitter.com/unsaac_oficial" target="_blank" class="social-icon"><i class="fab fa-twitter"></i></a>
+            <a href="https://www.instagram.com/unsaac_oficial" target="_blank" class="social-icon"><i class="fab fa-instagram"></i></a>
+            <a href="https://www.youtube.com/channel/UCunsaac" target="_blank" class="social-icon"><i class="fab fa-youtube"></i></a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="header-middle">
+      <div class="header-middle-container">
+        <div class="logo-container">
+          <div class="logo-img"></div>
+          <div class="logo-text-container">
+            <span class="logo-title">Sistema de Portafolio</span>
+            <span class="logo-subtitle">Verificación de Portafolios</span>
+          </div>
+        </div>
+
+        <div class="user-menu" id="userMenu">
+          <div class="user-icon">
+            <i class="fas fa-user-check"></i>
+          </div>
+          <div class="user-info">
+            <div class="user-name" id="nombreUsuario">Verificador</div>
+            <div class="user-role" id="rolUsuario">Verificador</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="header-bottom">
+      <div class="header-bottom-container">
+        <button class="menu-toggle" aria-label="Abrir menú">
+          <i class="fas fa-bars"></i>
+        </button>
+        <nav class="main-nav">
+          <ul class="nav-list" id="sidebarMenu">
+            <!-- El menú se generará dinámicamente por navegacion.js -->
+          </ul>
+        </nav>
+      </div>
+    </div>
+  </header>
+
+  <!-- Contenido principal -->
+  <main class="main-content">
+    <section class="page-header">
+      <div class="container-fluid">
+        <div class="row">
+          <div class="col-12">
+            <div class="page-title">
+              <h1><i class="fas fa-folder-open"></i> Portafolios a Verificar</h1>
+              <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                  <li class="breadcrumb-item"><a href="tablero.html">Dashboard</a></li>
+                  <li class="breadcrumb-item active">Portafolios</li>
+                </ol>
+              </nav>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Filtros y estadísticas -->
+    <section class="filters-section">
+      <div class="container-fluid">
+        <div class="row">
+          <div class="col-12">
+            <div class="card">
+              <div class="card-body">
+                <div class="row align-items-center">
+                  <div class="col-md-8">
+                    <div class="filters-row">
+                      <div class="filter-group">
+                        <label for="filtroEstado">Estado:</label>
+                        <select class="form-select" id="filtroEstado">
+                          <option value="">Todos</option>
+                          <option value="pendiente">Pendientes</option>
+                          <option value="en_revision">En Revisión</option>
+                          <option value="completado">Completados</option>
+                        </select>
+                      </div>
+                      <div class="filter-group">
+                        <label for="filtroCarrera">Carrera:</label>
+                        <select class="form-select" id="filtroCarrera">
+                          <option value="">Todas</option>
+                          <option value="informatica">Informática</option>
+                          <option value="sistemas">Sistemas</option>
+                        </select>
+                      </div>
+                      <div class="filter-group">
+                        <button class="btn btn-primary" id="btnFiltrar">
+                          <i class="fas fa-filter"></i> Filtrar
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-md-4">
+                    <div class="quick-stats">
+                      <div class="stat-item">
+                        <span class="stat-value text-warning" id="pendientes">8</span>
+                        <span class="stat-label">Pendientes</span>
+                      </div>
+                      <div class="stat-item">
+                        <span class="stat-value text-info" id="enRevision">3</span>
+                        <span class="stat-label">En Revisión</span>
+                      </div>
+                      <div class="stat-item">
+                        <span class="stat-value text-success" id="completados">15</span>
+                        <span class="stat-label">Completados</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Lista de portafolios -->
+    <section class="content-section">
+      <div class="container-fluid">
+        <div class="row">
+          <div class="col-12">
+            <div class="card">
+              <div class="card-header">
+                <div class="d-flex justify-content-between align-items-center">
+                  <h3 class="card-title mb-0">Portafolios Asignados</h3>
+                  <div class="card-actions">
+                    <button class="btn btn-primary" id="btnRefrescar">
+                      <i class="fas fa-sync"></i> Actualizar
+                    </button>
+                  </div>
+                </div>
+              </div>
+              <div class="card-body">
+                <div class="row" id="contenedorPortafolios">
+                  <!-- Loading state -->
+                  <div class="col-12 text-center">
+                    <div class="loading-message">
+                      <i class="fas fa-spinner fa-spin fa-2x"></i>
+                      <p class="mt-2">Cargando portafolios...</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Scripts -->
+  <script src="../../../assets/js/nucleo/configuracion.js"></script>
+  <script src="../../../assets/js/nucleo/auth.js"></script>
+  <script src="../../../assets/js/nucleo/navegacion.js"></script>
+  <script>
+    // Inicialización básica
+    document.addEventListener('DOMContentLoaded', function() {
+      console.log('📁 Página de Portafolios a Verificar cargada');
+      
+      // Simular carga de datos
+      setTimeout(() => {
+        const contenedor = document.getElementById('contenedorPortafolios');
+        contenedor.innerHTML = `
+          <div class="col-md-6 col-xl-4 mb-4">
+            <div class="card portfolio-card border-warning">
+              <div class="card-header bg-warning text-dark">
+                <h6 class="mb-0">
+                  <i class="fas fa-user"></i> Juan Pérez Mamani
+                </h6>
+                <small>Algoritmos y Estructuras de Datos - Grupo A</small>
+              </div>
+              <div class="card-body">
+                <div class="portfolio-stats">
+                  <div class="stat">
+                    <span class="label">Progreso:</span>
+                    <span class="value">75%</span>
+                  </div>
+                  <div class="stat">
+                    <span class="label">Documentos:</span>
+                    <span class="value">12/16</span>
+                  </div>
+                  <div class="stat">
+                    <span class="label">Pendientes:</span>
+                    <span class="value text-warning">3</span>
+                  </div>
+                </div>
+                <div class="mt-3">
+                  <span class="badge bg-warning">Pendiente de Revisión</span>
+                </div>
+              </div>
+              <div class="card-footer">
+                <button class="btn btn-primary btn-sm">
+                  <i class="fas fa-eye"></i> Revisar
+                </button>
+                <button class="btn btn-info btn-sm">
+                  <i class="fas fa-comments"></i> Observaciones
+                </button>
+              </div>
+            </div>
+          </div>
+          
+          <div class="col-md-6 col-xl-4 mb-4">
+            <div class="card portfolio-card border-info">
+              <div class="card-header bg-info text-white">
+                <h6 class="mb-0">
+                  <i class="fas fa-user"></i> María García López
+                </h6>
+                <small>Base de Datos I - Grupo B</small>
+              </div>
+              <div class="card-body">
+                <div class="portfolio-stats">
+                  <div class="stat">
+                    <span class="label">Progreso:</span>
+                    <span class="value">45%</span>
+                  </div>
+                  <div class="stat">
+                    <span class="label">Documentos:</span>
+                    <span class="value">7/16</span>
+                  </div>
+                  <div class="stat">
+                    <span class="label">En revisión:</span>
+                    <span class="value text-info">2</span>
+                  </div>
+                </div>
+                <div class="mt-3">
+                  <span class="badge bg-info">En Revisión</span>
+                </div>
+              </div>
+              <div class="card-footer">
+                <button class="btn btn-primary btn-sm">
+                  <i class="fas fa-eye"></i> Revisar
+                </button>
+                <button class="btn btn-info btn-sm">
+                  <i class="fas fa-comments"></i> Observaciones
+                </button>
+              </div>
+            </div>
+          </div>
+          
+          <div class="col-md-6 col-xl-4 mb-4">
+            <div class="card portfolio-card border-success">
+              <div class="card-header bg-success text-white">
+                <h6 class="mb-0">
+                  <i class="fas fa-user"></i> Carlos Mendoza Quispe
+                </h6>
+                <small>Redes de Computadoras - Grupo A</small>
+              </div>
+              <div class="card-body">
+                <div class="portfolio-stats">
+                  <div class="stat">
+                    <span class="label">Progreso:</span>
+                    <span class="value">100%</span>
+                  </div>
+                  <div class="stat">
+                    <span class="label">Documentos:</span>
+                    <span class="value">16/16</span>
+                  </div>
+                  <div class="stat">
+                    <span class="label">Aprobados:</span>
+                    <span class="value text-success">16</span>
+                  </div>
+                </div>
+                <div class="mt-3">
+                  <span class="badge bg-success">Completado</span>
+                </div>
+              </div>
+              <div class="card-footer">
+                <button class="btn btn-primary btn-sm">
+                  <i class="fas fa-eye"></i> Ver
+                </button>
+                <button class="btn btn-success btn-sm">
+                  <i class="fas fa-check"></i> Aprobado
+                </button>
+              </div>
+            </div>
+          </div>
+          
+          <div class="col-md-6 col-xl-4 mb-4">
+            <div class="card portfolio-card border-warning">
+              <div class="card-header bg-warning text-dark">
+                <h6 class="mb-0">
+                  <i class="fas fa-user"></i> Ana Huamán Flores
+                </h6>
+                <small>Ingeniería de Software - Grupo A</small>
+              </div>
+              <div class="card-body">
+                <div class="portfolio-stats">
+                  <div class="stat">
+                    <span class="label">Progreso:</span>
+                    <span class="value">60%</span>
+                  </div>
+                  <div class="stat">
+                    <span class="label">Documentos:</span>
+                    <span class="value">9/16</span>
+                  </div>
+                  <div class="stat">
+                    <span class="label">Pendientes:</span>
+                    <span class="value text-warning">4</span>
+                  </div>
+                </div>
+                <div class="mt-3">
+                  <span class="badge bg-warning">Pendiente de Revisión</span>
+                </div>
+              </div>
+              <div class="card-footer">
+                <button class="btn btn-primary btn-sm">
+                  <i class="fas fa-eye"></i> Revisar
+                </button>
+                <button class="btn btn-info btn-sm">
+                  <i class="fas fa-comments"></i> Observaciones
+                </button>
+              </div>
+            </div>
+          </div>
+        `;
+      }, 1000);
+    });
+  </script>
+  
+  <style>
+    .filters-section {
+      margin-bottom: 1.5rem;
+    }
+    
+    .filters-row {
+      display: flex;
+      gap: 1rem;
+      align-items: end;
+    }
+    
+    .filter-group {
+      display: flex;
+      flex-direction: column;
+      gap: 0.25rem;
+    }
+    
+    .filter-group label {
+      font-size: 0.9rem;
+      font-weight: 500;
+      margin-bottom: 0;
+    }
+    
+    .quick-stats {
+      display: flex;
+      gap: 1rem;
+      justify-content: end;
+    }
+    
+    .stat-item {
+      text-align: center;
+    }
+    
+    .stat-value {
+      display: block;
+      font-size: 1.25rem;
+      font-weight: bold;
+    }
+    
+    .stat-label {
+      font-size: 0.8rem;
+      color: #6c757d;
+    }
+    
+    .portfolio-card {
+      transition: transform 0.2s ease;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    }
+    
+    .portfolio-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+    }
+    
+    .portfolio-stats {
+      font-size: 0.9rem;
+    }
+    
+    .portfolio-stats .stat {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 0.25rem;
+    }
+    
+    .portfolio-stats .label {
+      font-weight: 500;
+    }
+    
+    .loading-message {
+      padding: 2rem;
+      color: #6c757d;
+    }
+    
+    @media (max-width: 768px) {
+      .filters-row {
+        flex-direction: column;
+        gap: 0.75rem;
+      }
+      
+      .quick-stats {
+        justify-content: center;
+        margin-top: 1rem;
+      }
+    }
+  </style>
+</body>
+</html> 

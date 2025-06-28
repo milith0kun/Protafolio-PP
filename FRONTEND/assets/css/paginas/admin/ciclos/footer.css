@@ -1,0 +1,526 @@
+/* ===============================================
+   FOOTER - GESTIÓN DE CICLOS ACADÉMICOS
+   =============================================== */
+
+/* Variables CSS consistentes */
+:root {
+    --ciclos-primary: #667eea;
+    --ciclos-secondary: #764ba2;
+    --ciclos-accent: #f0d65a;
+    --ciclos-text: #2d3748;
+    --ciclos-light: #f8f9fa;
+    --ciclos-shadow: 0 4px 20px rgba(0,0,0,0.1);
+    --ciclos-transition: all 0.3s ease;
+}
+
+/* Footer principal */
+.footer {
+    background: linear-gradient(135deg, #2d3748 0%, #1a202c 100%);
+    color: white;
+    padding: 3rem 0 1rem 0;
+    margin-top: auto;
+    position: relative;
+    overflow: hidden;
+}
+
+.footer::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, var(--ciclos-primary), var(--ciclos-secondary), var(--ciclos-accent));
+}
+
+.footer::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiPjxkZWZzPjxwYXR0ZXJuIGlkPSJwYXR0ZXJuIiB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHBhdHRlcm5Vbml0cz0idXNlclNwYWNlT25Vc2UiIHBhdHRlcm5UcmFuc2Zvcm09InJvdGF0ZSg0NSkiPjxyZWN0IHg9IjAiIHk9IjAiIHdpZHRoPSIyMCIgaGVpZ2h0PSIyMCIgZmlsbD0icmdiYSgyNTUsMjU1LDI1NSwwLjAyKSIvPjwvcGF0dGVybj48L2RlZnM+PHJlY3QgeD0iMCIgeT0iMCIgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgZmlsbD0idXJsKCNwYXR0ZXJuKSIvPjwvc3ZnPg==');
+    opacity: 0.1;
+    pointer-events: none;
+}
+
+.footer-content {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 0 2rem;
+    position: relative;
+    z-index: 2;
+}
+
+/* ===============================================
+   INFORMACIÓN DEL SISTEMA
+   =============================================== */
+
+.sistema-info {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 2rem;
+    margin-bottom: 2rem;
+}
+
+.info-section {
+    background: rgba(255,255,255,0.05);
+    border-radius: 12px;
+    padding: 1.5rem;
+    border-left: 4px solid var(--ciclos-primary);
+    backdrop-filter: blur(10px);
+    transition: var(--ciclos-transition);
+    position: relative;
+    overflow: hidden;
+}
+
+.info-section::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 60px;
+    height: 60px;
+    background: rgba(255,255,255,0.05);
+    border-radius: 50%;
+    transform: translate(20px, -20px);
+}
+
+.info-section:hover {
+    background: rgba(255,255,255,0.08);
+    transform: translateY(-3px);
+    box-shadow: 0 8px 25px rgba(0,0,0,0.2);
+}
+
+.info-section h6 {
+    color: var(--ciclos-accent);
+    font-weight: 600;
+    margin-bottom: 1rem;
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    position: relative;
+    z-index: 2;
+}
+
+.info-section p {
+    margin: 0.5rem 0;
+    font-size: 0.85rem;
+    color: rgba(255,255,255,0.8);
+    line-height: 1.6;
+    position: relative;
+    z-index: 2;
+}
+
+.info-section .highlight {
+    color: var(--ciclos-accent);
+    font-weight: 600;
+    text-shadow: 0 0 10px rgba(240, 198, 59, 0.3);
+}
+
+/* ===============================================
+   ESTADO DEL CICLO ACTIVO
+   =============================================== */
+
+.ciclo-activo {
+    background: linear-gradient(135deg, rgba(102, 126, 234, 0.1) 0%, rgba(118, 75, 162, 0.1) 100%);
+    border-left-color: #66bb6a;
+    border: 1px solid rgba(102, 187, 106, 0.2);
+    position: relative;
+}
+
+.ciclo-activo::before {
+    background: rgba(102, 187, 106, 0.1);
+}
+
+.ciclo-activo h6 {
+    color: #66bb6a;
+    text-shadow: 0 0 10px rgba(102, 187, 106, 0.3);
+}
+
+.ciclo-activo .highlight {
+    color: #66bb6a;
+    text-shadow: 0 0 10px rgba(102, 187, 106, 0.3);
+}
+
+.ciclo-activo::after {
+    content: '●';
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    color: #66bb6a;
+    font-size: 1.2rem;
+    animation: activePulse 2s infinite;
+}
+
+@keyframes activePulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.5; }
+}
+
+/* ===============================================
+   INDICADORES DE MÓDULOS
+   =============================================== */
+
+.modulos-estado {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-top: 1rem;
+}
+
+.modulo-indicator {
+    padding: 0.25rem 0.75rem;
+    border-radius: 15px;
+    font-size: 0.75rem;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+    transition: var(--ciclos-transition);
+    position: relative;
+    overflow: hidden;
+}
+
+.modulo-indicator::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 3px;
+    height: 100%;
+    background: currentColor;
+    opacity: 0.3;
+}
+
+.modulo-indicator.enabled {
+    background: rgba(102, 187, 106, 0.2);
+    color: #66bb6a;
+    border: 1px solid rgba(102, 187, 106, 0.3);
+    box-shadow: 0 0 10px rgba(102, 187, 106, 0.1);
+}
+
+.modulo-indicator.enabled::after {
+    content: '✓';
+    margin-left: 0.3rem;
+    font-weight: bold;
+}
+
+.modulo-indicator.disabled {
+    background: rgba(120, 144, 156, 0.2);
+    color: #78909c;
+    border: 1px solid rgba(120, 144, 156, 0.3);
+}
+
+.modulo-indicator.disabled::after {
+    content: '○';
+    margin-left: 0.3rem;
+    opacity: 0.5;
+}
+
+.modulo-indicator:hover {
+    transform: scale(1.05);
+}
+
+/* ===============================================
+   INFORMACIÓN INSTITUCIONAL
+   =============================================== */
+
+.info-institucional {
+    border-top: 1px solid rgba(255,255,255,0.1);
+    padding-top: 2rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 2rem;
+    margin-bottom: 1.5rem;
+}
+
+.logo-institucional {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+}
+
+.logo-institucional img {
+    height: 50px;
+    opacity: 0.8;
+    transition: var(--ciclos-transition);
+    filter: brightness(1.2);
+}
+
+.logo-institucional img:hover {
+    opacity: 1;
+    transform: scale(1.05);
+}
+
+.info-texto {
+    flex: 1;
+    min-width: 250px;
+}
+
+.info-texto h5 {
+    color: white;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+    font-size: 1.1rem;
+    text-shadow: 0 1px 3px rgba(0,0,0,0.3);
+}
+
+.info-texto p {
+    color: rgba(255,255,255,0.7);
+    margin: 0;
+    font-size: 0.9rem;
+    line-height: 1.5;
+}
+
+/* ===============================================
+   ENLACES DE SOPORTE
+   =============================================== */
+
+.enlaces-soporte {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+    align-items: center;
+}
+
+.enlace-soporte {
+    color: rgba(255,255,255,0.7);
+    text-decoration: none;
+    font-size: 0.85rem;
+    transition: var(--ciclos-transition);
+    padding: 0.5rem 1rem;
+    border-radius: 8px;
+    border: 1px solid rgba(255,255,255,0.1);
+    background: rgba(255,255,255,0.05);
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.enlace-soporte:hover {
+    color: var(--ciclos-accent);
+    background: rgba(240, 198, 59, 0.1);
+    border-color: rgba(240, 198, 59, 0.3);
+    text-decoration: none;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(240, 198, 59, 0.2);
+}
+
+.enlace-soporte i {
+    font-size: 1rem;
+    transition: var(--ciclos-transition);
+}
+
+.enlace-soporte:hover i {
+    transform: scale(1.1);
+}
+
+/* ===============================================
+   COPYRIGHT
+   =============================================== */
+
+.copyright {
+    border-top: 1px solid rgba(255,255,255,0.1);
+    padding-top: 1rem;
+    text-align: center;
+    color: rgba(255,255,255,0.6);
+    font-size: 0.8rem;
+    line-height: 1.6;
+}
+
+.copyright p {
+    margin: 0.25rem 0;
+}
+
+.copyright a {
+    color: var(--ciclos-accent);
+    text-decoration: none;
+    transition: var(--ciclos-transition);
+}
+
+.copyright a:hover {
+    color: white;
+    text-decoration: underline;
+}
+
+/* ===============================================
+   INDICADOR DE CONEXIÓN
+   =============================================== */
+
+.connection-status {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    background: rgba(0,0,0,0.8);
+    color: white;
+    padding: 0.5rem 1rem;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    z-index: 1000;
+    transition: var(--ciclos-transition);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255,255,255,0.1);
+}
+
+.connection-status.online {
+    background: rgba(76, 175, 80, 0.9);
+    border-color: rgba(76, 175, 80, 0.3);
+}
+
+.connection-status.offline {
+    background: rgba(244, 67, 54, 0.9);
+    border-color: rgba(244, 67, 54, 0.3);
+}
+
+.connection-status .status-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: currentColor;
+    animation: connectionPulse 2s infinite;
+}
+
+@keyframes connectionPulse {
+    0%, 100% { 
+        opacity: 1; 
+        transform: scale(1);
+    }
+    50% { 
+        opacity: 0.5; 
+        transform: scale(1.2);
+    }
+}
+
+.connection-status:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+}
+
+/* ===============================================
+   RESPONSIVE DESIGN
+   =============================================== */
+
+@media (max-width: 992px) {
+    .footer-content {
+        padding: 0 1.5rem;
+    }
+    
+    .sistema-info {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 1.5rem;
+    }
+    
+    .info-institucional {
+        flex-direction: column;
+        text-align: center;
+        gap: 1.5rem;
+    }
+    
+    .logo-institucional {
+        justify-content: center;
+    }
+    
+    .enlaces-soporte {
+        justify-content: center;
+    }
+}
+
+@media (max-width: 768px) {
+    .footer {
+        padding: 2rem 0 1rem 0;
+    }
+    
+    .footer-content {
+        padding: 0 1rem;
+    }
+    
+    .sistema-info {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+    }
+    
+    .info-section {
+        padding: 1rem;
+    }
+    
+    .info-section h6 {
+        font-size: 0.8rem;
+    }
+    
+    .info-section p {
+        font-size: 0.8rem;
+    }
+    
+    .modulos-estado {
+        justify-content: center;
+    }
+    
+    .modulo-indicator {
+        font-size: 0.7rem;
+        padding: 0.2rem 0.5rem;
+    }
+    
+    .enlaces-soporte {
+        flex-direction: column;
+        align-items: center;
+        gap: 0.5rem;
+    }
+    
+    .enlace-soporte {
+        width: 100%;
+        max-width: 200px;
+        justify-content: center;
+    }
+}
+
+@media (max-width: 576px) {
+    .footer {
+        padding: 1.5rem 0 1rem 0;
+    }
+    
+    .footer-content {
+        padding: 0 0.5rem;
+    }
+    
+    .info-section {
+        padding: 0.75rem;
+    }
+    
+    .info-section h6 {
+        font-size: 0.75rem;
+        margin-bottom: 0.75rem;
+    }
+    
+    .info-section p {
+        font-size: 0.75rem;
+    }
+    
+    .logo-institucional img {
+        height: 40px;
+    }
+    
+    .info-texto h5 {
+        font-size: 1rem;
+    }
+    
+    .info-texto p {
+        font-size: 0.8rem;
+    }
+    
+    .connection-status {
+        bottom: 10px;
+        right: 10px;
+        padding: 0.4rem 0.8rem;
+        font-size: 0.75rem;
+    }
+    
+    .copyright {
+        font-size: 0.75rem;
+    }
+}

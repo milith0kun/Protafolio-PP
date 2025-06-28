@@ -1,0 +1,193 @@
+/* ==========================================================================
+   VERIFICAR DATOS - HEAD STYLES
+   Estilos para el header, navegación y sidebar de la página verificar-datos
+   ========================================================================== */
+
+/* Wrapper principal */
+.wrapper {
+    display: flex;
+    width: 100%;
+    align-items: stretch;
+}
+
+/* Sidebar Styles */
+#sidebar {
+    min-width: 250px;
+    max-width: 250px;
+    background: #333;
+    color: white;
+    transition: all 0.3s;
+    position: relative;
+    z-index: 1050;
+    height: 100vh;
+    overflow-y: auto;
+}
+
+#sidebar.active {
+    margin-left: -250px;
+}
+
+.sidebar-header {
+    background: #2c3e50;
+    padding: 20px;
+    text-align: center;
+}
+
+.sidebar-header h3 {
+    color: white;
+    font-size: 1.2rem;
+    margin: 0;
+    font-weight: 600;
+}
+
+.sidebar-header strong {
+    display: block;
+    margin-top: 5px;
+    font-size: 0.9rem;
+    color: #bdc3c7;
+}
+
+/* Lista de navegación */
+#sidebar .components {
+    padding: 0;
+}
+
+#sidebar ul li {
+    padding: 0;
+    border-bottom: 1px solid #47748b;
+}
+
+#sidebar ul li a {
+    padding: 12px 20px;
+    font-size: 1rem;
+    display: block;
+    color: #bdc3c7;
+    text-decoration: none;
+    transition: all 0.3s;
+}
+
+#sidebar ul li a:hover {
+    color: white;
+    background: #2c3e50;
+}
+
+#sidebar ul li.active > a {
+    color: white;
+    background: #2980b9;
+    border-left: 4px solid #3498db;
+}
+
+#sidebar ul li a i {
+    margin-right: 10px;
+    width: 20px;
+    text-align: center;
+}
+
+.menu-text {
+    display: inline;
+}
+
+/* Footer del sidebar */
+.sidebar-footer {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    border-top: 1px solid #47748b;
+}
+
+/* Content area */
+#content {
+    width: 100%;
+    min-height: 100vh;
+    transition: all 0.3s;
+    background: #f8f9fa;
+}
+
+/* Navbar superior */
+#content .navbar {
+    padding: 15px 20px;
+    background: white !important;
+    border-bottom: 1px solid #dee2e6;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+/* Botón de colapso del sidebar */
+#sidebarCollapse {
+    background: #2980b9;
+    border: none;
+    border-radius: 6px;
+    transition: all 0.3s;
+}
+
+#sidebarCollapse:hover {
+    background: #3498db;
+    transform: translateY(-2px);
+}
+
+/* User info */
+.user-info {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.user-info span {
+    font-weight: 500;
+}
+
+.badge {
+    font-size: 0.8rem;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    #sidebar {
+        margin-left: -250px;
+    }
+    #sidebar.active {
+        margin-left: 0;
+    }
+    
+    .menu-text {
+        display: inline;
+    }
+}
+
+/* Status banner */
+.status-banner {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+}
+
+.status-banner h4 {
+    color: white;
+    font-weight: 600;
+}
+
+.status-banner p {
+    color: rgba(255, 255, 255, 0.9);
+}
+
+/* Breadcrumb personalizado */
+#breadcrumb-container {
+    margin-top: 8px;
+}
+
+.breadcrumb {
+    background: transparent;
+    padding: 0;
+    margin: 0;
+    font-size: 0.9rem;
+}
+
+.breadcrumb-item {
+    color: #6c757d;
+}
+
+.breadcrumb-item.active {
+    color: #495057;
+    font-weight: 500;
+} 

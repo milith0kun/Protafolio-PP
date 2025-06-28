@@ -18,7 +18,7 @@
   <header class="main-header">
     <!-- Sección superior -->
     <div class="header-top">
-      <div class="header-top-container">
+      <div class="header-top-container">  
         <!-- Búsqueda -->
         <div class="search-container">
           <div class="search-wrapper">
@@ -61,7 +61,7 @@
       <div class="header-middle-container">
         <div class="logo-container">
           <div class="logo-img">
-            <img src="../../assets/images/logo-unsaac.png" alt="Logo UNSAAC" class="logo">
+       
           </div>
           <div class="logo-text-container">
             <h1 class="logo-title">Sistema de Portafolio</h1>
@@ -120,13 +120,7 @@
           <p class="login-subtitle">Acceda a su cuenta institucional</p>
         </div>
         
-        <!-- Spinner de carga -->
-        <div id="spinner-carga" class="spinner-container d-none">
-          <div class="spinner-border text-primary" role="status">
-            <span class="visually-hidden">Cargando...</span>
-          </div>
-          <p class="spinner-text">Verificando credenciales...</p>
-        </div>
+   
         
         <!-- Alertas -->
         <div class="alerts-container">
@@ -324,42 +318,46 @@
             </div>
           </div>
           
-          <!-- Estado del sistema -->
-          <div class="system-status">
-            <div class="status-card">
-              <div class="status-header">
-                <i class="fas fa-server status-icon"></i>
-                <h4 class="status-title">Estado del Sistema</h4>
-              </div>
-              <div class="status-content">
-                <div class="status-indicator online">
-                  <span class="status-dot"></span>
-                  <span class="status-text">Operativo</span>
-                </div>
-                <p class="status-description">Todos los servicios funcionando correctamente</p>
-              </div>
-            </div>
+          <!-- Sección de bienvenida -->
+          <div class="welcome-section">
+            <h1>Bienvenido al Sistema</h1>
+            <p>Inicie sesión para acceder a su cuenta</p>
           </div>
-          
-          <!-- Información de soporte -->
-          <div class="support-info">
-            <div class="support-card">
-              <h4 class="support-title">
-                <i class="fas fa-headset"></i>
-                ¿Necesita ayuda?
-              </h4>
-              <p class="support-description">
-                Nuestro equipo de soporte está disponible para asistirle.
-              </p>
-              <div class="support-actions">
-                <a href="../compartidas/ayuda.html" class="btn btn-outline-light btn-sm">
-                  <i class="fas fa-question-circle"></i>
-                  Centro de Ayuda
-                </a>
-                <a href="mailto:soporte@unsaac.edu.pe" class="btn btn-outline-light btn-sm">
-                  <i class="fas fa-envelope"></i>
-                  Contactar Soporte
-                </a>
+
+          <!-- Contenedor de información -->
+          <div class="info-container">
+            <!-- Estado del sistema -->
+            <div class="bottom-section">
+              <div class="system-status">
+                <div class="status-card">
+                  <div class="status-header">
+                    <i class="fas fa-server status-icon"></i>
+                    <div class="status-content">
+                      <div class="status-indicator">
+                        <span class="status-dot online"></span>
+                        <span class="status-title">Estado del sistema</span>
+                      </div>
+                      <p class="status-text">Todos los sistemas funcionando correctamente</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              
+              <!-- Información de soporte -->
+              <div class="support-info">
+                <div class="support-card">
+                  <h3 class="support-title">
+                    <i class="fas fa-headset"></i>
+                    Soporte Técnico
+                  </h3>
+                  <p class="support-description">¿Necesitas ayuda? Nuestro equipo está disponible para asistirte.</p>
+                  <div class="support-links">
+                    <a href="mailto:soporte@unsaac.edu.pe" class="support-email">
+                      <i class="fas fa-envelope"></i>
+                      soporte@unsaac.edu.pe
+                    </a>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
@@ -405,116 +403,9 @@
   
   <!-- Scripts -->
   <script src="../../assets/js/nucleo/configuracion.js"></script>
-  <script src="../../assets/js/nucleo.js"></script>
-  <script src="../../assets/js/autenticacion.js"></script>
+  <script src="../../assets/js/nucleo/auth.js"></script>
   
-  <!-- Script de configuración e inicialización -->
-  <script>
-    // Función para mostrar información de depuración
-    function mostrarDepuracion() {
-      console.log('DEBUG - Mostrando información de depuración');
-      
-      // Crear un div para mostrar mensajes de depuración
-      const debugDiv = document.createElement('div');
-      debugDiv.id = 'debug-info';
-      debugDiv.className = 'debug-panel';
-      debugDiv.style.cssText = `
-        position: fixed;
-        bottom: 10px;
-        left: 10px;
-        background-color: rgba(0,0,0,0.8);
-        color: white;
-        padding: 15px;
-        border-radius: 8px;
-        max-width: 400px;
-        z-index: 9999;
-        font-size: 12px;
-        max-height: 200px;
-        overflow-y: auto;
-        font-family: monospace;
-        box-shadow: 0 4px 6px rgba(0,0,0,0.3);
-      `;
-      
-      // Añadir información de depuración
-      const token = localStorage.getItem(window.CONFIG?.STORAGE?.TOKEN || 'token');
-      const usuario = localStorage.getItem(window.CONFIG?.STORAGE?.USER || 'user');
-      
-      debugDiv.innerHTML = `
-        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
-          <h3 style="margin: 0; color: #4CAF50;">Información de Depuración</h3>
-          <button onclick="this.closest('#debug-info').remove();" style="background: none; border: none; color: white; cursor: pointer; font-size: 16px;">×</button>
-        </div>
-        <div style="line-height: 1.4;">
-          <p><strong>URL:</strong> ${window.location.href}</p>
-          <p><strong>Token existe:</strong> ${!!token ? '✅' : '❌'}</p>
-          <p><strong>Usuario existe:</strong> ${!!usuario ? '✅' : '❌'}</p>
-          <p><strong>API URL:</strong> ${window.CONFIG?.API?.BASE_URL || 'No configurada'}</p>
-          <p><strong>Timestamp:</strong> ${new Date().toLocaleString()}</p>
-        </div>
-      `;
-      
-      // Remover debug panel anterior si existe
-      const existingDebug = document.getElementById('debug-info');
-      if (existingDebug) {
-        existingDebug.remove();
-      }
-      
-      document.body.appendChild(debugDiv);
-      
-      // Mostrar información de los elementos del formulario
-      const formulario = document.getElementById('formulario-login');
-      console.log('Formulario encontrado:', !!formulario);
-      
-      if (formulario) {
-        console.log('Elementos del formulario:', {
-          correo: !!document.getElementById('correo'),
-          password: !!document.getElementById('password'),
-          btnMostrar: !!document.getElementById('btn-mostrar-password'),
-          btnLogin: !!document.getElementById('btn-login')
-        });
-      }
-    }
-    
-    // Inicialización cuando el DOM esté completamente cargado
-    document.addEventListener('DOMContentLoaded', function() {
-      console.log('DEBUG - DOM completamente cargado');
-      
-      // Mostrar información de depuración en modo desarrollo
-      if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
-        mostrarDepuracion();
-      }
-      
-      // Configurar el formulario de login
-      if (typeof configurarLogin === 'function') {
-        console.log('DEBUG - Configurando login...');
-        configurarLogin();
-      } else {
-        console.error('ERROR: La función configurarLogin no está definida');
-      }
-      
-      // Agregar funcionalidad adicional para mejorar UX
-      const menuToggle = document.querySelector('.menu-toggle');
-      const mainNav = document.querySelector('.main-nav');
-      
-      if (menuToggle && mainNav) {
-        menuToggle.addEventListener('click', function() {
-          const isExpanded = this.getAttribute('aria-expanded') === 'true';
-          this.setAttribute('aria-expanded', !isExpanded);
-          mainNav.classList.toggle('nav-open');
-        });
-      }
-      
-      // Auto-cerrar alertas después de 5 segundos
-      const alerts = document.querySelectorAll('.alert');
-      alerts.forEach(alert => {
-        const closeBtn = alert.querySelector('.alert-close');
-        if (closeBtn) {
-          closeBtn.addEventListener('click', () => {
-            alert.classList.add('d-none');
-          });
-        }
-      });
-    });
-  </script>
+  <!-- Script específico para login -->
+  <script src="../../assets/js/paginas/autenticacion/login.js"></script>
 </body>
 </html>

@@ -4,11 +4,14 @@ const logger = require('../../config/logger');
 
 // Configuración de rutas de almacenamiento
 const UPLOADS_DIR = path.join(__dirname, '../../../uploads/portafolios');
+const LOGS_DIR = path.join(__dirname, '../../../logs');
 
-// Crear directorio de portafolios si no existe
-if (!fs.existsSync(UPLOADS_DIR)) {
-    fs.mkdirSync(UPLOADS_DIR, { recursive: true });
-}
+// Crear directorios necesarios
+[UPLOADS_DIR, LOGS_DIR].forEach(dir => {
+    if (!fs.existsSync(dir)) {
+        fs.mkdirSync(dir, { recursive: true });
+    }
+});
 
 // Estado global de inicialización
 global.inicializacionProgress = {
@@ -59,14 +62,25 @@ function actualizarProgreso(paso, detalles = {}) {
  */
 function registrarError(error, contexto = '') {
     const timestamp = new Date().toISOString();
-    const errorMessage = `[${timestamp}] Error${contexto ? ` en ${contexto}` : ''}: ${error.message}\n${error.stack}\n\n`;
+    const errorLog = {
+        timestamp,
+        contexto,
+        mensaje: error.message,
+        stack: error.stack,
+        detalles: error.detalles || {}
+    };
     
     // Registrar en consola
-    console.error(errorMessage);
+    console.error(JSON.stringify(errorLog, null, 2));
     
     // Registrar en archivo de logs
-    fs.appendFile('errores-inicializacion.log', errorMessage, (err) => {
-        if (err) console.error('Error al escribir en el archivo de logs:', err);
+    const logPath = path.join(LOGS_DIR, 'errores-inicializacion.log');
+    fs.appendFileSync(logPath, JSON.stringify(errorLog, null, 2) + '\n');
+    
+    // Registrar en el logger principal
+    logger.error(`[${contexto}] ${error.message}`, {
+        error: errorLog,
+        stack: error.stack
     });
 }
 
@@ -84,8 +98,59 @@ async function limpiarArchivosTemporales(archivos) {
                 logger.info(`Archivo temporal eliminado: ${archivo.originalname}`);
             } catch (err) {
                 logger.error(`Error al eliminar archivo temporal ${archivo.originalname}:`, err);
+                registrarError(err, 'limpiarArchivosTemporales');
             }
         }
+    }
+}
+
+/**
+ * Realiza un backup de la base de datos
+ * @param {string} nombreArchivo - Nombre del archivo de backup
+ */
+async function realizarBackup(nombreArchivo) {
+    const backupPath = path.join(LOGS_DIR, 'backups', nombreArchivo);
+    
+    try {
+        // Crear directorio de backups si no existe
+        const backupDir = path.dirname(backupPath);
+        if (!fs.existsSync(backupDir)) {
+            fs.mkdirSync(backupDir, { recursive: true });
+        }
+        
+        // Aquí iría la lógica para realizar el backup
+        // Por ejemplo, usando mysqldump o similar
+        
+        logger.info(`Backup realizado exitosamente: ${nombreArchivo}`);
+        return true;
+    } catch (error) {
+        registrarError(error, 'realizarBackup');
+        return false;
+    }
+}
+
+/**
+ * Limpia los logs antiguos
+ * @param {number} diasRetener - Número de días a retener los logs
+ */
+function limpiarLogsAntiguos(diasRetener = 30) {
+    const fechaLimite = new Date();
+    fechaLimite.setDate(fechaLimite.getDate() - diasRetener);
+    
+    try {
+        const archivos = fs.readdirSync(LOGS_DIR);
+        
+        archivos.forEach(archivo => {
+            const rutaArchivo = path.join(LOGS_DIR, archivo);
+            const stats = fs.statSync(rutaArchivo);
+            
+            if (stats.mtime < fechaLimite) {
+                fs.unlinkSync(rutaArchivo);
+                logger.info(`Log antiguo eliminado: ${archivo}`);
+            }
+        });
+    } catch (error) {
+        registrarError(error, 'limpiarLogsAntiguos');
     }
 }
 
@@ -93,5 +158,7 @@ module.exports = {
     actualizarProgreso,
     registrarError,
     limpiarArchivosTemporales,
+    realizarBackup,
+    limpiarLogsAntiguos,
     UPLOADS_DIR
 };

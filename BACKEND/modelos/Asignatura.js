@@ -12,12 +12,23 @@ const Asignatura = sequelize.define('Asignatura', {
     autoIncrement: true
   },
   codigo: {
-    type: DataTypes.STRING(20),
-    allowNull: false,
-    unique: true
+    type: DataTypes.STRING(50),
+    allowNull: false
   },
   nombre: {
     type: DataTypes.STRING(255),
+    allowNull: false
+  },
+  carrera: {
+    type: DataTypes.STRING(255),
+    allowNull: false
+  },
+  semestre: {
+    type: DataTypes.STRING(50),
+    allowNull: false
+  },
+  anio: {
+    type: DataTypes.INTEGER,
     allowNull: false
   },
   creditos: {
@@ -26,41 +37,27 @@ const Asignatura = sequelize.define('Asignatura', {
   },
   horas_teoricas: {
     type: DataTypes.INTEGER,
-    allowNull: false,
     defaultValue: 0
   },
-  horas_practicas: {
+  tipo: {
+    type: DataTypes.ENUM('teoria', 'practica', 'laboratorio'),
+    allowNull: false
+  },
+  ciclo_id: {
     type: DataTypes.INTEGER,
     allowNull: false,
-    defaultValue: 0
-  },
-  ciclo_malla: {
-    type: DataTypes.STRING(10),
-    allowNull: true
-  },
-  departamento_academico: {
-    type: DataTypes.STRING(255),
-    allowNull: true
-  },
-  escuela_profesional: {
-    type: DataTypes.STRING(255),
-    allowNull: true
-  },
-  facultad: {
-    type: DataTypes.STRING(255),
-    allowNull: true
+    references: {
+      model: 'ciclos_academicos',
+      key: 'id'
+    }
   },
   activo: {
     type: DataTypes.BOOLEAN,
     defaultValue: true
   },
-  creado_por: {
-    type: DataTypes.INTEGER,
-    allowNull: false,
-    references: {
-      model: 'usuarios',
-      key: 'id'
-    }
+  prerequisitos: {
+    type: DataTypes.JSON,
+    allowNull: true
   },
   creado_en: {
     type: DataTypes.DATE,
@@ -68,7 +65,9 @@ const Asignatura = sequelize.define('Asignatura', {
   },
   actualizado_en: {
     type: DataTypes.DATE,
-    defaultValue: DataTypes.NOW
+    defaultValue: DataTypes.NOW,
+    onUpdate: DataTypes.NOW,
+    field: 'actualizado_en'
   }
 }, {
   tableName: 'asignaturas',
@@ -78,18 +77,9 @@ const Asignatura = sequelize.define('Asignatura', {
       fields: ['codigo'],
       name: 'idx_codigo'
     },
-    {
-      fields: ['departamento_academico'],
-      name: 'idx_departamento'
-    },
-    {
-      fields: ['escuela_profesional'],
-      name: 'idx_escuela'
-    },
-    {
-      fields: ['facultad'],
-      name: 'idx_facultad'
-    }
+    // Se eliminó el índice idx_departamento porque la columna 'departamento_academico' no existe en la tabla real
+    // Se eliminó el índice idx_escuela porque la columna 'escuela_profesional' no existe en la tabla real
+    // Se eliminó el índice idx_facultad porque la columna 'facultad' no existe en la tabla real
   ]
 });
 

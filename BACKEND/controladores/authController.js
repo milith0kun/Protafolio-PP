@@ -2,6 +2,7 @@ const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
 const { Usuario, UsuarioRol } = require('../modelos');
 const { Op } = require('sequelize');
+const config = require('../config/env');
 
 // Añadir logs para depuración
 console.log('Módulos cargados correctamente');
@@ -21,8 +22,8 @@ const generarToken = (usuario, rolActual) => {
       nombres: usuario.nombres,
       apellidos: usuario.apellidos
     },
-    process.env.JWT_SECRET,
-    { expiresIn: process.env.JWT_EXPIRES_IN || '24h' }
+    config.JWT_SECRET,
+    { expiresIn: config.JWT_EXPIRES_IN }
   );
 };
 
@@ -186,7 +187,7 @@ exports.getUsuarioActual = async (req, res) => {
       include: [
         {
           model: UsuarioRol,
-          as: 'rolesAsignados',
+          as: 'roles',
           where: { activo: true },
           required: false
         }
@@ -201,6 +202,7 @@ exports.getUsuarioActual = async (req, res) => {
     }
 
     res.status(200).json({
+      success: true,
       usuario,
       error: false
     });
@@ -209,7 +211,6 @@ exports.getUsuarioActual = async (req, res) => {
     console.error('Error al obtener información del usuario:', error);
     res.status(500).json({
       mensaje: 'Error al obtener información del usuario',
-      error: true,
       error: error.message
     });
   }
@@ -218,25 +219,40 @@ exports.getUsuarioActual = async (req, res) => {
 // Cambiar de rol (para usuarios con múltiples roles)
 exports.cambiarRol = async (req, res) => {
   try {
-    const { rolNombre } = req.body;
+    const { rolId, rolNombre } = req.body;
     const usuarioId = req.usuario.id;
 
-    // Verificar que se proporcione un nombre de rol
-    if (!rolNombre) {
+    console.log('=== CAMBIO DE ROL ===');
+    console.log('Body recibido:', req.body);
+    console.log('Usuario ID:', usuarioId);
+
+    // Aceptar tanto rolId como rolNombre para compatibilidad
+    let rolUsuario;
+    
+    if (rolId) {
+      // Buscar por ID
+      rolUsuario = await UsuarioRol.findOne({
+        where: {
+          id: rolId,
+          usuario_id: usuarioId,
+          activo: true
+        }
+      });
+    } else if (rolNombre) {
+      // Buscar por nombre
+      rolUsuario = await UsuarioRol.findOne({
+        where: {
+          usuario_id: usuarioId,
+          rol: rolNombre,
+          activo: true
+        }
+      });
+    } else {
       return res.status(400).json({
-        mensaje: 'Se requiere especificar el rol',
+        mensaje: 'Se requiere especificar el rolId o rolNombre',
         error: true
       });
     }
-
-    // Verificar que el usuario tenga el rol solicitado
-    const rolUsuario = await UsuarioRol.findOne({
-      where: {
-        usuario_id: usuarioId,
-        rol: rolNombre,
-        activo: true
-      }
-    });
 
     if (!rolUsuario) {
       return res.status(404).json({
@@ -245,22 +261,26 @@ exports.cambiarRol = async (req, res) => {
       });
     }
 
+    console.log('Rol encontrado:', rolUsuario.rol);
+
     // Obtener el usuario con sus roles asignados
     const usuario = await Usuario.findByPk(usuarioId, {
-      attributes: { exclude: ['contrasena'] },
-      include: [{
-        model: UsuarioRol,
-        as: 'rolesAsignados',
-        where: { activo: true },
-        required: false
-      }]
+      attributes: { exclude: ['contrasena'] }
     });
 
-    // Generar nuevo token con el rol actualizado
-    const token = generarToken(usuario, rolNombre);
+    // Obtener todos los roles del usuario para la respuesta
+    const rolesUsuario = await UsuarioRol.findAll({
+      where: {
+        usuario_id: usuarioId,
+        activo: true
+      }
+    });
+
+    // Generar nuevo token con el rol seleccionado
+    const token = generarToken(usuario, rolUsuario.rol);
 
     // Mapear los roles para la respuesta
-    const roles = usuario.rolesAsignados.map(ur => ({
+    const roles = rolesUsuario.map(ur => ({
       id: ur.id,
       rol: ur.rol,
       asignado_por: ur.asignado_por
@@ -273,8 +293,10 @@ exports.cambiarRol = async (req, res) => {
       apellidos: usuario.apellidos,
       correo: usuario.correo,
       roles: roles,
-      rolActual: rolNombre
+      rolActual: rolUsuario.rol
     };
+
+    console.log('Token generado exitosamente para rol:', rolUsuario.rol);
 
     res.status(200).json({
       mensaje: 'Rol cambiado exitosamente',
@@ -288,7 +310,108 @@ exports.cambiarRol = async (req, res) => {
     res.status(500).json({
       mensaje: 'Error al cambiar de rol',
       error: true,
-      error: error.message
+      detalles: error.message
+    });
+  }
+};
+
+// Verificar el token y estado de sesión
+exports.verificarToken = async (req, res) => {
+  try {
+    // El middleware ya verificó el token y agregó req.usuario
+    if (!req.usuario) {
+      return res.status(401).json({
+        mensaje: 'Token inválido',
+        error: true
+      });
+    }
+
+    // Verificar que el usuario existe y está activo
+    const usuario = await Usuario.findByPk(req.usuario.id, {
+      attributes: { exclude: ['contrasena'] }
+    });
+
+    if (!usuario || !usuario.activo) {
+      return res.status(401).json({
+        mensaje: 'Usuario no encontrado o inactivo',
+        error: true
+      });
+    }
+
+    // Obtener roles actuales
+    const rolesUsuario = await UsuarioRol.findAll({
+      where: {
+        usuario_id: usuario.id,
+        activo: true
+      }
+    });
+
+    const roles = rolesUsuario.map(ur => ({
+      id: ur.id,
+      rol: ur.rol,
+      asignado_por: ur.asignado_por
+    }));
+
+    res.status(200).json({
+      mensaje: 'Token válido',
+      error: false,
+      usuario: {
+        id: usuario.id,
+        nombres: usuario.nombres,
+        apellidos: usuario.apellidos,
+        correo: usuario.correo,
+        roles: roles,
+        rolActual: req.usuario.rol
+      }
+    });
+
+  } catch (error) {
+    console.error('Error al verificar token:', error);
+    res.status(500).json({
+      mensaje: 'Error al verificar token',
+      error: true,
+      detalles: error.message
+    });
+  }
+};
+
+// Renovar token
+exports.renovarToken = async (req, res) => {
+  try {
+    if (!req.usuario) {
+      return res.status(401).json({
+        mensaje: 'Token inválido',
+        error: true
+      });
+    }
+
+    // Obtener usuario completo
+    const usuario = await Usuario.findByPk(req.usuario.id, {
+      attributes: { exclude: ['contrasena'] }
+    });
+
+    if (!usuario || !usuario.activo) {
+      return res.status(401).json({
+        mensaje: 'Usuario no encontrado o inactivo',
+        error: true
+      });
+    }
+
+    // Generar nuevo token con el mismo rol
+    const nuevoToken = generarToken(usuario, req.usuario.rol);
+
+    res.status(200).json({
+      mensaje: 'Token renovado exitosamente',
+      error: false,
+      token: nuevoToken
+    });
+
+  } catch (error) {
+    console.error('Error al renovar token:', error);
+    res.status(500).json({
+      mensaje: 'Error al renovar token',
+      error: true,
+      detalles: error.message
     });
   }
 };

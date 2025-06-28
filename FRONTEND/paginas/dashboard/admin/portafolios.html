@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestión de Portafolios - Administrador</title>
+    <!-- CSS desde CDN -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css" rel="stylesheet">
+    <link href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap5.min.css" rel="stylesheet">
+
+    <!-- Estilos personalizados -->
+    <link rel="stylesheet" href="../../../assets/css/paginas/admin/body.css">
+    <link rel="stylesheet" href="../../../assets/css/paginas/admin/head.css">
+    <link rel="stylesheet" href="../../../assets/css/paginas/admin/footer.css">
+  
+    <meta name="description" content="Gestión de portafolios - Sistema UNSAAC">
+    <meta name="keywords" content="portafolios, gestión, UNSAAC">
+    <meta name="author" content="UNSAAC">
+</head>
+<body>
+    <!-- Encabezado -->
+    <header class="main-header">
+        <div class="header-top">
+            <div class="header-top-container">
+                <div class="search-container">
+                    <input type="text" class="search-input" placeholder="Buscar portafolios...">
+                </div>
+                <div class="header-actions">
+                    <div class="social-icons">
+                        <a href="https://www.facebook.com/unsaac.oficial" target="_blank" class="social-icon"><i class="fab fa-facebook-f"></i></a>
+                        <a href="https://twitter.com/unsaac_oficial" target="_blank" class="social-icon"><i class="fab fa-twitter"></i></a>
+                        <a href="https://www.instagram.com/unsaac_oficial" target="_blank" class="social-icon"><i class="fab fa-instagram"></i></a>
+                        <a href="https://www.youtube.com/channel/UCunsaac" target="_blank" class="social-icon"><i class="fab fa-youtube"></i></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="header-middle">
+            <div class="header-middle-container">
+                <div class="logo-container">
+                    <div class="logo-img"></div>
+                    <div class="logo-text-container">
+                        <span class="logo-title">Sistema de Portafolio</span>
+                        <span class="logo-subtitle">Gestión de Portafolios</span>
+                    </div>
+                </div>
+
+                <div class="user-menu" id="userMenu">
+                    <div class="user-icon">
+                        <i class="fas fa-user-shield"></i>
+                    </div>
+                    <div class="user-info">
+                        <div class="user-name" id="nombreUsuario">Administrador</div>
+                        <div class="user-role" id="rolUsuario">Administrador</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="header-bottom">
+            <div class="header-bottom-container">
+                <button class="menu-toggle" aria-label="Abrir menú">
+                    <i class="fas fa-bars"></i>
+                </button>
+                <nav class="main-nav">
+                    <ul class="nav-list" id="sidebarMenu">
+                        <!-- El menú se generará dinámicamente por navegacion.js -->
+                    </ul>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <!-- Contenido principal -->
+    <main class="main-content">
+        <section class="page-header">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-12">
+                        <div class="page-title">
+                            <h1><i class="fas fa-folder-open"></i> Gestión de Portafolios</h1>
+                            <nav aria-label="breadcrumb">
+                                <ol class="breadcrumb">
+                                    <li class="breadcrumb-item"><a href="tablero.html">Dashboard</a></li>
+                                    <li class="breadcrumb-item active">Portafolios</li>
+                                </ol>
+                            </nav>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="content-section">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-12">
+                        <div class="card">
+                            <div class="card-header">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <h3 class="card-title mb-0">Lista de Portafolios</h3>
+                                    <div class="card-actions">
+                                        <button class="btn btn-primary" id="btnRefrescar">
+                                            <i class="fas fa-sync"></i> Actualizar
+                                        </button>
+                                        <button class="btn btn-success" id="btnGenerarPortafolios">
+                                            <i class="fas fa-plus"></i> Generar Portafolios
+                                        </button>
+                                    </div>
+                                </div>
+                                <!-- Filtros -->
+                                <div class="row mt-3">
+                                    <div class="col-md-4">
+                                        <label for="filtroCiclo" class="form-label">Filtrar por Ciclo Académico:</label>
+                                        <select class="form-select" id="filtroCiclo">
+                                            <option value="">Todos los ciclos</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <label for="filtroEstado" class="form-label">Filtrar por Estado:</label>
+                                        <select class="form-select" id="filtroEstado">
+                                            <option value="">Todos los estados</option>
+                                            <option value="activo">Activo</option>
+                                            <option value="inactivo">Inactivo</option>
+                                            <option value="completado">Completado</option>
+                                            <option value="en_revision">En Revisión</option>
+                                            <option value="observado">Observado</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <label for="filtroDocente" class="form-label">Buscar Docente:</label>
+                                        <input type="text" class="form-control" id="filtroDocente" placeholder="Nombre del docente...">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card-body">
+                                <div class="table-responsive">
+                                    <table class="table table-hover" id="tablaPortafolios">
+                                        <thead>
+                                            <tr>
+                                                <th>Docente</th>
+                                                <th>Asignatura</th>
+                                                <th>Ciclo</th>
+                                                <th>Progreso</th>
+                                                <th>Estado</th>
+                                                <th>Última Actualización</th>
+                                                <th>Acciones</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="cuerpoTablaPortafolios">
+                                            <tr>
+                                                <td colspan="7" class="text-center">
+                                                    <div class="loading-message">
+                                                        <i class="fas fa-spinner fa-spin"></i> Cargando portafolios...
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Scripts -->
+    <script src="../../../assets/js/nucleo/configuracion.js"></script>
+    <script src="../../../assets/js/nucleo/auth.js"></script>
+    <script src="../../../assets/js/nucleo/navegacion.js"></script>
+    
+    <!-- Script específico de portafolios -->
+    <script src="../../../assets/js/paginas/dashboard/admin/portafolios.js"></script>
+    
+</body>
+</html>

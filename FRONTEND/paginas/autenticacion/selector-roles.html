@@ -7,72 +7,103 @@
   <meta name="keywords" content="roles, portafolio, UNSAAC">
   <meta name="author" content="UNSAAC">
   <title>Seleccionar Rol - Sistema de Portafolio Docente</title>
-
-
-  <link rel="stylesheet" href="../../assets/css/paginas/autenticacion/selector-rol/body.css ">  
-  <link rel="stylesheet" href="../../assets/css/paginas/autenticacion/selector-rol/footer.css">  
-  <link rel="stylesheet" href="../../assets/css/paginas/autenticacion/selector-rol/head.css">  
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" integrity="sha512-Avb2QiuDEEvB4bZJYdft2mNjVShBftLdPG8FJ0V7irTLQ8Uo0qcPxh4Plq7G5tGm0rU+1SPhVotteLpBERwTkw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+  
+  <link rel="stylesheet" href="../../assets/css/paginas/autenticacion/selector-roles/head.css">
+  <link rel="stylesheet" href="../../assets/css/paginas/autenticacion/selector-roles/body.css">
+  <link rel="stylesheet" href="../../assets/css/paginas/autenticacion/selector-roles/footer.css">
 
 </head>
 
 <body>
-  <!-- Header principal -->
   <header class="main-header">
     <!-- Sección superior -->
     <div class="header-top">
-      <div class="header-top-container">
+      <div class="header-top-container">  
         <!-- Búsqueda -->
         <div class="search-container">
-          <input type="text" class="search-input" placeholder="Buscar...">
+          <div class="search-wrapper">
+            <input type="text" class="search-input" placeholder="Buscar..." aria-label="Campo de búsqueda">
+            <button type="button" class="search-btn" aria-label="Buscar">
+              <i class="fas fa-search"></i>
+            </button>
+          </div>
         </div>
-
+        
         <!-- Redes y usuario -->
         <div class="header-actions">
           <div class="social-icons">
-            <a href="https://www.facebook.com/unsaac.oficial" target="_blank" class="social-icon"><i class="fab fa-facebook-f"></i></a>
-            <a href="https://twitter.com/unsaac_oficial" target="_blank" class="social-icon"><i class="fab fa-twitter"></i></a>
-            <a href="https://www.instagram.com/unsaac_oficial" target="_blank" class="social-icon"><i class="fab fa-instagram"></i></a>
-            <a href="https://www.youtube.com/channel/UCunsaac" target="_blank" class="social-icon"><i class="fab fa-youtube"></i></a>
+            <a href="https://www.facebook.com/unsaac.oficial" target="_blank" class="social-icon facebook" aria-label="Facebook UNSAAC">
+              <i class="fab fa-facebook-f"></i>
+            </a>
+            <a href="https://twitter.com/unsaac_oficial" target="_blank" class="social-icon twitter" aria-label="Twitter UNSAAC">
+              <i class="fab fa-twitter"></i>
+            </a>
+            <a href="https://www.instagram.com/unsaac_oficial" target="_blank" class="social-icon instagram" aria-label="Instagram UNSAAC">
+              <i class="fab fa-instagram"></i>
+            </a>
+            <a href="https://www.youtube.com/channel/UCunsaac" target="_blank" class="social-icon youtube" aria-label="YouTube UNSAAC">
+              <i class="fab fa-youtube"></i>
+            </a>
           </div>
-
+          
           <div class="user-menu">
-            <div class="user-icon"><i class="fas fa-user-circle"></i></div>
-            <span class="user-name" id="nombreUsuario">Usuario</span>
+            <div class="user-icon">
+              <i class="fas fa-user"></i>
+            </div>
+            <span class="user-name">Entrar</span>
           </div>
         </div>
       </div>
     </div>
-
+    
     <!-- Logo -->
     <div class="header-middle">
       <div class="header-middle-container">
         <div class="logo-container">
           <div class="logo-img">
-
+          </div>
           <div class="logo-text-container">
-            <span class="logo-title">Sistema de Portafolio</span>
+            <h1 class="logo-title">Sistema de Portafolio</h1>
             <span class="logo-subtitle">Docente</span>
           </div>
         </div>
       </div>
     </div>
-
+    
     <!-- Menú de navegación -->
-    <div class="header-bottom">
+    <nav class="header-bottom">
       <div class="header-bottom-container">
-        <button class="menu-toggle" aria-label="Abrir menú">
-          <i class="fas fa-bars"></i>
+        <button class="menu-toggle" aria-label="Abrir menú" aria-expanded="false">
+          <span class="menu-icon">
+            <i class="fas fa-bars"></i>
+          </span>
         </button>
-
-        <nav class="main-nav">
+        
+        <div class="main-nav">
           <ul class="nav-list">
-            <li><a href="../../index.html">Inicio</a></li>
-            <li><a href="../compartidas/ayuda.html">Ayuda</a></li>
-            <li><a href="#" id="btnCerrarSesion">Cerrar Sesión</a></li>
+            <li class="nav-item">
+              <a href="../../index.html" class="nav-link">
+                <i class="fas fa-home"></i>
+                <span>Inicio</span>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a href="../compartidas/ayuda.html" class="nav-link">
+                <i class="fas fa-question-circle"></i>
+                <span>Ayuda</span>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a href="login.html" class="nav-link active">
+                <i class="fas fa-sign-in-alt"></i>
+                <span>Iniciar Sesión</span>
+              </a>
+            </li>
           </ul>
-        </nav>
+        </div>
       </div>
-    </div>
+    </nav>
   </header>
 
   <!-- Contenido principal -->
@@ -121,8 +152,7 @@
  
   <!-- Scripts -->
   <script src="../../assets/js/nucleo/configuracion.js"></script>
-  <script src="../../assets/js/nucleo.js"></script>
-  <script src="../../assets/js/autenticacion.js"></script>
+  <script src="../../assets/js/nucleo/auth.js"></script>
   <script src="../../assets/js/paginas/autenticacion/selector-roles.js"></script>
 </body>
 </html>

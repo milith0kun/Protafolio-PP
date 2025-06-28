@@ -10,7 +10,8 @@
 
   <link rel="stylesheet" href="../../../assets/css/paginas/verificador/body.css">
   <link rel="stylesheet" href="../../../assets/css/paginas/verificador/footer.css">  
-  <link rel="stylesheet" href="../../../assets/css/paginas/verificador/head.css">  
+  <link rel="stylesheet" href="../../../assets/css/paginas/verificador/head.css">
+  <link rel="stylesheet" href="../../../assets/css/botones-sesion.css">
   
 </head>
 
@@ -32,7 +33,15 @@
           </div>
           <div class="user-menu">
             <div class="user-icon"><i class="fas fa-user-check"></i></div>
-            <span class="user-name">Verificador</span>
+            <div class="user-info">
+              <span class="user-name" id="nombreUsuario">Cargando...</span>
+              <span class="user-role" id="rolUsuario">Verificador</span>
+            </div>
+            <div class="user-actions">
+              <button type="button" class="btn-cambiar-rol" id="btnCambiarRol" style="display: none;" title="Cambiar rol">
+                <i class="fas fa-exchange-alt"></i>
+              </button>
+            </div>
           </div>
         </div>
       </div>
@@ -41,9 +50,7 @@
     <div class="header-middle">
       <div class="header-middle-container">
         <div class="logo-container">
-          <div class="logo-img">
-            <img src="../../assets/imagenes/logos/logo-unsaac.png" alt="Logo UNSAAC">
-          </div>
+          <div class="logo-img"></div>
           <div class="logo-text-container">
             <span class="logo-title">Sistema de Portafolio</span>
             <span class="logo-subtitle">Panel Verificador</span>
@@ -328,10 +335,52 @@
     </div>
   </footer>
 
-  <!-- Scripts -->
+  <!-- Scripts Core -->
   <script src="../../../assets/js/nucleo/configuracion.js"></script>
-  <script src="../../../assets/js/nucleo.js"></script>
-  <script src="../../../assets/js/autenticacion.js"></script>
+  <script src="../../../assets/js/nucleo/auth.js"></script>
+  <script src="../../../assets/js/nucleo/navegacion.js"></script>
+  <script src="../../../assets/js/nucleo/gestion-sesiones.js"></script>
+    
+  
+  <!-- Page Script -->
   <script src="../../../assets/js/paginas/dashboard/verificador/tablero.js"></script>
+
+  <!-- Inicialización Verificador -->
+  <script>
+    document.addEventListener('DOMContentLoaded', async function() {
+      console.log('🚀 Iniciando tablero de verificador...');
+      
+      // Verificar que el sistema AUTH esté disponible
+      if (typeof AUTH === 'undefined') {
+        console.error('❌ Sistema AUTH no disponible');
+        alert('Error: Sistema de autenticación no cargado');
+        return;
+      }
+
+      // Verificar autenticación
+      if (!await AUTH.verificarAutenticacion()) {
+        console.log('❌ No autenticado, redirigiendo...');
+        window.location.href = '../../autenticacion/login.html';
+        return;
+      }
+
+      // Cargar información del usuario en la interfaz
+      if (window.GestionSesiones) {
+        await window.GestionSesiones.cargarInformacionUsuario();
+      }
+      
+      // Configurar eventos del botón cambiar rol
+      const btnCambiarRol = document.getElementById('btnCambiarRol');
+      if (btnCambiarRol) {
+        btnCambiarRol.addEventListener('click', function() {
+          if (window.GestionSesiones && typeof window.GestionSesiones.cambiarRol === 'function') {
+            window.GestionSesiones.cambiarRol();
+          }
+        });
+      }
+      
+      console.log('✅ Página de verificador inicializada correctamente');
+    });
+  </script>
 </body>
 </html>

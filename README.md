@@ -382,7 +382,7 @@ portafolio-docente-unsaac/
 
 **BACKEND NUEVOS:**
 - `controladores/usuarios.js` - Crear, editar, eliminar usuarios
-- `controladores/excel.js` - Procesa miles de registros de Excel
+-    
 - `servicios/generador-reportes.js` - Crea reportes en PDF y Excel
 - `modelos/Ciclo.js` - Estructura de datos para semestres
 - `modelos/Asignatura.js` - Estructura de datos para asignaturas
@@ -485,6 +485,9 @@ portafolio-docente-unsaac/
 - `assets/css/archivos.css` - Estilos para listas de archivos
 
 #### **¿Cómo sé que Etapa 3 funciona?**
+
+- ✅ Administrador puede gestionar usuarios
+- El sistema  inicia los portafolios  y el nuevo ciclo 
 - ✅ Docente puede subir archivos
 - ✅ Validaciones rechazan archivos incorrectos
 - ✅ Archivos se guardan correctamente
