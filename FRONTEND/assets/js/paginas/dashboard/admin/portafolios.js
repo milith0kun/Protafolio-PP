@@ -109,6 +109,15 @@ function configurarEventos() {
     elementos.filtroCiclo?.addEventListener('change', aplicarFiltros);
     elementos.filtroEstado?.addEventListener('change', aplicarFiltros);
     elementos.filtroDocente?.addEventListener('input', debounce(aplicarFiltros, 500));
+    
+    // Escuchar cambios de ciclo desde el sistema global
+    document.addEventListener('cicloSeleccionado', (event) => {
+        console.log('📅 Ciclo seleccionado cambió en portafolios:', event.detail);
+        // Recargar portafolios automáticamente
+        setTimeout(() => {
+            cargarPortafolios();
+        }, 100);
+    });
 }
 
 /**
@@ -158,6 +167,7 @@ async function cargarCiclosAcademicos() {
 
     /**
  * Cargar portafolios desde el API
+ * Ahora con soporte para filtrado por ciclo académico
  */
 async function cargarPortafolios() {
     console.log('🔄 Cargando portafolios...');
@@ -177,20 +187,53 @@ async function cargarPortafolios() {
             </tr>
         `;
         
+        // Obtener ciclo seleccionado
+        const cicloSeleccionado = obtenerCicloSeleccionado();
+        console.log('📅 Ciclo seleccionado para portafolios:', cicloSeleccionado);
+        
+        // Construir URL con parámetros
+        let url = '/portafolios';
+        const params = new URLSearchParams();
+        
+        if (cicloSeleccionado) {
+            params.append('ciclo', cicloSeleccionado);
+        }
+        
+        // Agregar otros filtros activos
+        const filtroEstado = PortafoliosAdmin.elementos.filtroEstado?.value;
+        const filtroDocente = PortafoliosAdmin.elementos.filtroDocente?.value;
+        
+        if (filtroEstado) {
+            params.append('estado', filtroEstado);
+        }
+        
+        if (filtroDocente) {
+            params.append('docente', filtroDocente);
+        }
+        
+        if (params.toString()) {
+            url += '?' + params.toString();
+        }
+        
+        console.log('🔍 URL de petición:', url);
+        
         // Usar el sistema unificado de peticiones
-        const data = await window.apiRequest('/portafolios', 'GET');
-        console.log('✅ Portafolios cargados:', data);
+        const data = await window.apiRequest(url, 'GET');
+        console.log('✅ Respuesta de portafolios:', data);
 
         // Manejar ambos formatos de respuesta
         const exito = data.exito || data.success;
-        const datos = data.datos || data.data;
+        const responseData = data.datos || data.data;
+        
+        // Extraer portafolios de la respuesta (puede estar en responseData.portafolios o directamente en responseData)
+        const portafolios = responseData?.portafolios || responseData || [];
 
-        if (!exito || !datos || datos.length === 0) {
+        if (!exito || !portafolios || portafolios.length === 0) {
             PortafoliosAdmin.todosLosPortafolios = [];
             tbody.innerHTML = `
                 <tr>
                     <td colspan="7" class="text-center text-muted">
-                        <i class="fas fa-folder-open"></i> No hay portafolios disponibles
+                        <i class="fas fa-folder-open"></i> No hay portafolios disponibles para el ciclo seleccionado
                     </td>
                 </tr>
             `;
@@ -198,7 +241,7 @@ async function cargarPortafolios() {
         }
 
         // Almacenar datos en variable global
-        PortafoliosAdmin.todosLosPortafolios = datos;
+        PortafoliosAdmin.todosLosPortafolios = portafolios;
         
         // Aplicar filtros (que llamará a renderizarPortafolios)
         aplicarFiltros();
@@ -450,6 +493,30 @@ function formatearFecha(fecha) {
     if (!fecha) return 'N/A';
     const date = new Date(fecha);
     return date.toLocaleDateString('es-ES') + ' ' + date.toLocaleTimeString('es-ES', {hour: '2-digit', minute: '2-digit'});
+}
+
+/**
+ * Obtener ciclo seleccionado desde el selector o almacenamiento
+ */
+function obtenerCicloSeleccionado() {
+    // Intentar obtener desde diferentes selectores posibles
+    const selectores = [
+        '#selectCiclo',
+        '#filtroCiclo',
+        '#selectorCiclo select',
+        'select[name="ciclo"]',
+        '#cicloAcademico'
+    ];
+    
+    for (const selector of selectores) {
+        const elemento = document.querySelector(selector);
+        if (elemento && elemento.value) {
+            return elemento.value;
+        }
+    }
+    
+    // Fallback: obtener desde almacenamiento local o sesión
+    return localStorage.getItem('cicloSeleccionado') || sessionStorage.getItem('cicloSeleccionado') || null;
 }
 
 /**

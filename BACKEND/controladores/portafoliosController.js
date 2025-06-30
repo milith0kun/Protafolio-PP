@@ -9,14 +9,37 @@ const ResponseHandler = require('./utils/responseHandler');
 
 /**
  * Obtener todos los portafolios (administrador)
+ * Ahora con soporte para filtrado por ciclo académico
  */
 const obtenerPortafolios = async (req, res) => {
   try {
     console.log('=== OBTENIENDO TODOS LOS PORTAFOLIOS ===');
     
+    // Obtener parámetros de filtrado
+    const cicloId = req.query.ciclo || req.query.cicloId;
+    const estado = req.query.estado;
+    const docenteId = req.query.docente || req.query.docenteId;
+    
+    console.log('🔍 Filtros aplicados:', { cicloId, estado, docenteId });
+    
     await sequelize.authenticate();
     
     const { Portafolio, Usuario, Asignatura, CicloAcademico, DocenteAsignatura } = require('../modelos');
+    
+    // Construir condiciones WHERE dinámicamente
+    const whereConditions = { activo: true };
+    
+    if (cicloId) {
+      whereConditions.ciclo_id = cicloId;
+    }
+    
+    if (estado) {
+      whereConditions.estado = estado;
+    }
+    
+    if (docenteId) {
+      whereConditions.docente_id = docenteId;
+    }
     
     const portafolios = await Portafolio.findAll({
       include: [
@@ -33,16 +56,43 @@ const obtenerPortafolios = async (req, res) => {
         {
           model: CicloAcademico,
           as: 'ciclo',
-          attributes: ['id', 'nombre', 'estado']
+          attributes: ['id', 'nombre', 'estado', 'fecha_inicio', 'fecha_fin']
         }
       ],
-      where: { activo: true },
+      where: whereConditions,
       order: [['actualizado_en', 'DESC']]
     });
 
-    console.log(`✅ ${portafolios.length} portafolios encontrados`);
+    console.log(`✅ ${portafolios.length} portafolios encontrados con filtros aplicados`);
 
-    return ResponseHandler.success(res, portafolios, 'Portafolios obtenidos correctamente');
+    // Agregar información adicional en la respuesta
+    const responseData = {
+      portafolios,
+      filtros: {
+        cicloId,
+        estado,
+        docenteId,
+        totalEncontrados: portafolios.length
+      },
+      resumen: {
+        porEstado: {},
+        porCiclo: {}
+      }
+    };
+
+    // Calcular resumen por estado
+    portafolios.forEach(p => {
+      const estadoPortafolio = p.estado || 'sin_estado';
+      responseData.resumen.porEstado[estadoPortafolio] = (responseData.resumen.porEstado[estadoPortafolio] || 0) + 1;
+    });
+
+    // Calcular resumen por ciclo
+    portafolios.forEach(p => {
+      const cicloNombre = p.ciclo?.nombre || 'Sin ciclo';
+      responseData.resumen.porCiclo[cicloNombre] = (responseData.resumen.porCiclo[cicloNombre] || 0) + 1;
+    });
+
+    return ResponseHandler.success(res, responseData, `${portafolios.length} portafolios obtenidos correctamente`);
     
   } catch (error) {
     console.error('❌ Error al obtener portafolios:', error);

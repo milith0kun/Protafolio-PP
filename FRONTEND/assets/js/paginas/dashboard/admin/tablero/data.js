@@ -25,12 +25,41 @@ async function initialize() {
     console.log('📊 Inicializando módulo de datos del tablero...');
     
     try {
+        // Inicializar ciclo desde el selector si existe
+        setTimeout(() => {
+            inicializarCicloDesdeSelector();
+        }, 500);
+        
         await cargarDatosIniciales();
         configurarActualizacionAutomatica();
         console.log('✅ Módulo de datos inicializado');
     } catch (error) {
         console.error('❌ Error en inicialización de datos:', error);
         throw error;
+    }
+}
+
+/**
+ * Inicializar el ciclo seleccionado desde el selector al cargar la página
+ */
+function inicializarCicloDesdeSelector() {
+    console.log('🔄 Inicializando ciclo desde selector...');
+    
+    const selector = document.querySelector('#selectCiclo');
+    if (selector && selector.value && selector.value !== '') {
+        console.log(`📅 Ciclo detectado en selector: ${selector.value}`);
+        
+        // Establecer como ciclo seleccionado
+        localStorage.setItem('cicloSeleccionado', selector.value);
+        
+        // Forzar actualización de la interfaz
+        setTimeout(() => {
+            if (window.UITablero?.actualizarInterfaz) {
+                window.UITablero.actualizarInterfaz();
+            }
+        }, 200);
+    } else {
+        console.log('⚠️ No se encontró selector de ciclo con valor');
     }
 }
 
@@ -140,24 +169,59 @@ async function cargarEstadoSistema(endpoint) {
 
 /**
  * Cargar métricas del dashboard
+ * Ahora con soporte para ciclo académico
  */
 async function cargarMetricas(endpoint) {
     if (!endpoint) return obtenerMetricasPorDefecto();
     
     try {
+        // Obtener ciclo seleccionado
+        const cicloSeleccionado = obtenerCicloSeleccionado();
+        console.log('📅 Ciclo seleccionado para métricas:', cicloSeleccionado);
+        
+        // Construir URL con parámetros de ciclo
+        let url = `${CONFIG.API.ENDPOINTS.DASHBOARD}/estadisticas`;
+        if (cicloSeleccionado) {
+            url += `?ciclo=${cicloSeleccionado}`;
+        }
+        
         // Usar el endpoint correcto para estadísticas (probando múltiples endpoints)
         let response;
         try {
-            response = await window.apiRequest(`${CONFIG.API.ENDPOINTS.DASHBOARD}/estadisticas`, 'GET');
+            response = await window.apiRequest(url, 'GET');
         } catch (firstError) {
             console.warn('⚠️ Endpoint /estadisticas no disponible, probando /stats');
-            response = await window.apiRequest(`${CONFIG.API.ENDPOINTS.DASHBOARD}/stats`, 'GET');
+            let fallbackUrl = `${CONFIG.API.ENDPOINTS.DASHBOARD}/stats`;
+            if (cicloSeleccionado) {
+                fallbackUrl += `?ciclo=${cicloSeleccionado}`;
+            }
+            response = await window.apiRequest(fallbackUrl, 'GET');
         }
         
         console.log('📊 Respuesta de estadísticas:', response);
         
-        // El endpoint devuelve directamente los datos, no en una propiedad 'data'
-        return response || obtenerMetricasPorDefecto();
+        // Procesar la respuesta estructurada del backend
+        if (response && (response.success || response.data)) {
+            const data = response.data || response;
+            
+            // Extraer métricas según la estructura del backend
+            const metricas = {
+                usuarios: data.usuarios?.total || data.usuarios?.activos || 0,
+                carreras: data.carreras?.total || data.carreras?.activas || 0,
+                asignaturas: data.asignaturas?.total || data.asignaturas?.activas || 0,
+                asignaciones: data.asignaciones?.total || data.asignaciones?.activas || 0,
+                verificaciones: data.verificaciones?.total || 0,
+                portafolios: data.portafolios?.total || data.portafolios?.activos || 0,
+                timestamp: data.timestamp || new Date().toISOString(),
+                ciclo: data.ciclo || null,
+                sistema: data.sistema || null
+            };
+            
+            console.log('📊 Métricas procesadas:', metricas);
+            return metricas;
+        }
+        
+        return obtenerMetricasPorDefecto();
     } catch (error) {
         // Solo mostrar warning si no es un error de red común
         if (!error.message?.includes('Failed to fetch') && !error.message?.includes('NetworkError')) {
@@ -339,6 +403,83 @@ function limpiarCache() {
 }
 
 // ================================================
+// GESTIÓN DE CICLO SELECCIONADO
+// ================================================
+
+/**
+ * Obtener ciclo seleccionado desde el selector en la página
+ */
+function obtenerCicloSeleccionado() {
+    // Intentar obtener desde diferentes selectores posibles
+    const selectores = [
+        '#selectCiclo',
+        '#selectorCiclo select',
+        'select[name="ciclo"]',
+        '#cicloAcademico'
+    ];
+    
+    console.log('🔍 Buscando ciclo seleccionado en selectores...');
+    
+    for (const selector of selectores) {
+        const elemento = document.querySelector(selector);
+        if (elemento) {
+            console.log(`📋 Selector ${selector} encontrado:`, {
+                value: elemento.value,
+                selectedIndex: elemento.selectedIndex,
+                options: Array.from(elemento.options).map(opt => ({ value: opt.value, text: opt.text, selected: opt.selected }))
+            });
+            
+            if (elemento.value && elemento.value !== '') {
+                console.log(`✅ Ciclo seleccionado encontrado: ${elemento.value}`);
+                // Guardar en almacenamiento para consistencia
+                localStorage.setItem('cicloSeleccionado', elemento.value);
+                return elemento.value;
+            }
+        } else {
+            console.log(`❌ Selector ${selector} no encontrado`);
+        }
+    }
+    
+    // Fallback: obtener desde almacenamiento local o sesión
+    const cicloAlmacenado = localStorage.getItem('cicloSeleccionado') || sessionStorage.getItem('cicloSeleccionado');
+    if (cicloAlmacenado) {
+        console.log(`📦 Ciclo recuperado del almacenamiento: ${cicloAlmacenado}`);
+        return cicloAlmacenado;
+    }
+    
+    console.log('⚠️ No se encontró ningún ciclo seleccionado');
+    return null;
+}
+
+/**
+ * Establecer ciclo seleccionado y actualizar datos
+ */
+async function establecerCicloSeleccionado(cicloId) {
+    console.log('📅 Estableciendo ciclo seleccionado:', cicloId);
+    
+    // Guardar en almacenamiento
+    if (cicloId) {
+        localStorage.setItem('cicloSeleccionado', cicloId);
+        sessionStorage.setItem('cicloSeleccionado', cicloId);
+    } else {
+        localStorage.removeItem('cicloSeleccionado');
+        sessionStorage.removeItem('cicloSeleccionado');
+    }
+    
+    // Actualizar estado interno
+    dataState.cicloActual = dataState.ciclosDisponibles.find(c => c.id == cicloId) || null;
+    
+    // Recargar datos con el nuevo ciclo
+    await actualizarDatos();
+    
+    // Emitir evento personalizado para que otros módulos puedan reaccionar
+    const evento = new CustomEvent('cicloSeleccionado', {
+        detail: { cicloId, ciclo: dataState.cicloActual }
+    });
+    document.dispatchEvent(evento);
+}
+
+// ================================================
 // EXPORTACIÓN DEL MÓDULO
 // ================================================
 
@@ -354,6 +495,10 @@ window.DataTablero = {
     obtenerCiclosDisponibles,
     estaCargando,
     obtenerUltimaActualizacion,
+    
+    // Gestión de ciclo
+    obtenerCicloSeleccionado,
+    establecerCicloSeleccionado,
     
     // Acciones
     actualizarDatos,

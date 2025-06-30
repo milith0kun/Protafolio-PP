@@ -1213,18 +1213,74 @@ class CargaMasiva {
         if (!estadoArchivos) return;
         
         try {
-            // window.apiRequest ya agrega /api automáticamente
-            const statsResponse = await window.apiRequest(`/ciclos/${cicloId}/estadisticas`, 'GET');
-            const archivosResponse = await window.apiRequest(`/ciclos/${cicloId}/archivos-carga`, 'GET');
+            // Usar el mismo endpoint de estadísticas que el tablero
+            const statsUrl = `${CONFIG.API.ENDPOINTS.DASHBOARD}/estadisticas?ciclo=${cicloId}`;
+            console.log('📊 Obteniendo estadísticas desde:', statsUrl);
             
-            if (!statsResponse.success || !archivosResponse.success) {
-                this.mostrarEstadoVacio();
-                return;
+            const [statsResponse, archivosResponse] = await Promise.all([
+                window.apiRequest(statsUrl, 'GET'),
+                window.apiRequest(`/ciclos/${cicloId}/archivos-carga`, 'GET')
+            ]);
+            
+            console.log('📊 Respuesta de estadísticas:', statsResponse);
+            console.log('📁 Respuesta de archivos:', archivosResponse);
+            
+            const archivos = archivosResponse.data || archivosResponse || [];
+            const ciclo = archivosResponse.ciclo || { nombre: `Ciclo ${cicloId}`, estado: 'activo' };
+            
+            // Extraer estadísticas del formato del tablero
+            let stats = { usuarios: 0, carreras: 0, asignaturas: 0, portafolios: 0 };
+            
+            console.log('🔍 DEBUG - Respuesta completa de estadísticas:', {
+                tieneStatsResponse: !!statsResponse,
+                tieneData: !!statsResponse?.data,
+                tieneSuccess: !!statsResponse?.success,
+                keysStatsResponse: statsResponse ? Object.keys(statsResponse) : null,
+                dataContent: statsResponse?.data
+            });
+            
+            if (statsResponse && statsResponse.success && statsResponse.data) {
+                const data = statsResponse.data;
+                
+                console.log('🔍 DEBUG - Datos para procesar:', {
+                    tieneUsuarios: !!data.usuarios,
+                    tieneCarreras: !!data.carreras,
+                    tieneAsignaturas: !!data.asignaturas,
+                    tienePortafolios: !!data.portafolios,
+                    tieneCiclo: !!data.ciclo,
+                    valoresDirectos: {
+                        usuarios: data.usuarios,
+                        carreras: data.carreras,
+                        asignaturas: data.asignaturas,
+                        portafolios: data.portafolios
+                    }
+                });
+                
+                // Mapear datos según la estructura de respuesta
+                stats = {
+                    usuarios: data.usuarios?.total || data.usuarios?.activos || data.usuarios || 0,
+                    carreras: data.carreras?.total || data.carreras?.activas || data.carreras || 0,
+                    asignaturas: data.asignaturas?.total || data.asignaturas?.activas || data.asignaturas || 0,
+                    portafolios: data.portafolios?.total || data.portafolios?.activos || data.portafolios || 0
+                };
+                
+                console.log('✅ Estadísticas mapeadas:', stats);
+                
+                // Si hay información del ciclo en la respuesta, usarla
+                if (data.ciclo) {
+                    ciclo.nombre = data.ciclo.nombre || ciclo.nombre;
+                    ciclo.estado = data.ciclo.estado || ciclo.estado;
+                    ciclo.fechaInicio = data.ciclo.fechaInicio || data.ciclo.fecha_inicio;
+                    ciclo.fechaFin = data.ciclo.fechaFin || data.ciclo.fecha_fin;
+                    console.log('✅ Información del ciclo actualizada:', ciclo);
+                }
+            } else {
+                console.warn('⚠️ No se recibieron estadísticas válidas, usando valores por defecto');
+                console.log('❌ Contenido de statsResponse:', statsResponse);
             }
             
-            const stats = statsResponse.data;
-            const archivos = archivosResponse.data;
-            const ciclo = archivosResponse.ciclo;
+            console.log('📊 Estadísticas procesadas:', stats);
+            console.log('📅 Información del ciclo:', ciclo);
             
             // Crear HTML consolidado
             const html = `
@@ -1318,10 +1374,27 @@ class CargaMasiva {
             this.configurarEventosArchivos();
             
         } catch (error) {
-            console.error('Error al cargar información consolidada:', error);
-            this.mostrarEstadoVacio();
+            console.error('❌ Error al cargar información consolidada:', error);
+            
+            // Mostrar estado con error pero información básica
+            const estadoArchivos = document.getElementById('estadoArchivos');
+            if (estadoArchivos) {
+                estadoArchivos.innerHTML = `
+                    <div class="alert alert-warning">
+                        <h6><i class="fas fa-exclamation-triangle me-2"></i>Error de Conectividad</h6>
+                        <p class="mb-2">No se pudo cargar la información completa del ciclo académico.</p>
+                        <small class="text-muted">Error: ${error.message || 'Conexión con el servidor falló'}</small>
+                        <hr>
+                        <button class="btn btn-sm btn-outline-primary" onclick="window.cargaMasiva.mostrarInformacionConsolidadaCiclo('${cicloId}')">
+                            <i class="fas fa-sync me-1"></i>Reintentar
+                        </button>
+                    </div>
+                `;
+            }
         }
     }
+    
+    
     
     /**
      * Generar badge visual para el estado del ciclo

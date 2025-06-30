@@ -115,7 +115,7 @@ const procesar = async (archivo, transaction) => {
                     
                     // Actualizar asignatura con verificación explícita
                     try {
-                        const [updateCount] = await asignatura.update(updateData, { transaction });
+                        await asignatura.update(updateData, { transaction });
                         logger.info(`Asignatura actualizada: ${codigo} - ${nombre}`, { updateData: Object.keys(updateData) });
                         
                         // Verificar que la actualización se haya realizado correctamente

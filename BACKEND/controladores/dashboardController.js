@@ -4,17 +4,33 @@ const ResponseHandler = require('./utils/responseHandler');
 
 /**
  * Obtiene las métricas del dashboard con datos reales de la base de datos
+ * Ahora con soporte para filtrado por ciclo académico
  */
 const obtenerMetricas = async (req, res) => {
   console.log('=== INICIO DE OBTENCIÓN DE MÉTRICAS ===');
   
   try {
+    // Obtener ciclo desde parámetros de consulta
+    const cicloId = req.query.ciclo || req.query.cicloId;
+    console.log('📅 Ciclo solicitado:', cicloId);
+    
     // Verificar conexión a la base de datos
     await sequelize.authenticate();
     console.log('Conexión a la base de datos establecida correctamente.');
     
     // Obtener modelos después de verificar la conexión
-    const { Usuario, UsuarioRol } = require('../modelos');
+    const { Usuario, UsuarioRol, Portafolio, DocenteAsignatura, CicloAcademico, Carrera, Asignatura } = require('../modelos');
+    
+    // Obtener información del ciclo académico
+    let cicloInfo = null;
+    if (cicloId) {
+      try {
+        cicloInfo = await CicloAcademico.findByPk(cicloId);
+        console.log('📅 Información del ciclo:', cicloInfo?.nombre || 'No encontrado');
+      } catch (error) {
+        console.warn('⚠️ Error obteniendo información del ciclo:', error.message);
+      }
+    }
     
     // Obtener total de usuarios
     const totalUsuarios = await Usuario.count();
@@ -47,20 +63,168 @@ const obtenerMetricas = async (req, res) => {
       console.error('Error al obtener distribución de roles:', error);
     }
     
+    // Obtener métricas de carreras
+    let carrerasMetricas = { total: 0, activas: 0 };
+    try {
+      const totalCarreras = await Carrera.count({
+        where: { activo: true }
+      });
+      
+      carrerasMetricas = {
+        total: totalCarreras,
+        activas: totalCarreras
+      };
+      
+      console.log('📊 Métricas de carreras:', carrerasMetricas);
+    } catch (error) {
+      console.error('Error al obtener métricas de carreras:', error);
+    }
+    
+    // Obtener métricas de asignaturas (filtradas por ciclo si se especifica)
+    let asignaturasMetricas = { total: 0, activas: 0 };
+    if (cicloId) {
+      try {
+        // Contar asignaturas que tienen asignaciones en el ciclo específico
+        const asignaturasEnCiclo = await Asignatura.count({
+          include: [{
+            model: DocenteAsignatura,
+            as: 'asignaciones_docente',
+            where: { 
+              ciclo_id: cicloId,
+              activo: true 
+            },
+            required: true
+          }],
+          where: { activo: true }
+        });
+        
+        asignaturasMetricas = {
+          total: asignaturasEnCiclo,
+          activas: asignaturasEnCiclo
+        };
+        
+        console.log('📊 Métricas de asignaturas por ciclo:', asignaturasMetricas);
+      } catch (error) {
+        console.error('Error al obtener métricas de asignaturas:', error);
+        // Fallback: contar todas las asignaturas activas
+        try {
+          const totalAsignaturas = await Asignatura.count({ where: { activo: true } });
+          asignaturasMetricas = { total: totalAsignaturas, activas: totalAsignaturas };
+        } catch (fallbackError) {
+          console.error('Error en fallback de asignaturas:', fallbackError);
+        }
+      }
+    } else {
+      // Si no hay ciclo específico, contar todas las asignaturas
+      try {
+        const totalAsignaturas = await Asignatura.count({ where: { activo: true } });
+        asignaturasMetricas = { total: totalAsignaturas, activas: totalAsignaturas };
+      } catch (error) {
+        console.error('Error al obtener total de asignaturas:', error);
+      }
+    }
+    
+    // Obtener métricas de portafolios (filtradas por ciclo si se especifica)
+    let portafoliosMetricas = { total: 0, activos: 0, completados: 0, progresoPromedio: 0 };
+    if (cicloId) {
+      try {
+        const totalPortafoliosCiclo = await Portafolio.count({
+          where: { 
+            ciclo_id: cicloId,
+            activo: true 
+          }
+        });
+        
+        const portafoliosActivos = await Portafolio.count({
+          where: { 
+            ciclo_id: cicloId,
+            activo: true,
+            estado: 'activo'
+          }
+        });
+        
+        const portafoliosCompletados = await Portafolio.count({
+          where: { 
+            ciclo_id: cicloId,
+            activo: true,
+            estado: 'completado'
+          }
+        });
+        
+        // Calcular progreso promedio
+        const portafoliosConProgreso = await Portafolio.findAll({
+          where: { 
+            ciclo_id: cicloId,
+            activo: true 
+          },
+          attributes: ['progreso'],
+          raw: true
+        });
+        
+        const progresoPromedio = portafoliosConProgreso.length > 0 
+          ? Math.round(portafoliosConProgreso.reduce((sum, p) => sum + (p.progreso || 0), 0) / portafoliosConProgreso.length)
+          : 0;
+        
+        portafoliosMetricas = {
+          total: totalPortafoliosCiclo,
+          activos: portafoliosActivos,
+          completados: portafoliosCompletados,
+          progresoPromedio
+        };
+        
+        console.log('📊 Métricas de portafolios por ciclo:', portafoliosMetricas);
+      } catch (error) {
+        console.error('Error al obtener métricas de portafolios:', error);
+      }
+    }
+    
+    // Obtener métricas de asignaciones (filtradas por ciclo si se especifica)
+    let asignacionesMetricas = { total: 0, activas: 0 };
+    if (cicloId) {
+      try {
+        const totalAsignaciones = await DocenteAsignatura.count({
+          where: { 
+            ciclo_id: cicloId,
+            activo: true 
+          }
+        });
+        
+        asignacionesMetricas = {
+          total: totalAsignaciones,
+          activas: totalAsignaciones
+        };
+        
+        console.log('📊 Métricas de asignaciones por ciclo:', asignacionesMetricas);
+      } catch (error) {
+        console.error('Error al obtener métricas de asignaciones:', error);
+      }
+    }
+    
     // Estructura de respuesta
     const metricas = {
       sistema: {
         estado: 'activo',
         version: '1.0.0',
         modo: 'produccion',
-        mensaje: 'Datos en tiempo real desde la base de datos'
+        mensaje: cicloId ? `Datos del ciclo: ${cicloInfo?.nombre || 'Desconocido'}` : 'Datos generales del sistema'
       },
+      ciclo: cicloInfo ? {
+        id: cicloInfo.id,
+        nombre: cicloInfo.nombre,
+        estado: cicloInfo.estado,
+        fechaInicio: cicloInfo.fecha_inicio,
+        fechaFin: cicloInfo.fecha_fin
+      } : null,
       usuarios: {
         total: totalUsuarios,
         activos: usuariosActivos,
         pendientes: totalUsuarios - usuariosActivos
       },
       roles: distribucionRoles,
+      carreras: carrerasMetricas,
+      asignaturas: asignaturasMetricas,
+      portafolios: portafoliosMetricas,
+      asignaciones: asignacionesMetricas,
       documentos: {
         // Estos valores se actualizarán cuando se implemente el módulo de documentos
         total: 0,
@@ -68,7 +232,6 @@ const obtenerMetricas = async (req, res) => {
         pendientes: 0,
         observados: 0
       },
-      // No incluimos cicloActual ya que el modelo no está disponible
       timestamp: new Date().toISOString()
     };
     

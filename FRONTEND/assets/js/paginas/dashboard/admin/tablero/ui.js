@@ -31,7 +31,7 @@ const uiConfig = {
         actividadesRecientes: 'actividadesRecientes',
         
         // Navegación
-        selectorCiclo: 'selectorCiclo',
+        selectorCiclo: 'selectCiclo',
         btnActualizarDatos: 'btnActualizarDatos',
         
         // Indicadores de carga
@@ -81,12 +81,27 @@ function configurarEventosUI() {
     const btnActualizar = document.getElementById(uiConfig.elementos.btnActualizarDatos);
     if (btnActualizar) {
         btnActualizar.addEventListener('click', manejarActualizacionManual);
+        console.log('✅ Evento de actualización manual configurado');
     }
     
-    // Selector de ciclo
-    const selectorCiclo = document.getElementById(uiConfig.elementos.selectorCiclo);
+    // Selector de ciclo - intentar múltiples métodos
+    let selectorCiclo = document.getElementById(uiConfig.elementos.selectorCiclo);
+    if (!selectorCiclo) {
+        // Fallback directo
+        selectorCiclo = document.getElementById('selectCiclo');
+    }
+    
     if (selectorCiclo) {
         selectorCiclo.addEventListener('change', manejarCambioCiclo);
+        console.log('✅ Evento de cambio de ciclo configurado para:', selectorCiclo.id);
+    } else {
+        console.warn('⚠️ Selector de ciclo no encontrado, configurando listener delegado');
+        // Configurar evento delegado como fallback
+        document.addEventListener('change', function(event) {
+            if (event.target.id === 'selectCiclo' || event.target.matches('#selectCiclo')) {
+                manejarCambioCiclo(event);
+            }
+        });
     }
     
     // Eventos de teclado para accesibilidad
@@ -229,20 +244,45 @@ function renderizarMetricas() {
         'observedDocuments': metricas.documentos?.observados || 0
     };
     
+    // Verificar si hay un ciclo seleccionado
+    const cicloSeleccionado = window.DataTablero?.obtenerCicloSeleccionado?.();
+    const informacionCiclo = metricas.ciclo || metricas.cicloActivo;
+    
+    console.log('🔍 Verificando ciclo:', { cicloSeleccionado, informacionCiclo, metricas });
+    
     // Mostrar información del ciclo si está disponible
-    if (metricas.cicloActivo) {
-        console.log(`🎯 Estadísticas del ciclo: ${metricas.cicloActivo.nombre}`);
+    if (cicloSeleccionado && informacionCiclo) {
+        console.log(`🎯 Estadísticas del ciclo: ${informacionCiclo.nombre || `Ciclo ${cicloSeleccionado}`}`);
         
         // Actualizar información del ciclo en la interfaz
         const cicloNombre = document.getElementById('nombreCiclo');
         if (cicloNombre) {
-            cicloNombre.textContent = metricas.cicloActivo.nombre;
+            cicloNombre.textContent = informacionCiclo.nombre || `Ciclo ${cicloSeleccionado}`;
         }
         
-        // Agregar indicador visual de que las estadísticas son del ciclo activo
-        agregarIndicadorCiclo(metricas.cicloActivo);
+        // Crear objeto de ciclo con información completa
+        const cicloInfo = {
+            id: cicloSeleccionado,
+            nombre: informacionCiclo.nombre || `Ciclo ${cicloSeleccionado}`,
+            estado: informacionCiclo.estado || 'activo',
+            ...informacionCiclo
+        };
+        
+        // Agregar indicador visual de que las estadísticas son del ciclo seleccionado
+        agregarIndicadorCiclo(cicloInfo);
+    } else if (cicloSeleccionado) {
+        // Hay ciclo seleccionado pero sin información detallada
+        console.log(`🎯 Estadísticas del ciclo seleccionado: ${cicloSeleccionado}`);
+        
+        const cicloInfo = {
+            id: cicloSeleccionado,
+            nombre: `Ciclo ${cicloSeleccionado}`,
+            estado: 'activo'
+        };
+        
+        agregarIndicadorCiclo(cicloInfo);
     } else {
-        console.log('📊 Mostrando estadísticas generales (sin ciclo activo)');
+        console.log('📊 Mostrando estadísticas generales (sin ciclo seleccionado)');
         agregarIndicadorSinCiclo();
     }
     
@@ -599,14 +639,42 @@ async function manejarActualizacionManual(event) {
     }
 }
 
-function manejarCambioCiclo(event) {
+async function manejarCambioCiclo(event) {
     const cicloId = event.target.value;
     console.log('🔄 Cambiando a ciclo:', cicloId);
     
-    // Aquí se implementaría la lógica para cambiar de ciclo
-    // Por ahora solo mostramos una notificación
-    if (cicloId) {
-        mostrarNotificacion(`Ciclo seleccionado: ${cicloId}`, 'info');
+    try {
+        // Mostrar indicador de carga
+        mostrarIndicadorCarga(true);
+        
+        // Usar el sistema de datos para establecer el ciclo y actualizar
+        if (window.DataTablero?.establecerCicloSeleccionado) {
+            await DataTablero.establecerCicloSeleccionado(cicloId);
+            
+            // Actualizar la interfaz con los nuevos datos
+            await renderizarInterfazCompleta();
+            
+            // Mostrar notificación de éxito
+            const nombreCiclo = document.querySelector('#selectCiclo option:checked')?.textContent || 'Desconocido';
+            mostrarNotificacion(`Datos actualizados para: ${nombreCiclo}`, 'success');
+            
+            console.log('✅ Ciclo cambiado exitosamente:', cicloId);
+        } else {
+            // Fallback si no está disponible el módulo de datos
+            localStorage.setItem('cicloSeleccionado', cicloId);
+            mostrarNotificacion(`Ciclo seleccionado: ${cicloId}`, 'info');
+            
+            // Forzar actualización de la interfaz
+            setTimeout(() => {
+                renderizarInterfazCompleta();
+            }, 100);
+        }
+        
+    } catch (error) {
+        console.error('❌ Error al cambiar ciclo:', error);
+        mostrarNotificacion('Error al cambiar el ciclo académico', 'error');
+    } finally {
+        mostrarIndicadorCarga(false);
     }
 }
 
