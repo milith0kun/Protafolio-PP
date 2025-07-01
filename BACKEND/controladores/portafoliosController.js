@@ -496,72 +496,258 @@ async function crearEstructuraBase() {
 }
 
 /**
- * Crear estructura de carpetas para un portafolio específico
+ * Crear estructura jerárquica de portafolio según especificación UNSAAC
  */
 async function crearEstructuraPortafolio(portafolioId, cicloId, semestreId, transaction = null) {
   try {
-    console.log(`📂 Creando estructura para portafolio ${portafolioId}`);
+    console.log(`📁 Creando estructura jerárquica para portafolio ${portafolioId}`);
     
-    const { Estructura, Portafolio } = require('../modelos');
+    const { Portafolio } = require('../modelos');
     
-    // Obtener estructuras base de nivel 1
-    const estructurasBase = await Estructura.findAll({
-      where: { nivel: 1 },
-      order: [['orden', 'ASC']],
+    // Estructura específica UNSAAC con niveles jerárquicos
+    const estructuraUNSAAC = {
+      // Nivel 0: Presentación del Portafolio (Global para todos los cursos)
+      presentacion: {
+        nombre: '0. PRESENTACIÓN DEL PORTAFOLIO',
+        nivel: 1,
+        subcarpetas: {
+          '0.1': { nombre: '0.1 CARÁTULA', nivel: 2 },
+          '0.2': { nombre: '0.2 CARGA ACADÉMICA', nivel: 2 },
+          '0.3': { nombre: '0.3 FILOSOFÍA DOCENTE', nivel: 2 },
+          '0.4': { nombre: '0.4 CURRÍCULUM VITAE', nivel: 2 }
+        }
+      },
+      
+      // Nivel 1: Secciones principales del curso
+      silabos: {
+        nombre: '1. SILABOS',
+        nivel: 1,
+        subcarpetas: {
+          '1.1': { nombre: '1.1 SILABO UNSAAC', nivel: 2 },
+          '1.2': { nombre: '1.2 SILABO ICACIT', nivel: 2 },
+          '1.3': { nombre: '1.3 REGISTRO DE ENTREGA DE SILABO', nivel: 2 }
+        }
+      },
+      
+      avance_academico: {
+        nombre: '2. AVANCE ACADÉMICO POR SESIONES',
+        nivel: 1
+      },
+      
+      material_ensenanza: {
+        nombre: '3. MATERIAL DE ENSEÑANZA',
+        nivel: 1,
+        subcarpetas: {
+          '3.1': { nombre: '3.1 PRIMERA UNIDAD', nivel: 2 },
+          '3.2': { nombre: '3.2 SEGUNDA UNIDAD', nivel: 2 },
+          '3.3': { nombre: '3.3 TERCERA UNIDAD', nivel: 2, condicional: true } // Solo para 4-5 créditos
+        }
+      },
+      
+      asignaciones: {
+        nombre: '4. ASIGNACIONES',
+        nivel: 1
+      },
+      
+      examenes: {
+        nombre: '5. ENUNCIADO DE EXÁMENES Y SOLUCIÓN',
+        nivel: 1,
+        subcarpetas: {
+          '5.1': {
+            nombre: '5.1 EXAMEN DE ENTRADA',
+            nivel: 2,
+            subcarpetas: {
+              '5.1.1': { nombre: '5.1.1 ENUNCIADO DE EXAMEN Y RESOLUCIÓN', nivel: 3 },
+              '5.1.2': { nombre: '5.1.2 ASISTENCIA AL EXAMEN', nivel: 3 },
+              '5.1.3': { nombre: '5.1.3 INFORME DE RESULTADOS', nivel: 3 }
+            }
+          },
+          '5.2': {
+            nombre: '5.2 PRIMER EXAMEN',
+            nivel: 2,
+            subcarpetas: {
+              '5.2.1': { nombre: '5.2.1 ENUNCIADO Y RESOLUCIÓN DE EXAMEN', nivel: 3 },
+              '5.2.2': { nombre: '5.2.2 ASISTENCIA AL EXAMEN', nivel: 3 },
+              '5.2.3': { nombre: '5.2.3 INFORME DE RESULTADOS', nivel: 3 }
+            }
+          },
+          '5.3': {
+            nombre: '5.3 SEGUNDO EXAMEN',
+            nivel: 2,
+            subcarpetas: {
+              '5.3.1': { nombre: '5.3.1 ENUNCIADO Y RESOLUCIÓN DE EXAMEN', nivel: 3 },
+              '5.3.2': { nombre: '5.3.2 ASISTENCIA AL EXAMEN', nivel: 3 },
+              '5.3.3': { nombre: '5.3.3 INFORME DE RESULTADOS', nivel: 3 }
+            }
+          },
+          '5.4': {
+            nombre: '5.4 TERCER EXAMEN',
+            nivel: 2,
+            condicional: true, // Solo para 4-5 créditos
+            subcarpetas: {
+              '5.4.1': { nombre: '5.4.1 ENUNCIADO Y RESOLUCIÓN DE EXAMEN', nivel: 3 },
+              '5.4.2': { nombre: '5.4.2 ASISTENCIA AL EXAMEN', nivel: 3 },
+              '5.4.3': { nombre: '5.4.3 INFORME DE RESULTADOS', nivel: 3 }
+            }
+          }
+        }
+      },
+      
+      trabajos_estudiantiles: {
+        nombre: '6. TRABAJOS ESTUDIANTILES',
+        nivel: 1,
+        subcarpetas: {
+          '6.1': { nombre: '6.1 EXCELENTE (19–20)', nivel: 2 },
+          '6.2': { nombre: '6.2 BUENO (16–18)', nivel: 2 },
+          '6.3': { nombre: '6.3 REGULAR (14–15)', nivel: 2 },
+          '6.4': { nombre: '6.4 MALO (10–13)', nivel: 2 },
+          '6.5': { nombre: '6.5 POBRE (0–07)', nivel: 2 }
+        }
+      },
+      
+      archivos_portafolio: {
+        nombre: '7. ARCHIVOS PORTAFOLIO DOCENTE',
+        nivel: 1,
+        subcarpetas: {
+          '7.1': { nombre: '7.1 ASISTENCIA DE ALUMNOS', nivel: 2 },
+          '7.2': { nombre: '7.2 REGISTRO DE NOTAS DEL CENTRO DE CÓMPUTO', nivel: 2 },
+          '7.3': { nombre: '7.3 CIERRE DE PORTAFOLIO', nivel: 2 }
+        }
+      }
+    };
+    
+    // Obtener información del portafolio raíz para determinar créditos
+    const portafolioRaiz = await Portafolio.findByPk(portafolioId, {
+      include: [
+        {
+          model: require('../modelos').Asignatura,
+          as: 'asignatura',
+          attributes: ['creditos', 'codigo', 'nombre']
+        }
+      ],
       transaction
     });
-
-    console.log(`📋 Encontradas ${estructurasBase.length} estructuras base`);
-
-    if (estructurasBase.length === 0) {
-      console.log(`⚠️ No hay estructuras base, creando estructura por defecto`);
-      return; // No crear subcarpetas si no hay estructura base
-    }
-
-    // Obtener el portafolio padre para obtener docente_id
-    const portafolioPadre = await Portafolio.findByPk(portafolioId, { transaction });
     
-    if (!portafolioPadre) {
-      throw new Error(`No se encontró el portafolio padre con ID ${portafolioId}`);
-    }
-
-    console.log(`📁 Portafolio padre encontrado: ${portafolioPadre.nombre}`);
-
-    for (const estructura of estructurasBase) {
-      try {
-        console.log(`🔨 Creando subcarpeta: ${estructura.nombre}`);
-        
-        // Crear carpeta principal en el portafolio
-        const subcarpeta = await Portafolio.create({
-          nombre: estructura.nombre,
-          docente_id: portafolioPadre.docente_id,
-          asignatura_id: portafolioPadre.asignatura_id,
-          grupo: portafolioPadre.grupo,
-          asignacion_id: portafolioPadre.asignacion_id,
-          semestre_id: semestreId,
-          ciclo_id: cicloId,
-          estructura_id: estructura.id,
-          carpeta_padre_id: portafolioId,
-          nivel: estructura.nivel,
-          ruta: `${portafolioPadre.ruta}/${estructura.nombre}`,
-          estado: 'activo',
-          activo: true,
-          progreso_completado: 0.00,
-          creado_por: portafolioPadre.creado_por,
-          actualizado_por: portafolioPadre.actualizado_por
-        }, { transaction });
-        
-        console.log(`✅ Subcarpeta creada: ${subcarpeta.id} - ${subcarpeta.nombre}`);
-      } catch (subError) {
-        console.error(`❌ Error al crear subcarpeta ${estructura.nombre}:`, subError.message);
-        throw subError;
+    const creditosCurso = portafolioRaiz?.asignatura?.creditos || 3;
+    const carpetasCreadas = [];
+    const mapaCarpetas = {}; // Para mapear claves -> portafolio_id
+    
+    // Crear estructura jerárquica recursivamente
+    for (const [clave, seccion] of Object.entries(estructuraUNSAAC)) {
+      // Verificar si la sección es condicional (solo para 4-5 créditos)
+      if (seccion.condicional && creditosCurso < 4) {
+        console.log(`⏭️ Omitiendo sección condicional ${seccion.nombre} (curso de ${creditosCurso} créditos)`);
+        continue;
+      }
+      
+      // Crear carpeta principal de nivel 1
+      const carpetaPrincipal = await Portafolio.create({
+        nombre: seccion.nombre,
+        docente_id: portafolioRaiz.docente_id,
+        asignatura_id: portafolioRaiz.asignatura_id,
+        grupo: portafolioRaiz.grupo,
+        asignacion_id: portafolioRaiz.asignacion_id,
+        semestre_id: semestreId,
+        ciclo_id: cicloId,
+        estructura_id: null,
+        carpeta_padre_id: portafolioId,
+        nivel: seccion.nivel,
+        ruta: `/${portafolioRaiz.docente_id}/${portafolioRaiz.asignatura?.codigo}/${clave}`,
+        estado: 'activo',
+        activo: true,
+        progreso_completado: 0.00,
+        metadatos: {
+          seccion_principal: clave,
+          es_condicional: seccion.condicional || false,
+          creditos_requeridos: seccion.condicional ? 4 : null
+        },
+        creado_por: portafolioRaiz.creado_por,
+        actualizado_por: portafolioRaiz.actualizado_por
+      }, { transaction });
+      
+      carpetasCreadas.push(carpetaPrincipal);
+      mapaCarpetas[clave] = carpetaPrincipal.id;
+      
+      // Crear subcarpetas si existen
+      if (seccion.subcarpetas) {
+        await crearSubcarpetasRecursivamente(
+          seccion.subcarpetas,
+          carpetaPrincipal.id,
+          portafolioRaiz,
+          `${carpetaPrincipal.ruta}`,
+          creditosCurso,
+          transaction,
+          carpetasCreadas,
+          mapaCarpetas
+        );
       }
     }
     
-    console.log(`✅ Estructura completa creada para portafolio ${portafolioId}`);
+    console.log(`✅ Estructura creada: ${carpetasCreadas.length} carpetas para portafolio ${portafolioId}`);
+    
+    return {
+      carpetas_creadas: carpetasCreadas.length,
+      estructura_completa: mapaCarpetas,
+      creditos_curso: creditosCurso
+    };
+    
   } catch (error) {
-    console.error(`❌ Error en crearEstructuraPortafolio:`, error.message);
+    console.error(`❌ Error al crear estructura de portafolio ${portafolioId}:`, error);
     throw error;
+  }
+}
+
+/**
+ * Crear subcarpetas recursivamente
+ */
+async function crearSubcarpetasRecursivamente(subcarpetas, padreId, portafolioRaiz, rutaBase, creditosCurso, transaction, carpetasCreadas, mapaCarpetas) {
+  for (const [subClave, subcarpeta] of Object.entries(subcarpetas)) {
+    // Verificar condiciones para subcarpetas
+    if (subcarpeta.condicional && creditosCurso < 4) {
+      console.log(`⏭️ Omitiendo subcarpeta condicional ${subcarpeta.nombre}`);
+      continue;
+    }
+    
+    const nuevaSubcarpeta = await Portafolio.create({
+      nombre: subcarpeta.nombre,
+      docente_id: portafolioRaiz.docente_id,
+      asignatura_id: portafolioRaiz.asignatura_id,
+      grupo: portafolioRaiz.grupo,
+      asignacion_id: portafolioRaiz.asignacion_id,
+      semestre_id: portafolioRaiz.semestre_id,
+      ciclo_id: portafolioRaiz.ciclo_id,
+      estructura_id: null,
+      carpeta_padre_id: padreId,
+      nivel: subcarpeta.nivel,
+      ruta: `${rutaBase}/${subClave}`,
+      estado: 'activo',
+      activo: true,
+      progreso_completado: 0.00,
+      metadatos: {
+        subcarpeta_de: subClave,
+        es_condicional: subcarpeta.condicional || false,
+        descripcion: subcarpeta.descripcion || ''
+      },
+      creado_por: portafolioRaiz.creado_por,
+      actualizado_por: portafolioRaiz.actualizado_por
+    }, { transaction });
+    
+    carpetasCreadas.push(nuevaSubcarpeta);
+    mapaCarpetas[`${rutaBase}/${subClave}`] = nuevaSubcarpeta.id;
+    
+    // Crear subcarpetas de nivel 3 si existen
+    if (subcarpeta.subcarpetas) {
+      await crearSubcarpetasRecursivamente(
+        subcarpeta.subcarpetas,
+        nuevaSubcarpeta.id,
+        portafolioRaiz,
+        `${rutaBase}/${subClave}`,
+        creditosCurso,
+        transaction,
+        carpetasCreadas,
+        mapaCarpetas
+      );
+    }
   }
 }
 

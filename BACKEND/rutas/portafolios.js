@@ -6,8 +6,7 @@ const express = require('express');
 const router = express.Router();
 
 // Middlewares de autenticación
-const { verificarToken } = require('../middleware/verificar-jwt');
-const verificarRol = require('../middleware/verificar-rol');
+const { verificarToken, verificarRol } = require('../middleware/authJwt');
 
 // Controlador de portafolios
 const portafoliosController = require('../controladores/portafoliosController');
