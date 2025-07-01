@@ -84,7 +84,124 @@ class CargaMasiva {
         
         this.inicializado = false;
         this.cicloSeleccionado = null;
+        
+        // Integración con sistema global de ciclos
+        this.integrarSistemaCiclosGlobal();
+        
         console.log('✅ CargaMasiva inicializada');
+    }
+
+    /**
+     * Integrar con el sistema global de ciclos académicos
+     */
+    integrarSistemaCiclosGlobal() {
+        try {
+            // Escuchar eventos de cambio de ciclo desde otras páginas
+            window.addEventListener('cicloAcademicoChange', (event) => {
+                const { cicloId, cicloNombre } = event.detail;
+                console.log('🔄 [CargaMasiva] Evento de cambio de ciclo recibido:', { cicloId, cicloNombre, origen: event.detail.origen });
+                this.sincronizarCicloDesdeEvento(cicloId, event);
+            });
+            
+            // Intentar sincronizar con el ciclo ya seleccionado en el sistema
+            this.sincronizarCicloInicial();
+            
+            console.log('✅ [CargaMasiva] Integración con sistema global de ciclos configurada');
+        } catch (error) {
+            console.error('❌ Error al integrar sistema de ciclos:', error);
+        }
+    }
+    
+    /**
+     * Sincronizar ciclo inicial con el sistema global
+     */
+    sincronizarCicloInicial() {
+        try {
+            // Verificar si hay un ciclo seleccionado en el sistema global
+            const cicloGlobal = window.DataTablero?.obtenerCicloSeleccionado?.();
+            
+            if (cicloGlobal) {
+                console.log('🔄 [CargaMasiva] Sincronizando con ciclo global:', cicloGlobal);
+                this.estadoSistema.cicloSeleccionado = cicloGlobal;
+                this.cicloSeleccionado = cicloGlobal;
+                
+                // Si el selector ya está disponible, actualizarlo
+                setTimeout(() => {
+                    const selector = document.getElementById('selectCiclo') || document.getElementById('cicloAcademico');
+                    if (selector && selector.options.length > 1) {
+                        selector.value = cicloGlobal;
+                        console.log('✅ [CargaMasiva] Selector actualizado con ciclo global:', cicloGlobal);
+                    }
+                }, 500);
+            }
+        } catch (error) {
+            console.error('❌ Error al sincronizar ciclo inicial:', error);
+        }
+    }
+    
+    /**
+     * Sincronizar ciclo desde evento de otra página
+     */
+    async sincronizarCicloDesdeEvento(cicloId, evento) {
+        try {
+            // Evitar bucles infinitos - no procesar eventos que vienen de esta misma página
+            if (evento?.detail?.origen === 'carga-masiva') {
+                return;
+            }
+            
+            if (!cicloId || cicloId === this.cicloSeleccionado) {
+                return; // No hacer nada si es el mismo ciclo
+            }
+            
+            console.log('🔄 [CargaMasiva] Sincronizando con ciclo desde evento externo:', cicloId);
+            
+            // Actualizar estado interno
+            this.estadoSistema.cicloSeleccionado = cicloId;
+            this.cicloSeleccionado = cicloId;
+            
+            // Actualizar selector si existe
+            const selector = document.getElementById('selectCiclo') || document.getElementById('cicloAcademico');
+            if (selector) {
+                selector.value = cicloId;
+                
+                // Cargar datos del nuevo ciclo
+                await this.cargarDatosPorCiclo(cicloId);
+                
+                // Actualizar estado visual
+                this.habilitarCargaArchivos();
+                this.actualizarEstadoConexion();
+            }
+            
+            console.log('✅ [CargaMasiva] Ciclo sincronizado correctamente desde evento externo');
+        } catch (error) {
+            console.error('❌ Error al sincronizar ciclo desde evento:', error);
+        }
+    }
+    
+    /**
+     * Emitir evento de cambio de ciclo al sistema global
+     */
+    emitirCambioCicloGlobal(cicloId, cicloNombre) {
+        try {
+            // Actualizar sistema global si existe
+            if (window.DataTablero?.establecerCicloSeleccionado) {
+                window.DataTablero.establecerCicloSeleccionado(cicloId);
+            }
+            
+            // Emitir evento personalizado
+            const evento = new CustomEvent('cicloAcademicoChange', {
+                detail: { 
+                    cicloId, 
+                    cicloNombre,
+                    origen: 'carga-masiva'
+                }
+            });
+            
+            window.dispatchEvent(evento);
+            console.log('📡 [CargaMasiva] Evento de cambio de ciclo emitido:', { cicloId, cicloNombre });
+        } catch (error) {
+            console.error('❌ Error al emitir cambio de ciclo:', error);
+        }
     }
 
     /**
@@ -203,6 +320,11 @@ class CargaMasiva {
             
             // Cargar ciclos académicos
             await this.cargarCiclosAcademicos();
+            
+            // Sincronizar con el ciclo global después de cargar los ciclos
+            setTimeout(() => {
+                this.sincronizarCicloInicial();
+            }, 1000);
             
             // Actualizar interfaz con el estado actual
             this.mostrarEstadoArchivos();
@@ -625,6 +747,9 @@ class CargaMasiva {
                 const textoSeleccionado = e.target.options[e.target.selectedIndex].text;
                 this.agregarLog(`📅 Ciclo académico seleccionado: ${textoSeleccionado}`, 'success');
                 
+                // Emitir evento de cambio de ciclo al sistema global
+                this.emitirCambioCicloGlobal(cicloId, textoSeleccionado);
+                
                 // Cargar datos específicos del ciclo seleccionado
                 await this.cargarDatosPorCiclo(cicloId);
                 
@@ -649,6 +774,9 @@ class CargaMasiva {
             this.habilitarCargaArchivos();
             const textoSeleccionado = selector.options[selector.selectedIndex].text;
             this.agregarLog(`📅 Sistema habilitado con ciclo: ${textoSeleccionado}`, 'success');
+            
+            // Emitir evento de cambio de ciclo al sistema global
+            this.emitirCambioCicloGlobal(this.cicloSeleccionado, textoSeleccionado);
             
             // Cargar datos del ciclo seleccionado automáticamente
             this.cargarDatosPorCiclo(this.cicloSeleccionado);
@@ -1236,11 +1364,19 @@ class CargaMasiva {
                 tieneData: !!statsResponse?.data,
                 tieneSuccess: !!statsResponse?.success,
                 keysStatsResponse: statsResponse ? Object.keys(statsResponse) : null,
-                dataContent: statsResponse?.data
+                dataContent: statsResponse?.data,
+                valoresDirectos: {
+                    usuarios: statsResponse?.usuarios,
+                    carreras: statsResponse?.carreras,
+                    asignaturas: statsResponse?.asignaturas,
+                    portafolios: statsResponse?.portafolios
+                }
             });
             
-            if (statsResponse && statsResponse.success && statsResponse.data) {
-                const data = statsResponse.data;
+            // Procesar estadísticas según el formato del backend
+            if (statsResponse && typeof statsResponse === 'object') {
+                // Los datos están directamente en statsResponse
+                const data = statsResponse.data || statsResponse;
                 
                 console.log('🔍 DEBUG - Datos para procesar:', {
                     tieneUsuarios: !!data.usuarios,
@@ -1248,6 +1384,7 @@ class CargaMasiva {
                     tieneAsignaturas: !!data.asignaturas,
                     tienePortafolios: !!data.portafolios,
                     tieneCiclo: !!data.ciclo,
+                    tieneCicloActivo: !!data.cicloActivo,
                     valoresDirectos: {
                         usuarios: data.usuarios,
                         carreras: data.carreras,
@@ -1256,22 +1393,23 @@ class CargaMasiva {
                     }
                 });
                 
-                // Mapear datos según la estructura de respuesta
+                // Mapear datos según la estructura de respuesta real del servidor
                 stats = {
-                    usuarios: data.usuarios?.total || data.usuarios?.activos || data.usuarios || 0,
-                    carreras: data.carreras?.total || data.carreras?.activas || data.carreras || 0,
-                    asignaturas: data.asignaturas?.total || data.asignaturas?.activas || data.asignaturas || 0,
-                    portafolios: data.portafolios?.total || data.portafolios?.activos || data.portafolios || 0
+                    usuarios: parseInt(data.usuarios) || parseInt(data.usuariosActivos) || 0,
+                    carreras: parseInt(data.carreras) || 0,
+                    asignaturas: parseInt(data.asignaturas) || 0,
+                    portafolios: parseInt(data.portafolios) || 0
                 };
                 
                 console.log('✅ Estadísticas mapeadas:', stats);
                 
                 // Si hay información del ciclo en la respuesta, usarla
-                if (data.ciclo) {
-                    ciclo.nombre = data.ciclo.nombre || ciclo.nombre;
-                    ciclo.estado = data.ciclo.estado || ciclo.estado;
-                    ciclo.fechaInicio = data.ciclo.fechaInicio || data.ciclo.fecha_inicio;
-                    ciclo.fechaFin = data.ciclo.fechaFin || data.ciclo.fecha_fin;
+                const cicloInfo = data.ciclo || data.cicloActivo;
+                if (cicloInfo) {
+                    ciclo.nombre = cicloInfo.nombre || ciclo.nombre;
+                    ciclo.estado = cicloInfo.estado || ciclo.estado;
+                    ciclo.fechaInicio = cicloInfo.fechaInicio || cicloInfo.fecha_inicio;
+                    ciclo.fechaFin = cicloInfo.fechaFin || cicloInfo.fecha_fin;
                     console.log('✅ Información del ciclo actualizada:', ciclo);
                 }
             } else {
