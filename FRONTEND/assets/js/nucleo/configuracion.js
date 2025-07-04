@@ -207,7 +207,10 @@ window.CONFIG = {
         obtenerCicloActivo: function() {
             try {
                 const cicloGuardado = localStorage.getItem(window.CONFIG.STORAGE.CICLO_ACTIVO);
-                return cicloGuardado ? JSON.parse(cicloGuardado) : null;
+                if (!cicloGuardado || cicloGuardado === 'undefined' || cicloGuardado === 'null') {
+                    return null;
+                }
+                return JSON.parse(cicloGuardado);
             } catch (error) {
                 console.error('Error al obtener ciclo activo:', error);
                 return null;

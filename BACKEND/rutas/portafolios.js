@@ -34,6 +34,28 @@ router.get('/mis-portafolios',
 );
 
 /**
+ * @route GET /api/portafolios/estructura
+ * @desc Obtener estructura de portafolios según rol del usuario
+ * @access Docente, Verificador, Administrador
+ */
+router.get('/estructura', 
+  verificarToken, 
+  verificarRol(['docente', 'verificador', 'administrador']), 
+  portafoliosController.obtenerEstructuraParaRol
+);
+
+/**
+ * @route GET /api/portafolios/estructura/:docenteId/:portafolioId
+ * @desc Obtener estructura de un portafolio específico de un docente
+ * @access Verificador, Administrador
+ */
+router.get('/estructura/:docenteId/:portafolioId', 
+  verificarToken, 
+  verificarRol(['verificador', 'administrador']), 
+  portafoliosController.obtenerEstructuraParaRol
+);
+
+/**
  * @route POST /api/portafolios/generar
  * @desc Generar portafolios automáticamente para todas las asignaciones
  * @access Administrador
@@ -53,6 +75,17 @@ router.get('/:id/estructura',
   verificarToken, 
   verificarRol(['docente', 'verificador', 'administrador']), 
   portafoliosController.obtenerEstructuraPortafolio
+);
+
+/**
+ * @route GET /api/portafolios/:portafolioId/archivos
+ * @desc Obtener archivos de una carpeta específica del portafolio
+ * @access Docente, Verificador, Administrador
+ */
+router.get('/:portafolioId/archivos', 
+  verificarToken, 
+  verificarRol(['docente', 'verificador', 'administrador']), 
+  portafoliosController.obtenerArchivosDePortafolio
 );
 
 /**

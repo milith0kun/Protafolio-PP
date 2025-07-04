@@ -645,15 +645,9 @@ class CargaMasiva {
                 this.estadoSistema.conectado = false;
             }
             
-            // Usar ciclos de ejemplo como fallback (con estructura correcta)
-            const ciclosEjemplo = [
-                { id: 1, nombre: '2024-I', estado: 'activo' },
-                { id: 2, nombre: '2024-II', estado: 'preparacion' },
-                { id: 3, nombre: '2025-I', estado: 'preparacion' }
-            ];
-            
-            this.llenarSelectorCiclos(ciclosEjemplo);
-            this.log('✅ Ciclos académicos cargados (modo local):', ciclosEjemplo.length);
+            // No usar datos de ejemplo, mostrar mensaje de error
+            this.log('❌ No se pudieron cargar ciclos académicos del servidor');
+            this.mostrarError('No se pudieron cargar los ciclos académicos. Verifique la conexión al servidor.');
             
             // Verificación final después de cargar (modo local)
             setTimeout(() => {
@@ -662,16 +656,7 @@ class CargaMasiva {
             
         } catch (error) {
             this.log('❌ Error crítico al cargar ciclos:', error);
-            // Garantizar que siempre haya ciclos disponibles
-            const ciclosSeguros = [
-                { id: 1, nombre: '2024-I', estado: 'activo' }
-            ];
-            this.llenarSelectorCiclos(ciclosSeguros);
-            
-            // Verificación final después de cargar (modo seguro)
-            setTimeout(() => {
-                this.verificarEstadoFinalSelector();
-            }, 100);
+            this.mostrarError('Error crítico al cargar ciclos académicos: ' + error.message);
         }
     }
 

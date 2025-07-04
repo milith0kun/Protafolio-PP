@@ -1,6 +1,7 @@
 const { sequelize } = require('../config/database');
 const { Op } = require('sequelize');
 const ResponseHandler = require('./utils/responseHandler');
+const { Actividad, Usuario, Notificacion } = require('../modelos');
 
 /**
  * Obtiene las métricas del dashboard con datos reales de la base de datos
@@ -259,48 +260,63 @@ const obtenerMetricas = async (req, res) => {
  */
 const obtenerActividades = async (req, res) => {
   try {
-    // Por ahora devolvemos datos de ejemplo
-    const actividades = [
-      {
-        id: 1,
-        tipo: 'usuario',
-        titulo: 'Nuevo usuario registrado',
-        descripcion: 'Juan Pérez (Docente) se ha registrado en el sistema',
-        fecha: new Date(Date.now() - 2 * 60 * 60 * 1000).toISOString(), // Hace 2 horas
-        icono: 'fas fa-user-plus'
-      },
-      {
-        id: 2,
-        tipo: 'documento',
-        titulo: 'Documentos subidos',
-        descripcion: '15 nuevos documentos subidos en las últimas 24 horas',
-        fecha: new Date(Date.now() - 5 * 60 * 60 * 1000).toISOString(), // Hace 5 horas
-        icono: 'fas fa-file-upload'
-      },
-      {
-        id: 3,
-        tipo: 'sistema',
-        titulo: 'Configuración actualizada',
-        descripcion: 'Se actualizaron los plazos de entrega para el ciclo 2025-I',
-        fecha: new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString(), // Hace 1 día
-        icono: 'fas fa-cog'
-      }
-    ];
+    console.log('📊 Obteniendo actividades del sistema...');
+    
+    // Obtener actividades con información de usuario usando las asociaciones
+    const actividades = await Actividad.findAll({
+      include: [{
+        model: Usuario,
+        as: 'usuario',
+        attributes: ['id', 'nombres', 'apellidos'],
+        required: false
+      }],
+      order: [['fecha_creacion', 'DESC']],
+      limit: 10
+    });
+
+    console.log(`📋 ${actividades.length} actividades encontradas`);
+
+    const actividadesFormateadas = actividades.map(actividad => ({
+      id: actividad.id,
+      tipo: actividad.tipo,
+      titulo: actividad.modulo, // Usar módulo como título
+      descripcion: actividad.descripcion,
+      fecha: actividad.fecha_creacion,
+      icono: obtenerIconoActividad(actividad.tipo),
+      usuario: actividad.usuario ? `${actividad.usuario.nombres} ${actividad.usuario.apellidos}` : null
+    }));
 
     return res.status(200).json({
       success: true,
       message: 'Actividades obtenidas correctamente',
-      data: actividades
+      data: actividadesFormateadas
     });
     
   } catch (error) {
-    console.error('Error al obtener actividades:', error);
-    return res.status(500).json({
-      success: false,
-      message: 'Error al obtener actividades recientes',
-      error: process.env.NODE_ENV === 'development' ? error.message : undefined
+    console.error('❌ Error al obtener actividades:', error);
+    // Retornar array vacío en lugar de error 500
+    return res.status(200).json({
+      success: true,
+      message: 'No hay actividades disponibles',
+      data: []
     });
   }
+};
+
+// Función auxiliar para obtener iconos según el tipo de actividad
+const obtenerIconoActividad = (tipo) => {
+  const iconos = {
+    'login': 'fas fa-sign-in-alt',
+    'logout': 'fas fa-sign-out-alt',
+    'creacion': 'fas fa-plus-circle',
+    'actualizacion': 'fas fa-edit',
+    'eliminacion': 'fas fa-trash-alt',
+    'carga_masiva': 'fas fa-upload',
+    'descarga': 'fas fa-download',
+    'cambio_estado': 'fas fa-exchange-alt',
+    'error': 'fas fa-exclamation-triangle'
+  };
+  return iconos[tipo] || 'fas fa-info-circle';
 };
 
 /**
@@ -308,30 +324,31 @@ const obtenerActividades = async (req, res) => {
  */
 const obtenerNotificaciones = async (req, res) => {
   try {
-    // Por ahora devolvemos datos de ejemplo
-    const notificaciones = [
-      {
-        id: 1,
-        tipo: 'info',
-        titulo: 'Sistema actualizado',
-        mensaje: 'El sistema ha sido actualizado a la versión 1.0.0',
-        fecha: new Date().toISOString(),
-        leida: false
+    // Obtener notificaciones reales de la base de datos
+    const { Notificacion } = require('../modelos');
+    
+    const notificaciones = await Notificacion.findAll({
+      where: { 
+        usuario_id: req.usuario.id,
+        leida: false 
       },
-      {
-        id: 2,
-        tipo: 'advertencia',
-        titulo: 'Mantenimiento programado',
-        mensaje: 'Se realizará mantenimiento el próximo domingo de 2:00 AM a 4:00 AM',
-        fecha: new Date(Date.now() - 60 * 60 * 1000).toISOString(),
-        leida: false
-      }
-    ];
+      order: [['fecha_creacion', 'DESC']],
+      limit: 10
+    });
+
+    const notificacionesFormateadas = notificaciones.map(notif => ({
+      id: notif.id,
+      tipo: notif.tipo,
+      titulo: notif.titulo,
+      mensaje: notif.mensaje,
+      fecha: notif.fecha_creacion,
+      leida: notif.leida
+    }));
 
     return res.status(200).json({
       success: true,
       message: 'Notificaciones obtenidas correctamente',
-      data: notificaciones
+      data: notificacionesFormateadas
     });
     
   } catch (error) {

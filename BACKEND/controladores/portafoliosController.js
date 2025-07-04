@@ -408,8 +408,8 @@ async function crearPortafolioParaAsignacion(asignacion, asignatura, cicloId, us
     console.log(`✅ Portafolio creado con ID: ${portafolioRaiz.id}`);
 
     // Crear estructura de carpetas (temporalmente deshabilitada para debug)
-    // await crearEstructuraPortafolio(portafolioRaiz.id, cicloId, semestre.id, transaction);
-    console.log(`⚠️ Creación de estructura deshabilitada temporalmente para debug`);
+    await crearEstructuraPortafolio(portafolioRaiz.id, cicloId, semestre.id, transaction);
+    // console.log(`⚠️ Creación de estructura deshabilitada temporalmente para debug`);
 
     return { creado: true, portafolio: portafolioRaiz };
   } catch (error) {
@@ -504,17 +504,19 @@ async function crearEstructuraPortafolio(portafolioId, cicloId, semestreId, tran
     
     const { Portafolio } = require('../modelos');
     
-    // Estructura específica UNSAAC con niveles jerárquicos
+    // Estructura específica UNSAAC según Portafolio Base.md
     const estructuraUNSAAC = {
       // Nivel 0: Presentación del Portafolio (Global para todos los cursos)
       presentacion: {
         nombre: '0. PRESENTACIÓN DEL PORTAFOLIO',
         nivel: 1,
+        pertenece_presentacion: true,
+        icono: 'fas fa-presentation',
         subcarpetas: {
-          '0.1': { nombre: '0.1 CARÁTULA', nivel: 2 },
-          '0.2': { nombre: '0.2 CARGA ACADÉMICA', nivel: 2 },
-          '0.3': { nombre: '0.3 FILOSOFÍA DOCENTE', nivel: 2 },
-          '0.4': { nombre: '0.4 CURRÍCULUM VITAE', nivel: 2 }
+          '0.1': { nombre: '0.1 CARÁTULA', nivel: 2, icono: 'fas fa-id-card' },
+          '0.2': { nombre: '0.2 CARGA ACADÉMICA', nivel: 2, icono: 'fas fa-calendar-check' },
+          '0.3': { nombre: '0.3 FILOSOFÍA DOCENTE', nivel: 2, icono: 'fas fa-lightbulb' },
+          '0.4': { nombre: '0.4 CURRÍCULUM VITAE', nivel: 2, icono: 'fas fa-user-graduate' }
         }
       },
       
@@ -522,72 +524,81 @@ async function crearEstructuraPortafolio(portafolioId, cicloId, semestreId, tran
       silabos: {
         nombre: '1. SILABOS',
         nivel: 1,
+        icono: 'fas fa-file-alt',
         subcarpetas: {
-          '1.1': { nombre: '1.1 SILABO UNSAAC', nivel: 2 },
-          '1.2': { nombre: '1.2 SILABO ICACIT', nivel: 2 },
-          '1.3': { nombre: '1.3 REGISTRO DE ENTREGA DE SILABO', nivel: 2 }
+          '1.1': { nombre: '1.1 SILABO UNSAAC', nivel: 2, icono: 'fas fa-university' },
+          '1.2': { nombre: '1.2 SILABO ICACIT', nivel: 2, icono: 'fas fa-certificate' },
+          '1.3': { nombre: '1.3 REGISTRO DE ENTREGA DE SILABO', nivel: 2, icono: 'fas fa-clipboard-check' }
         }
       },
       
       avance_academico: {
         nombre: '2. AVANCE ACADÉMICO POR SESIONES',
-        nivel: 1
+        nivel: 1,
+        icono: 'fas fa-chart-line'
       },
       
       material_ensenanza: {
         nombre: '3. MATERIAL DE ENSEÑANZA',
         nivel: 1,
+        icono: 'fas fa-book-open',
         subcarpetas: {
-          '3.1': { nombre: '3.1 PRIMERA UNIDAD', nivel: 2 },
-          '3.2': { nombre: '3.2 SEGUNDA UNIDAD', nivel: 2 },
-          '3.3': { nombre: '3.3 TERCERA UNIDAD', nivel: 2, condicional: true } // Solo para 4-5 créditos
+          '3.1': { nombre: '3.1 PRIMERA UNIDAD', nivel: 2, icono: 'fas fa-play' },
+          '3.2': { nombre: '3.2 SEGUNDA UNIDAD', nivel: 2, icono: 'fas fa-forward' },
+          '3.3': { nombre: '3.3 TERCERA UNIDAD', nivel: 2, condicional: true, icono: 'fas fa-fast-forward' } // Solo para 4-5 créditos
         }
       },
       
       asignaciones: {
         nombre: '4. ASIGNACIONES',
-        nivel: 1
+        nivel: 1,
+        icono: 'fas fa-tasks'
       },
       
       examenes: {
         nombre: '5. ENUNCIADO DE EXÁMENES Y SOLUCIÓN',
         nivel: 1,
+        icono: 'fas fa-file-prescription',
         subcarpetas: {
           '5.1': {
             nombre: '5.1 EXAMEN DE ENTRADA',
             nivel: 2,
+            icono: 'fas fa-sign-in-alt',
             subcarpetas: {
-              '5.1.1': { nombre: '5.1.1 ENUNCIADO DE EXAMEN Y RESOLUCIÓN', nivel: 3 },
-              '5.1.2': { nombre: '5.1.2 ASISTENCIA AL EXAMEN', nivel: 3 },
-              '5.1.3': { nombre: '5.1.3 INFORME DE RESULTADOS', nivel: 3 }
+              '5.1.1': { nombre: '5.1.1 ENUNCIADO DE EXAMEN Y RESOLUCIÓN', nivel: 3, icono: 'fas fa-question-circle' },
+              '5.1.2': { nombre: '5.1.2 ASISTENCIA AL EXAMEN', nivel: 3, icono: 'fas fa-users' },
+              '5.1.3': { nombre: '5.1.3 INFORME DE RESULTADOS', nivel: 3, icono: 'fas fa-chart-bar' }
             }
           },
           '5.2': {
             nombre: '5.2 PRIMER EXAMEN',
             nivel: 2,
+            icono: 'fas fa-file-medical',
             subcarpetas: {
-              '5.2.1': { nombre: '5.2.1 ENUNCIADO Y RESOLUCIÓN DE EXAMEN', nivel: 3 },
-              '5.2.2': { nombre: '5.2.2 ASISTENCIA AL EXAMEN', nivel: 3 },
-              '5.2.3': { nombre: '5.2.3 INFORME DE RESULTADOS', nivel: 3 }
+              '5.2.1': { nombre: '5.2.1 ENUNCIADO Y RESOLUCIÓN DE EXAMEN', nivel: 3, icono: 'fas fa-question-circle' },
+              '5.2.2': { nombre: '5.2.2 ASISTENCIA AL EXAMEN', nivel: 3, icono: 'fas fa-users' },
+              '5.2.3': { nombre: '5.2.3 INFORME DE RESULTADOS', nivel: 3, icono: 'fas fa-chart-bar' }
             }
           },
           '5.3': {
             nombre: '5.3 SEGUNDO EXAMEN',
             nivel: 2,
+            icono: 'fas fa-file-medical',
             subcarpetas: {
-              '5.3.1': { nombre: '5.3.1 ENUNCIADO Y RESOLUCIÓN DE EXAMEN', nivel: 3 },
-              '5.3.2': { nombre: '5.3.2 ASISTENCIA AL EXAMEN', nivel: 3 },
-              '5.3.3': { nombre: '5.3.3 INFORME DE RESULTADOS', nivel: 3 }
+              '5.3.1': { nombre: '5.3.1 ENUNCIADO Y RESOLUCIÓN DE EXAMEN', nivel: 3, icono: 'fas fa-question-circle' },
+              '5.3.2': { nombre: '5.3.2 ASISTENCIA AL EXAMEN', nivel: 3, icono: 'fas fa-users' },
+              '5.3.3': { nombre: '5.3.3 INFORME DE RESULTADOS', nivel: 3, icono: 'fas fa-chart-bar' }
             }
           },
           '5.4': {
             nombre: '5.4 TERCER EXAMEN',
             nivel: 2,
             condicional: true, // Solo para 4-5 créditos
+            icono: 'fas fa-file-medical',
             subcarpetas: {
-              '5.4.1': { nombre: '5.4.1 ENUNCIADO Y RESOLUCIÓN DE EXAMEN', nivel: 3 },
-              '5.4.2': { nombre: '5.4.2 ASISTENCIA AL EXAMEN', nivel: 3 },
-              '5.4.3': { nombre: '5.4.3 INFORME DE RESULTADOS', nivel: 3 }
+              '5.4.1': { nombre: '5.4.1 ENUNCIADO Y RESOLUCIÓN DE EXAMEN', nivel: 3, icono: 'fas fa-question-circle' },
+              '5.4.2': { nombre: '5.4.2 ASISTENCIA AL EXAMEN', nivel: 3, icono: 'fas fa-users' },
+              '5.4.3': { nombre: '5.4.3 INFORME DE RESULTADOS', nivel: 3, icono: 'fas fa-chart-bar' }
             }
           }
         }
@@ -596,22 +607,24 @@ async function crearEstructuraPortafolio(portafolioId, cicloId, semestreId, tran
       trabajos_estudiantiles: {
         nombre: '6. TRABAJOS ESTUDIANTILES',
         nivel: 1,
+        icono: 'fas fa-graduation-cap',
         subcarpetas: {
-          '6.1': { nombre: '6.1 EXCELENTE (19–20)', nivel: 2 },
-          '6.2': { nombre: '6.2 BUENO (16–18)', nivel: 2 },
-          '6.3': { nombre: '6.3 REGULAR (14–15)', nivel: 2 },
-          '6.4': { nombre: '6.4 MALO (10–13)', nivel: 2 },
-          '6.5': { nombre: '6.5 POBRE (0–07)', nivel: 2 }
+          '6.1': { nombre: '6.1 EXCELENTE (19–20)', nivel: 2, icono: 'fas fa-star', color: '#28a745' },
+          '6.2': { nombre: '6.2 BUENO (16–18)', nivel: 2, icono: 'fas fa-thumbs-up', color: '#17a2b8' },
+          '6.3': { nombre: '6.3 REGULAR (14–15)', nivel: 2, icono: 'fas fa-meh', color: '#ffc107' },
+          '6.4': { nombre: '6.4 MALO (10–13)', nivel: 2, icono: 'fas fa-thumbs-down', color: '#fd7e14' },
+          '6.5': { nombre: '6.5 POBRE (0–07)', nivel: 2, icono: 'fas fa-times-circle', color: '#dc3545' }
         }
       },
       
       archivos_portafolio: {
         nombre: '7. ARCHIVOS PORTAFOLIO DOCENTE',
         nivel: 1,
+        icono: 'fas fa-archive',
         subcarpetas: {
-          '7.1': { nombre: '7.1 ASISTENCIA DE ALUMNOS', nivel: 2 },
-          '7.2': { nombre: '7.2 REGISTRO DE NOTAS DEL CENTRO DE CÓMPUTO', nivel: 2 },
-          '7.3': { nombre: '7.3 CIERRE DE PORTAFOLIO', nivel: 2 }
+          '7.1': { nombre: '7.1 ASISTENCIA DE ALUMNOS', nivel: 2, icono: 'fas fa-user-check' },
+          '7.2': { nombre: '7.2 REGISTRO DE NOTAS DEL CENTRO DE CÓMPUTO', nivel: 2, icono: 'fas fa-desktop' },
+          '7.3': { nombre: '7.3 CIERRE DE PORTAFOLIO', nivel: 2, icono: 'fas fa-lock' }
         }
       }
     };
@@ -628,19 +641,23 @@ async function crearEstructuraPortafolio(portafolioId, cicloId, semestreId, tran
       transaction
     });
     
-    const creditosCurso = portafolioRaiz?.asignatura?.creditos || 3;
-    const carpetasCreadas = [];
-    const mapaCarpetas = {}; // Para mapear claves -> portafolio_id
+    if (!portafolioRaiz) {
+      throw new Error(`Portafolio ${portafolioId} no encontrado`);
+    }
     
-    // Crear estructura jerárquica recursivamente
+    const creditosCurso = portafolioRaiz.asignatura?.creditos || 3;
+    console.log(`📊 Curso ${portafolioRaiz.asignatura?.nombre} tiene ${creditosCurso} créditos`);
+    
+    const carpetasCreadas = new Map();
+    const mapaCarpetas = new Map();
+    
+    // Crear las carpetas principales y subcarpetas
     for (const [clave, seccion] of Object.entries(estructuraUNSAAC)) {
-      // Verificar si la sección es condicional (solo para 4-5 créditos)
-      if (seccion.condicional && creditosCurso < 4) {
-        console.log(`⏭️ Omitiendo sección condicional ${seccion.nombre} (curso de ${creditosCurso} créditos)`);
-        continue;
-      }
+      console.log(`📁 Creando sección: ${seccion.nombre}`);
       
-      // Crear carpeta principal de nivel 1
+      // Crear carpeta principal
+      const rutaSeccion = seccion.nombre;
+      
       const carpetaPrincipal = await Portafolio.create({
         nombre: seccion.nombre,
         docente_id: portafolioRaiz.docente_id,
@@ -649,50 +666,46 @@ async function crearEstructuraPortafolio(portafolioId, cicloId, semestreId, tran
         asignacion_id: portafolioRaiz.asignacion_id,
         semestre_id: semestreId,
         ciclo_id: cicloId,
-        estructura_id: null,
         carpeta_padre_id: portafolioId,
         nivel: seccion.nivel,
-        ruta: `/${portafolioRaiz.docente_id}/${portafolioRaiz.asignatura?.codigo}/${clave}`,
+        ruta: rutaSeccion,
         estado: 'activo',
-        activo: true,
-        progreso_completado: 0.00,
-        metadatos: {
-          seccion_principal: clave,
-          es_condicional: seccion.condicional || false,
-          creditos_requeridos: seccion.condicional ? 4 : null
-        },
-        creado_por: portafolioRaiz.creado_por,
-        actualizado_por: portafolioRaiz.actualizado_por
+        creado_por: portafolioRaiz.creado_por
       }, { transaction });
       
-      carpetasCreadas.push(carpetaPrincipal);
-      mapaCarpetas[clave] = carpetaPrincipal.id;
+      carpetasCreadas.set(clave, carpetaPrincipal.id);
+      mapaCarpetas.set(carpetaPrincipal.id, {
+        nombre: seccion.nombre,
+        ruta: rutaSeccion,
+        icono: seccion.icono || 'fas fa-folder',
+        nivel: seccion.nivel
+      });
       
       // Crear subcarpetas si existen
       if (seccion.subcarpetas) {
         await crearSubcarpetasRecursivamente(
-          seccion.subcarpetas,
-          carpetaPrincipal.id,
-          portafolioRaiz,
-          `${carpetaPrincipal.ruta}`,
-          creditosCurso,
-          transaction,
-          carpetasCreadas,
+          seccion.subcarpetas, 
+          carpetaPrincipal.id, 
+          portafolioRaiz, 
+          rutaSeccion, 
+          creditosCurso, 
+          transaction, 
+          carpetasCreadas, 
           mapaCarpetas
         );
       }
     }
     
-    console.log(`✅ Estructura creada: ${carpetasCreadas.length} carpetas para portafolio ${portafolioId}`);
+    console.log(`✅ Estructura creada: ${carpetasCreadas.size} carpetas para portafolio ${portafolioId}`);
     
     return {
-      carpetas_creadas: carpetasCreadas.length,
-      estructura_completa: mapaCarpetas,
-      creditos_curso: creditosCurso
+      portafolioId,
+      carpetasCreadas: carpetasCreadas.size,
+      estructura: mapaCarpetas
     };
     
   } catch (error) {
-    console.error(`❌ Error al crear estructura de portafolio ${portafolioId}:`, error);
+    console.error('❌ Error al crear estructura:', error);
     throw error;
   }
 }
@@ -733,7 +746,12 @@ async function crearSubcarpetasRecursivamente(subcarpetas, padreId, portafolioRa
     }, { transaction });
     
     carpetasCreadas.push(nuevaSubcarpeta);
-    mapaCarpetas[`${rutaBase}/${subClave}`] = nuevaSubcarpeta.id;
+    mapaCarpetas.set(nuevaSubcarpeta.id, {
+      nombre: nuevaSubcarpeta.nombre,
+      ruta: nuevaSubcarpeta.ruta,
+      icono: subcarpeta.icono || 'fas fa-folder',
+      nivel: nuevaSubcarpeta.nivel
+    });
     
     // Crear subcarpetas de nivel 3 si existen
     if (subcarpeta.subcarpetas) {
@@ -797,10 +815,330 @@ const inicializarSistemaPortafolios = async (req, res) => {
   }
 };
 
+/**
+ * Obtener estructura de portafolio para visualización según rol
+ */
+const obtenerEstructuraParaRol = async (req, res) => {
+  try {
+    console.log('=== OBTENIENDO ESTRUCTURA PARA ROL ===');
+    
+    const usuarioId = req.usuario.id;
+    const rolActual = req.usuario.rol_actual;
+    const { portafolioId, docenteId } = req.params;
+    
+    await sequelize.authenticate();
+    
+    const { Portafolio, Usuario, Asignatura, CicloAcademico, ArchivoSubido } = require('../modelos');
+    
+    // Verificar permisos según rol
+    let whereCondition = {};
+    
+    if (rolActual === 'docente') {
+      // Docente solo ve sus propios portafolios
+      whereCondition = { docente_id: usuarioId };
+    } else if (rolActual === 'verificador') {
+      // Verificador ve portafolios asignados
+      const { VerificadorDocente } = require('../modelos');
+      const asignaciones = await VerificadorDocente.findAll({
+        where: { verificador_id: usuarioId, activo: true },
+        attributes: ['docente_id']
+      });
+      
+      const docentesAsignados = asignaciones.map(a => a.docente_id);
+      whereCondition = { docente_id: docentesAsignados };
+    } else if (rolActual === 'administrador') {
+      // Administrador ve todos
+      whereCondition = {};
+    }
+    
+    // Si se especifica un docente y un portafolio específico
+    if (docenteId && portafolioId) {
+      whereCondition.docente_id = docenteId;
+      whereCondition.id = portafolioId;
+    } else if (portafolioId) {
+      whereCondition.id = portafolioId;
+    }
+    
+    // Obtener portafolio raíz y su estructura
+    const portafolios = await Portafolio.findAll({
+      where: {
+        ...whereCondition,
+        activo: true,
+        carpeta_padre_id: null // Solo portafolios raíz
+      },
+      include: [
+        {
+          model: Usuario,
+          as: 'docente',
+          attributes: ['id', 'nombres', 'apellidos', 'correo']
+        },
+        {
+          model: Asignatura,
+          as: 'asignatura',
+          attributes: ['id', 'codigo', 'nombre', 'creditos', 'carrera']
+        },
+        {
+          model: CicloAcademico,
+          as: 'ciclo',
+          attributes: ['id', 'nombre', 'estado']
+        }
+      ],
+      order: [['creado_en', 'DESC']]
+    });
+    
+    if (portafolios.length === 0) {
+      return ResponseHandler.error(res, 'No se encontraron portafolios para este usuario', 404);
+    }
+    
+    // Para cada portafolio, obtener su estructura completa
+    const resultado = [];
+    
+    for (const portafolio of portafolios) {
+      const estructura = await obtenerEstructuraJerarquica(portafolio.id);
+      const estadisticas = await obtenerEstadisticasPortafolio(portafolio.id);
+      
+      resultado.push({
+        portafolio: {
+          id: portafolio.id,
+          nombre: portafolio.nombre,
+          docente: portafolio.docente,
+          asignatura: portafolio.asignatura,
+          ciclo: portafolio.ciclo,
+          progreso_completado: portafolio.progreso_completado,
+          estado: portafolio.estado
+        },
+        estructura,
+        estadisticas
+      });
+    }
+    
+    return ResponseHandler.success(res, resultado, 'Estructura de portafolios obtenida correctamente');
+    
+  } catch (error) {
+    console.error('❌ Error al obtener estructura para rol:', error);
+    return ResponseHandler.error(res, error.message, 500);
+  }
+};
+
+/**
+ * Obtener estructura jerárquica de un portafolio
+ */
+async function obtenerEstructuraJerarquica(portafolioRaizId) {
+  const { Portafolio, ArchivoSubido } = require('../modelos');
+  
+  // Obtener todas las carpetas del portafolio ordenadas por nivel y ruta
+  const carpetas = await Portafolio.findAll({
+    where: {
+      [Op.or]: [
+        { id: portafolioRaizId },
+        { carpeta_padre_id: { [Op.not]: null } }
+      ],
+      activo: true
+    },
+    include: [
+      {
+        model: ArchivoSubido,
+        as: 'archivos',
+        where: { activo: true },
+        required: false,
+        attributes: ['id', 'nombre_original', 'tipo_mime', 'formato', 'tamanio', 'estado', 'subido_en', 'verificado_por', 'fecha_verificacion']
+      }
+    ],
+    order: [['nivel', 'ASC'], ['ruta', 'ASC'], ['creado_en', 'ASC']]
+  });
+  
+  // Construir árbol jerárquico
+  const mapaElementos = new Map();
+  const raiz = { id: portafolioRaizId, hijos: [] };
+  
+  carpetas.forEach(carpeta => {
+    const elemento = {
+      id: carpeta.id,
+      nombre: carpeta.nombre,
+      nivel: carpeta.nivel,
+      ruta: carpeta.ruta,
+      carpeta_padre_id: carpeta.carpeta_padre_id,
+      archivos: carpeta.archivos || [],
+      hijos: [],
+      estadisticas: {
+        total_archivos: carpeta.archivos?.length || 0,
+        archivos_aprobados: carpeta.archivos?.filter(a => a.estado === 'aprobado').length || 0,
+        archivos_pendientes: carpeta.archivos?.filter(a => a.estado === 'pendiente').length || 0,
+        archivos_rechazados: carpeta.archivos?.filter(a => a.estado === 'rechazado').length || 0
+      }
+    };
+    
+    mapaElementos.set(carpeta.id, elemento);
+    
+    if (carpeta.id === portafolioRaizId) {
+      Object.assign(raiz, elemento);
+    } else if (carpeta.carpeta_padre_id) {
+      const padre = mapaElementos.get(carpeta.carpeta_padre_id);
+      if (padre) {
+        padre.hijos.push(elemento);
+      }
+    }
+  });
+  
+  return raiz;
+}
+
+/**
+ * Obtener estadísticas generales de un portafolio
+ */
+async function obtenerEstadisticasPortafolio(portafolioRaizId) {
+  const { Portafolio, ArchivoSubido } = require('../modelos');
+  
+  // Obtener todas las carpetas del portafolio
+  const carpetas = await Portafolio.findAll({
+    where: {
+      [Op.or]: [
+        { id: portafolioRaizId },
+        { carpeta_padre_id: { [Op.not]: null } }
+      ],
+      activo: true
+    },
+    attributes: ['id']
+  });
+  
+  const carpetaIds = carpetas.map(c => c.id);
+  
+  // Obtener estadísticas de archivos
+  const archivos = await ArchivoSubido.findAll({
+    where: {
+      portafolio_id: carpetaIds,
+      activo: true
+    },
+    attributes: ['estado', 'tamanio']
+  });
+  
+  const estadisticas = {
+    total_carpetas: carpetas.length,
+    total_archivos: archivos.length,
+    archivos_por_estado: {
+      pendientes: archivos.filter(a => a.estado === 'pendiente').length,
+      aprobados: archivos.filter(a => a.estado === 'aprobado').length,
+      rechazados: archivos.filter(a => a.estado === 'rechazado').length,
+      en_revision: archivos.filter(a => a.estado === 'revisado').length
+    },
+    tamanio_total: archivos.reduce((sum, a) => sum + (a.tamanio || 0), 0),
+    progreso_porcentaje: archivos.length > 0 ? 
+      Math.round((archivos.filter(a => a.estado === 'aprobado').length / archivos.length) * 100) : 0
+  };
+  
+  return estadisticas;
+}
+
+/**
+ * Obtener archivos de una carpeta específica
+ */
+const obtenerArchivosDePortafolio = async (req, res) => {
+  try {
+    console.log('=== OBTENIENDO ARCHIVOS DE PORTAFOLIO ===');
+    
+    const { portafolioId } = req.params;
+    const usuarioId = req.usuario.id;
+    const rolActual = req.usuario.rol_actual;
+    
+    await sequelize.authenticate();
+    
+    const { Portafolio, ArchivoSubido, Usuario } = require('../modelos');
+    
+    // Verificar que el usuario tenga acceso a este portafolio
+    const portafolio = await Portafolio.findByPk(portafolioId, {
+      include: [
+        {
+          model: Usuario,
+          as: 'docente',
+          attributes: ['id', 'nombres', 'apellidos']
+        }
+      ]
+    });
+    
+    if (!portafolio) {
+      return ResponseHandler.error(res, 'Portafolio no encontrado', 404);
+    }
+    
+    // Verificar permisos
+    if (rolActual === 'docente' && portafolio.docente_id !== usuarioId) {
+      return ResponseHandler.error(res, 'No tienes permisos para ver este portafolio', 403);
+    }
+    
+    if (rolActual === 'verificador') {
+      const { VerificadorDocente } = require('../modelos');
+      const asignacion = await VerificadorDocente.findOne({
+        where: { 
+          verificador_id: usuarioId, 
+          docente_id: portafolio.docente_id,
+          activo: true 
+        }
+      });
+      
+      if (!asignacion) {
+        return ResponseHandler.error(res, 'No tienes asignado este docente para verificación', 403);
+      }
+    }
+    
+    // Obtener archivos del portafolio
+    const archivos = await ArchivoSubido.findAll({
+      where: {
+        portafolio_id: portafolioId,
+        activo: true
+      },
+      include: [
+        {
+          model: Usuario,
+          as: 'subidoPor',
+          attributes: ['id', 'nombres', 'apellidos']
+        },
+        {
+          model: Usuario,
+          as: 'verificadoPor',
+          attributes: ['id', 'nombres', 'apellidos'],
+          required: false
+        }
+      ],
+      order: [['subido_en', 'DESC']]
+    });
+    
+    const resultado = {
+      portafolio: {
+        id: portafolio.id,
+        nombre: portafolio.nombre,
+        ruta: portafolio.ruta,
+        docente: portafolio.docente
+      },
+      archivos: archivos.map(archivo => ({
+        id: archivo.id,
+        nombre_original: archivo.nombre_original,
+        nombre_sistema: archivo.nombre_sistema,
+        tipo_mime: archivo.tipo_mime,
+        formato: archivo.formato,
+        tamanio: archivo.tamanio,
+        estado: archivo.estado,
+        comentarios: archivo.comentarios,
+        version: archivo.version,
+        subido_en: archivo.subido_en,
+        subido_por: archivo.subidoPor,
+        verificado_por: archivo.verificadoPor,
+        fecha_verificacion: archivo.fecha_verificacion
+      }))
+    };
+    
+    return ResponseHandler.success(res, resultado, 'Archivos obtenidos correctamente');
+    
+  } catch (error) {
+    console.error('❌ Error al obtener archivos:', error);
+    return ResponseHandler.error(res, error.message, 500);
+  }
+};
+
 module.exports = {
   obtenerPortafolios,
   obtenerMisPortafolios,
   generarPortafoliosAutomaticos,
   obtenerEstructuraPortafolio,
-  inicializarSistemaPortafolios
+  inicializarSistemaPortafolios,
+  obtenerEstructuraParaRol,
+  obtenerArchivosDePortafolio
 }; 

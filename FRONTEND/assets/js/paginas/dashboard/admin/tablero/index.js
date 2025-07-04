@@ -146,6 +146,47 @@ async function inicializarModulos() {
             }
         }
     }
+
+    // Inicializar sistemas de gestión adicionales
+    await inicializarSistemasGestion();
+}
+
+// ================================================
+// INICIALIZACIÓN DE SISTEMAS DE GESTIÓN
+// ================================================
+
+async function inicializarSistemasGestion() {
+    console.log('🔧 Inicializando sistemas de gestión...');
+    
+    try {
+        // Inicializar sistema de sincronización de ciclos
+        if (window.SincronizacionCiclos && typeof window.SincronizacionCiclos.inicializar === 'function') {
+            console.log('🔄 Inicializando sincronización de ciclos...');
+            await window.SincronizacionCiclos.inicializar();
+            sistemaTablero.modulos.sincronizacionCiclos = true;
+            console.log('✅ Sistema de sincronización de ciclos inicializado');
+        } else {
+            console.warn('⚠️ Sistema de sincronización de ciclos no disponible');
+            sistemaTablero.modulos.sincronizacionCiclos = false;
+        }
+        
+        // Inicializar sistema de generación de portafolios
+        if (window.GeneracionPortafolios && typeof window.GeneracionPortafolios.inicializar === 'function') {
+            console.log('🔄 Inicializando generación de portafolios...');
+            await window.GeneracionPortafolios.inicializar();
+            sistemaTablero.modulos.generacionPortafolios = true;
+            console.log('✅ Sistema de generación de portafolios inicializado');
+        } else {
+            console.warn('⚠️ Sistema de generación de portafolios no disponible');
+            sistemaTablero.modulos.generacionPortafolios = false;
+        }
+        
+        console.log('✅ Sistemas de gestión inicializados');
+        
+    } catch (error) {
+        console.error('❌ Error inicializando sistemas de gestión:', error);
+        sistemaTablero.errores.push({ modulo: 'sistemas-gestion', error });
+    }
 }
 
 // ================================================

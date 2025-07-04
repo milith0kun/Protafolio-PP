@@ -516,7 +516,67 @@ function configurarEventosCustom() {
         mostrarErrorGlobal(event.detail);
     });
     
+    // Configurar eventos de botones de portafolios
+    const btnGenerarPortafolios = document.getElementById('btnGenerarPortafolios');
+    if (btnGenerarPortafolios) {
+        btnGenerarPortafolios.addEventListener('click', manejarGenerarPortafolios);
+        console.log('✅ Evento de generar portafolios configurado');
+    }
+
+    const btnGenerarTodosPortafolios = document.getElementById('btnGenerarTodosPortafolios');
+    if (btnGenerarTodosPortafolios) {
+        btnGenerarTodosPortafolios.addEventListener('click', manejarGenerarTodosPortafolios);
+        console.log('✅ Evento de generar todos portafolios configurado');
+    }
+
+    const btnActualizarPortafolios = document.getElementById('btnActualizarPortafolios');
+    if (btnActualizarPortafolios) {
+        btnActualizarPortafolios.addEventListener('click', manejarActualizarPortafolios);
+        console.log('✅ Evento de actualizar portafolios configurado');
+    }
+
+    const btnInicializarPortafolios = document.getElementById('btnInicializarPortafolios');
+    if (btnInicializarPortafolios) {
+        btnInicializarPortafolios.addEventListener('click', manejarInicializarPortafolios);
+        console.log('✅ Evento de inicializar portafolios configurado');
+    }
+
+    const btnNuevoCiclo = document.getElementById('btnNuevoCiclo');
+    if (btnNuevoCiclo) {
+        btnNuevoCiclo.addEventListener('click', manejarNuevoCiclo);
+        console.log('✅ Evento de nuevo ciclo configurado');
+    }
+
+    // Configurar filtros de portafolios
+    document.addEventListener('click', (event) => {
+        if (event.target.classList.contains('filter-btn')) {
+            const filtro = event.target.dataset.filter;
+            manejarFiltroPortafolios(filtro, event.target);
+        }
+    });
+    
     console.log('✅ Eventos custom configurados');
+}
+
+/**
+ * Maneja el filtrado de portafolios
+ */
+function manejarFiltroPortafolios(filtro, boton) {
+    // Actualizar botones activos
+    document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
+    boton.classList.add('active');
+    
+    // Filtrar portafolios
+    const portafolios = document.querySelectorAll('.portafolio-card');
+    portafolios.forEach(card => {
+        if (filtro === 'all') {
+            card.style.display = 'block';
+        } else {
+            const badge = card.querySelector('.badge');
+            const estado = badge ? badge.textContent.toLowerCase() : '';
+            card.style.display = estado.includes(filtro) ? 'block' : 'none';
+        }
+    });
 }
 
 function emitirEvento(tipoEvento, datos = null) {
@@ -654,6 +714,105 @@ async function manejarInicializacionPortafolios(boton) {
         boton.disabled = false;
         boton.innerHTML = '<i class="fas fa-folder-plus"></i> Inicializar Portafolios';
     }
+}
+
+/**
+ * Maneja la generación de portafolios desde el botón de generar
+ */
+async function manejarGenerarPortafolios() {
+    console.log('🔄 Generando portafolios para el ciclo actual...');
+    
+    const cicloActual = window.SincronizacionCiclos?.obtenerCicloActual()?.id;
+    if (!cicloActual) {
+        alert('❌ Error: No hay ciclo académico seleccionado');
+        return;
+    }
+    
+    // Usar el sistema de generación de portafolios
+    if (window.GeneracionPortafolios) {
+        document.dispatchEvent(new CustomEvent('generar-portafolios', {
+            detail: { cicloId: cicloActual }
+        }));
+    }
+}
+
+/**
+ * Maneja la generación de todos los portafolios
+ */
+async function manejarGenerarTodosPortafolios() {
+    console.log('🔄 Generando todos los portafolios...');
+    
+    const confirmacion = confirm('¿Está seguro de que desea generar TODOS los portafolios? Esta acción puede tomar varios minutos.');
+    if (!confirmacion) return;
+    
+    const cicloActual = window.SincronizacionCiclos?.obtenerCicloActual()?.id;
+    if (!cicloActual) {
+        alert('❌ Error: No hay ciclo académico seleccionado');
+        return;
+    }
+    
+    // Usar el sistema de generación de portafolios
+    if (window.GeneracionPortafolios) {
+        document.dispatchEvent(new CustomEvent('generar-portafolios', {
+            detail: { cicloId: cicloActual, docenteId: null }
+        }));
+    }
+}
+
+/**
+ * Maneja la actualización de portafolios
+ */
+async function manejarActualizarPortafolios() {
+    console.log('🔄 Actualizando lista de portafolios...');
+    
+    if (window.GeneracionPortafolios?.cargarPortafoliosExistentes) {
+        await window.GeneracionPortafolios.cargarPortafoliosExistentes();
+    }
+}
+
+/**
+ * Maneja la inicialización de portafolios (botón separado)
+ */
+async function manejarInicializarPortafolios() {
+    console.log('🔄 Inicializando sistema de portafolios...');
+    
+    const confirmacion = confirm('¿Está seguro de que desea inicializar el sistema de portafolios? Esto creará las estructuras necesarias para el ciclo actual.');
+    if (!confirmacion) return;
+    
+    const cicloActual = window.SincronizacionCiclos?.obtenerCicloActual()?.id;
+    if (!cicloActual) {
+        alert('❌ Error: No hay ciclo académico seleccionado');
+        return;
+    }
+    
+    try {
+        const response = await window.apiRequest('/api/portafolios/inicializar', 'POST', {
+            cicloId: cicloActual
+        });
+        
+        if (response.success) {
+            alert('✅ Sistema de portafolios inicializado correctamente');
+            // Recargar portafolios después de inicializar
+            if (window.GeneracionPortafolios?.cargarPortafoliosExistentes) {
+                await window.GeneracionPortafolios.cargarPortafoliosExistentes();
+            }
+        } else {
+            throw new Error(response.message || 'Error inicializando portafolios');
+        }
+    } catch (error) {
+        console.error('❌ Error inicializando portafolios:', error);
+        alert(`❌ Error: ${error.message}`);
+    }
+}
+
+/**
+ * Maneja el cambio de ciclo académico
+ */
+function manejarNuevoCiclo() {
+    console.log('🔄 Creando nuevo ciclo académico...');
+    
+    // Redireccionar a la página de gestión de ciclos
+    window.location.href = 'ciclos.html';
 }
 
 // Funciones placeholder para acciones de tabla

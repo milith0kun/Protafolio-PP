@@ -211,7 +211,10 @@ function renderizarEstadoSistema() {
 function renderizarMetricas() {
     const metricas = window.DataTablero?.obtenerMetricas?.();
     if (!metricas) {
+        // Solo mostrar warning si no es un problema de servidor offline
+        if (!window.DataTablero?.obtenerEstadoSistema?.()?.servidorOffline) {
         console.warn('⚠️ No se recibieron métricas del servidor');
+        }
         return;
     }
     

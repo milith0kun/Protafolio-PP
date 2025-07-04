@@ -14,7 +14,8 @@ const dataState = {
     actividadesRecientes: [],
     ciclosDisponibles: [],
     cargando: false,
-    ultimaActualizacion: null
+    ultimaActualizacion: null,
+    servidorOffline: false
 };
 
 // ================================================
@@ -32,9 +33,13 @@ async function initialize() {
         
         await cargarDatosIniciales();
         configurarActualizacionAutomatica();
+        configurarIntegracionCiclos();
         console.log('✅ Módulo de datos inicializado');
     } catch (error) {
-        console.error('❌ Error en inicialización de datos:', error);
+        // Solo mostrar error si no es un problema de conexión
+        if (!error.message?.includes('Failed to fetch')) {
+            console.error('❌ Error en inicialización de datos:', error);
+        }
         throw error;
     }
 }
@@ -59,7 +64,10 @@ function inicializarCicloDesdeSelector() {
             }
         }, 200);
     } else {
-        console.log('⚠️ No se encontró selector de ciclo con valor');
+        // Solo mostrar warning si no es un problema de servidor offline
+        if (!dataState.servidorOffline) {
+            console.log('⚠️ No se encontró selector de ciclo con valor');
+        }
     }
 }
 
@@ -71,6 +79,18 @@ function inicializarCicloDesdeSelector() {
  * Cargar todos los datos iniciales del dashboard
  */
 async function cargarDatosIniciales() {
+    // Evitar cargas múltiples simultáneas
+    if (dataState.cargando) {
+        console.log('⚠️ Carga de datos ya en progreso, evitando duplicación');
+        return;
+    }
+    
+    // Verificar autenticación antes de hacer peticiones
+    if (!window.AUTH?.verificarAutenticacion()) {
+        console.warn('🔐 Usuario no autenticado, evitando peticiones API');
+        return;
+    }
+    
     dataState.cargando = true;
     
     try {
@@ -98,7 +118,10 @@ async function cargarDatosIniciales() {
         dataState.ultimaActualizacion = new Date();
         
     } catch (error) {
-        console.error('❌ Error cargando datos iniciales:', error);
+        // Solo mostrar error si no es un problema de conexión o autenticación
+        if (!error.message?.includes('Failed to fetch') && error.status !== 401) {
+            console.error('❌ Error cargando datos iniciales:', error);
+        }
         throw error;
     } finally {
         dataState.cargando = false;
@@ -113,35 +136,50 @@ function procesarResultados(resultados) {
     if (resultados.estadoSistema.status === 'fulfilled') {
         dataState.estadoSistema = resultados.estadoSistema.value;
     } else {
-        console.error('Error cargando estado del sistema:', resultados.estadoSistema.reason);
+        // Solo mostrar error si no es un problema de conexión
+        if (!resultados.estadoSistema.reason?.message?.includes('Failed to fetch')) {
+            console.error('Error cargando estado del sistema:', resultados.estadoSistema.reason);
+        }
     }
     
     // Métricas
     if (resultados.metricas.status === 'fulfilled') {
         dataState.metricas = resultados.metricas.value;
     } else {
-        console.error('Error cargando métricas:', resultados.metricas.reason);
+        // Solo mostrar error si no es un problema de conexión
+        if (!resultados.metricas.reason?.message?.includes('Failed to fetch')) {
+            console.error('Error cargando métricas:', resultados.metricas.reason);
+        }
     }
     
     // Ciclo actual
     if (resultados.cicloActual.status === 'fulfilled') {
         dataState.cicloActual = resultados.cicloActual.value;
     } else {
-        console.error('Error cargando ciclo actual:', resultados.cicloActual.reason);
+        // Solo mostrar error si no es un problema de conexión
+        if (!resultados.cicloActual.reason?.message?.includes('Failed to fetch')) {
+            console.error('Error cargando ciclo actual:', resultados.cicloActual.reason);
+        }
     }
     
     // Actividades recientes
     if (resultados.actividades.status === 'fulfilled') {
         dataState.actividadesRecientes = resultados.actividades.value || [];
     } else {
-        console.error('Error cargando actividades:', resultados.actividades.reason);
+        // Solo mostrar error si no es un problema de conexión
+        if (!resultados.actividades.reason?.message?.includes('Failed to fetch')) {
+            console.error('Error cargando actividades:', resultados.actividades.reason);
+        }
     }
     
     // Ciclos disponibles
     if (resultados.ciclos.status === 'fulfilled') {
         dataState.ciclosDisponibles = resultados.ciclos.value || [];
     } else {
-        console.error('Error cargando ciclos disponibles:', resultados.ciclos.reason);
+        // Solo mostrar error si no es un problema de conexión
+        if (!resultados.ciclos.reason?.message?.includes('Failed to fetch')) {
+            console.error('Error cargando ciclos disponibles:', resultados.ciclos.reason);
+        }
     }
 }
 
@@ -190,7 +228,10 @@ async function cargarMetricas(endpoint) {
         try {
             response = await window.apiRequest(url, 'GET');
         } catch (firstError) {
-            console.warn('⚠️ Endpoint /estadisticas no disponible, probando /stats');
+            // Solo mostrar warning si no es un error de conexión
+            if (!firstError.message?.includes('Failed to fetch')) {
+                console.warn('⚠️ Endpoint /estadisticas no disponible, probando /stats');
+            }
             let fallbackUrl = `${CONFIG.API.ENDPOINTS.DASHBOARD}/stats`;
             if (cicloSeleccionado) {
                 fallbackUrl += `?ciclo=${cicloSeleccionado}`;
@@ -319,16 +360,28 @@ function configurarActualizacionAutomatica() {
     }
     
     intervaloActualizacion = setInterval(async () => {
-        console.log('🔄 Actualizando datos automáticamente...');
-        try {
-            await cargarDatosIniciales();
-            if (window.UITablero?.actualizarInterfaz) {
-                window.UITablero.actualizarInterfaz();
+        // Solo actualizar si no hay errores de conexión previos
+        if (!dataState.servidorOffline) {
+            console.log('🔄 Actualizando datos automáticamente...');
+            try {
+                await cargarDatosIniciales();
+                if (window.UITablero?.actualizarInterfaz) {
+                    window.UITablero.actualizarInterfaz();
+                }
+                // Marcar servidor como online si la actualización fue exitosa
+                dataState.servidorOffline = false;
+                    } catch (error) {
+            // Marcar servidor como offline tras error
+            dataState.servidorOffline = true;
+            // Solo mostrar mensaje si no es un error de conexión común
+            if (!error.message?.includes('Failed to fetch')) {
+                console.log('📡 Servidor no disponible, pausando actualizaciones automáticas');
             }
-        } catch (error) {
-            console.error('❌ Error en actualización automática:', error);
         }
-    }, INTERVALO_ACTUALIZACION);
+        } else {
+            console.log('⚠️ Servidor offline, omitiendo actualización automática');
+        }
+    }, INTERVALO_ACTUALIZACION * 2); // Duplicar intervalo a 60s
 }
 
 /**
@@ -477,6 +530,30 @@ async function establecerCicloSeleccionado(cicloId) {
         detail: { cicloId, ciclo: dataState.cicloActual }
     });
     document.dispatchEvent(evento);
+}
+
+// ================================================
+// INTEGRACIÓN CON SISTEMAS EXTERNOS
+// ================================================
+
+/**
+ * Configurar integración con el sistema de sincronización de ciclos
+ */
+function configurarIntegracionCiclos() {
+    console.log('🔗 Configurando integración con sistema de ciclos...');
+    
+    // Escuchar cambios de ciclo del sistema de sincronización
+    document.addEventListener('ciclo-cambiado', async (event) => {
+        const { ciclo } = event.detail;
+        console.log('🔄 Ciclo cambiado detectado en datos, actualizando...', ciclo);
+        
+        if (ciclo && ciclo.id) {
+            // Actualizar datos con el nuevo ciclo
+            await actualizarDatos();
+        }
+    });
+    
+    console.log('✅ Integración con sistema de ciclos configurada');
 }
 
 // ================================================
