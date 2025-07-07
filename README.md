@@ -1,6 +1,6 @@
 # Mi Portafolio
-# 📋 SISTEMA PORTAFOLIO DOCENTE UNSAAC - ESTRUCTURA COMPLETA CORREGIDA
-## Explicación Clara con Backend + Frontend + Base de Datos
+# 📋 SISTEMA PORTAFOLIO DOCENTE UNSAAC - ESTRUCTURA COMPLETA CON LARAVEL
+## Explicación Clara con Laravel Backend + Frontend HTML/CSS/JS + MySQL
 
 ---
 
@@ -151,53 +151,71 @@ El sistema se ve como el **explorador de archivos de Windows**, pero para docume
 
 ---
 
-## 🏗️ ESTRUCTURA TÉCNICA CORRECTA: BACKEND + FRONTEND + BASE DE DATOS
+## 🏗️ ESTRUCTURA TÉCNICA ACTUALIZADA: LARAVEL BACKEND + FRONTEND + MYSQL
 
-### **📁 ORGANIZACIÓN PROFESIONAL:**
+### **📁 ORGANIZACIÓN PROFESIONAL CON LARAVEL:**
 
 ```
 portafolio-docente-unsaac/
-├── 📁 BACKEND/                          # Servidor Node.js/Express
-│   ├── servidor.js                      # Archivo principal del servidor
-│   ├── package.json                     # Dependencias del backend
-│   ├── .env                             # Variables de entorno
-│   ├── 📁 controladores/                # Lógica de negocio
-│   │   ├── autenticacion.js
-│   │   ├── usuarios.js
-│   │   ├── archivos.js
-│   │   └── reportes.js
-│   ├── 📁 modelos/                      # Modelos de datos
-│   │   ├── Usuario.js
-│   │   ├── Portafolio.js
-│   │   └── Archivo.js
-│   ├── 📁 rutas/                        # APIs/Endpoints
-│   │   ├── auth.js
-│   │   ├── usuarios.js
-│   │   └── archivos.js
-│   ├── 📁 middleware/                   # Middleware personalizado
-│   │   ├── verificar-jwt.js
-│   │   └── subir-archivos.js
-│   ├── 📁 servicios/                    # Servicios de negocio
-│   │   ├── procesador-excel.js
-│   │   └── generador-reportes.js
-│   ├── 📁 utilidades/                   # Funciones auxiliares
-│   │   └── validaciones.js
-│   └── 📁 uploads/                      # Archivos subidos
-├── 📁 FRONTEND/                         # Cliente web
-│   ├── index.html                       # Página principal
-│   ├── 📁 paginas/                      # Páginas HTML
-│   │   ├── administrador/
-│   │   ├── docente/
-│   │   └── verificador/
-│   ├── 📁 assets/                       # Recursos estáticos
-│   │   ├── 📁 css/                      # Estilos CSS
-│   │   ├── 📁 js/                       # JavaScript
-│   │   └── 📁 imagenes/                 # Imágenes y logos
-│   └── 📁 componentes/                  # Componentes reutilizables
-│       ├── cabecera.html
-│       └── pie-pagina.html
-├── 📁 BASE-DE-DATOS/                    # Scripts SQL
-│   ├── 01-crear-estructura.sql         # Crear tablas
+├── 📁 app/                              # Lógica de aplicación Laravel
+│   ├── Http/
+│   │   ├── Controllers/                 # Controladores MVC
+│   │   │   ├── AuthController.php       # Autenticación y login
+│   │   │   ├── AdminController.php      # Panel administrador
+│   │   │   ├── DocenteController.php    # Panel docente
+│   │   │   ├── VerificadorController.php # Panel verificador
+│   │   │   ├── CicloController.php      # Gestión ciclos académicos
+│   │   │   ├── UsuarioController.php    # CRUD usuarios
+│   │   │   ├── CargaMasivaController.php # Procesamiento Excel
+│   │   │   └── ReporteController.php    # Generación reportes
+│   │   ├── Middleware/                  # Middleware personalizado
+│   │   │   ├── VerificarRol.php        # Verificación de roles
+│   │   │   ├── Autenticacion.php       # Autenticación
+│   │   │   └── MultiRol.php            # Sistema multi-rol
+│   │   └── Requests/                    # Validación de formularios
+│   │       ├── LoginRequest.php
+│   │       ├── CargaMasivaRequest.php
+│   │       └── UsuarioRequest.php
+│   ├── Models/                          # Modelos Eloquent
+│   │   ├── User.php                     # Usuario principal
+│   │   ├── Ciclo.php                    # Ciclos académicos
+│   │   ├── Asignatura.php               # Asignaturas
+│   │   ├── CargaAcademica.php           # Carga académica
+│   │   ├── Portafolio.php               # Portafolios
+│   │   ├── Archivo.php                  # Archivos subidos
+│   │   └── Observacion.php              # Observaciones
+│   ├── Services/                        # Servicios de negocio
+│   │   ├── ExcelService.php             # Procesamiento Excel
+│   │   ├── AuthService.php              # Lógica autenticación
+│   │   ├── ReporteService.php           # Generación reportes
+│   │   └── PortafolioService.php        # Gestión portafolios
+│   └── Jobs/                            # Tareas en background
+│       ├── ProcesarCargaMasiva.php      # Procesar Excel
+│       └── GenerarReporte.php           # Generar reportes
+├── 📁 resources/                        # Recursos frontend
+│   ├── views/                           # Vistas Blade
+│   │   ├── auth/                        # Páginas autenticación
+│   │   ├── admin/                       # Panel administrador
+│   │   ├── docente/                     # Panel docente
+│   │   ├── verificador/                 # Panel verificador
+│   │   └── layouts/                     # Layouts base
+│   ├── js/                              # JavaScript modular
+│   │   └── paginas/                     # JS por funcionalidad
+│   └── css/                             # Estilos CSS
+│       └── paginas/                     # CSS por sección
+├── 📁 routes/                           # Definición de rutas
+│   ├── web.php                          # Rutas web
+│   ├── api.php                          # APIs REST
+│   └── admin.php                        # Rutas admin
+├── 📁 database/                         # Base de datos
+│   ├── migrations/                      # Migraciones
+│   ├── seeders/                         # Datos iniciales
+│   └── factories/                       # Factories testing
+└── 📁 storage/                          # Archivos subidos
+    └── app/
+        └── public/
+            └── uploads/                 # Archivos públicos
+```
 │   ├── 02-datos-iniciales.sql          # Datos de prueba
 │   ├── 03-indices-optimizacion.sql     # Optimizaciones
 │   └── 📁 migraciones/                  # Scripts evolutivos
@@ -212,94 +230,96 @@ portafolio-docente-unsaac/
 
 ---
 
-## 🚀 PLAN DE IMPLEMENTACIÓN - 4 ETAPAS DETALLADAS
+## 🚀 PLAN DE IMPLEMENTACIÓN - 4 ETAPAS CON LARAVEL
 
+### **🗂️ MIGRACIÓN ESCALABLE A LARAVEL**
 
-### **🗂️ ADMINISTRACIÓN DE ARCHIVOS ESCALABLE**
-
-#### **Concepto Clave: Estructura que Crece**
-Cada etapa construye **SOLO LOS ARCHIVOS NECESARIOS** para esa funcionalidad, pero de manera que puedan crecer después.
+#### **Concepto Clave: Migración Gradual**
+Cada etapa migra **SOLO LOS COMPONENTES NECESARIOS** de tu frontend actual a Laravel, manteniendo toda la funcionalidad existente.
 
 **Analogía Simple:**
-- **Etapa 1**: Casa con 1 cuarto básico (funciona, puedes vivir)
-- **Etapa 2**: Agregas cocina y baño (más funcional)
-- **Etapa 3**: Agregas sala y comedor (más cómodo)
-- **Etapa 4**: Agregas decoración y acabados de lujo (completo)
+- **Etapa 1**: Mover la casa existente a un terreno mejor (Laravel base)
+- **Etapa 2**: Mejorar los cimientos y estructura (Backend Laravel)
+- **Etapa 3**: Renovar las habitaciones (APIs y servicios)
+- **Etapa 4**: Agregar comodidades modernas (Optimización y testing)
 
 ---
 
-## 📅 ETAPA 1: FUNDAMENTOS (2 semanas)
-### **Objetivo:** Sistema básico donde puedas entrar loguearte y navegar selecioanar el rol y direccionar a sus paginas respectivas  y tener todo lo minimo para la etapa 2
+## 📅 ETAPA 1: FUNDAMENTOS LARAVEL (2 semanas)
+### **Objetivo:** Migrar tu frontend actual a Laravel manteniendo toda la funcionalidad existente
 
-#### **🗂️ ARCHIVOS A CREAR (Solo lo esencial):**
+#### **🗂️ ARCHIVOS A MIGRAR (Manteniendo tu estructura actual):**
 
 ```
 portafolio-docente-unsaac/
-├── 📁 BACKEND/ (8 archivos)
-│   ├── servidor.js                      # Servidor Express principal
-│   ├── package.json                     # Dependencias Node.js
-│   ├── .env                             # Variables de entorno
-│   ├── 📁 controladores/
-│   │   └── autenticacion.js             # Login/logout backend
-│   ├── 📁 modelos/
-│   │   └── Usuario.js                   # Modelo de usuario
-│   ├── 📁 rutas/
-│   │   └── auth.js                      # APIs de autenticación
-│   ├── 📁 middleware/
-│   │   └── verificar-jwt.js             # Verificar tokens
-│   └── 📁 uploads/                      # Carpeta archivos (vacía)
-├── 📁 FRONTEND/ (10 archivos)
-│   ├── index.html                       # Página de login
-│   ├── 📁 paginas/
-│   │   ├── tablero-admin.html           # Dashboard administrador
-│   │   ├── tablero-docente.html         # Dashboard docente
-│   │   ├── tablero-verificador.html     # Dashboard verificador
-│   │   └── selector-rol.html            # Cambio de roles
-│   ├── 📁 assets/
-│   │   ├── 📁 css/
-│   │   │   └── principal.css            # Estilos principales
-│   │   └── 📁 js/
-│   │       ├── nucleo.js                # Funciones base
-│   │       └── autenticacion.js         # Login frontend
-│   └── 📁 componentes/
-│       ├── cabecera.html                # Header reutilizable
-│       └── pie-pagina.html              # Footer reutilizable
-└── 📁 BASE-DE-DATOS/ (1 archivo)
-    └── 01-tablas-basicas.sql            # Usuarios, roles básicos
+├── 📁 app/ (8 archivos Laravel)
+│   ├── Http/Controllers/
+│   │   ├── AuthController.php            # Autenticación Laravel
+│   │   ├── AdminController.php           # Panel admin
+│   │   ├── DocenteController.php         # Panel docente
+│   │   └── VerificadorController.php     # Panel verificador
+│   ├── Http/Middleware/
+│   │   ├── VerificarRol.php             # Middleware roles
+│   │   └── Autenticacion.php            # Middleware auth
+│   ├── Models/
+│   │   ├── User.php                     # Modelo usuario
+│   │   └── Ciclo.php                    # Modelo ciclo
+│   └── Services/
+│       └── AuthService.php              # Servicio autenticación
+├── 📁 resources/views/ (Migrar tu frontend actual)
+│   ├── auth/
+│   │   ├── login.blade.php              # Tu login.html actual
+│   │   └── selector-roles.blade.php     # Tu selector-roles.html
+│   ├── admin/
+│   │   └── tablero.blade.php            # Tu tablero.html actual
+│   ├── docente/
+│   │   └── tablero.blade.php            # Tu tablero docente
+│   ├── verificador/
+│   │   └── tablero.blade.php            # Tu tablero verificador
+│   └── layouts/
+│       ├── app.blade.php                # Layout principal
+│       └── components/
+│           ├── header.blade.php          # Tu cabecera actual
+│           └── footer.blade.php          # Tu pie actual
+├── 📁 resources/js/ (Mantener tu JS actual)
+│   └── paginas/                         # Tu JavaScript modular
+├── 📁 resources/css/ (Mantener tu CSS actual)
+│   └── paginas/                         # Tu CSS organizado
+└── 📁 database/
+    ├── migrations/
+    │   ├── create_users_table.php       # Tabla usuarios
+    │   ├── create_ciclos_table.php      # Tabla ciclos
+    │   └── create_roles_table.php       # Tabla roles
+    └── seeders/
+        └── UserSeeder.php                # Datos iniciales
 ```
 
 #### **¿Qué hace cada componente?**
 
-**BACKEND (8 archivos):**
-- `servidor.js` - El "cerebro" del sistema, servidor Express
-- `package.json` - Lista de librerías Node.js necesarias
-- `.env` - Configuración secreta (contraseñas, tokens)
-- `controladores/autenticacion.js` - Verifica usuarios y contraseñas
-- `modelos/Usuario.js` - Estructura de datos de usuarios
-- `rutas/auth.js` - URLs para login (/login, /logout, etc.)
-- `middleware/verificar-jwt.js` - Verifica que usuario esté logueado
-- `uploads/` - Carpeta donde se guardarán archivos después
-- `BASE-DE-DATOS/` - Base de datos para usuarios y roles
-- `BASE-DE-DATOS/01-tablas-basicas.sql` - Tablas para usuarios y roles
+**LARAVEL BACKEND (8 archivos):**
+- `AuthController.php` - Autenticación con Laravel Sanctum
+- `AdminController.php` - Panel administrador con tu lógica actual
+- `DocenteController.php` - Panel docente con tu lógica actual
+- `VerificadorController.php` - Panel verificador con tu lógica actual
+- `VerificarRol.php` - Middleware para verificación de roles
+- `User.php` - Modelo Eloquent para usuarios
+- `Ciclo.php` - Modelo Eloquent para ciclos académicos
+- `AuthService.php` - Servicio de autenticación multi-rol
 
+**FRONTEND MIGRADO (Mantiene tu estructura actual):**
+- `login.blade.php` - Tu login.html actual convertido a Blade
+- `tablero.blade.php` - Tus dashboards actuales convertidos a Blade
+- `selector-roles.blade.php` - Tu selector-roles.html convertido a Blade
+- `header.blade.php` - Tu cabecera actual como componente Blade
+- `footer.blade.php` - Tu pie actual como componente Blade
+- `resources/js/` - Tu JavaScript modular actual (sin cambios)
+- `resources/css/` - Tu CSS organizado actual (sin cambios)
 
-**FRONTEND (8 archivos):**
-- `index.html` - Página donde usuario pone email y contraseña
-- `paginas/tablero-*.html` - Página principal de cada tipo de usuario
-- `assets/css/principal.css` - Colores, fuentes, diseño básico
-- `assets/js/nucleo.js` - Funciones que usan todas las páginas
-- `assets/js/autenticacion.js` - Maneja login, logout, cambio de roles
-- `assets/js/gestion-usuarios.js` - Maneja gestion de usuarios
-- `assets/js/carga-excel.js` - Maneja carga de excel
-- `assets/js/procesador-excel.js` - Maneja procesador de excel
-- `assets/js/formularios.js` - Maneja formularios
-- `assets/js/tablas.js` - Maneja tablas
-- `assets/js/roles.js` - Maneja roles
-
-
-
-**BASE DE DATOS (1 archivo):**
-- `01-tablas-basicas.sql` - Crea tablas para usuarios y roles
+**BASE DE DATOS LARAVEL:**
+- `create_users_table.php` - Migración para tabla usuarios
+- `create_ciclos_table.php` - Migración para tabla ciclos
+- `create_roles_table.php` - Migración para tabla roles
+- `UserSeeder.php` - Datos iniciales basados en tus CSV
 
 #### **¿Cómo sé que Etapa 1 funciona?**
 - ✅ Puedo entrar con usuario y contraseña
@@ -329,78 +349,89 @@ portafolio-docente-unsaac/
 
 ---
 
-## 📅 ETAPA 2: ADMINISTRACIÓN COMPLETA (3 semanas)
-### **Objetivo:** El administrador puede gestionar todo el sistema cargar los excel y iniciar el sistema de verificacion 
+## 📅 ETAPA 2: ADMINISTRACIÓN COMPLETA CON LARAVEL (3 semanas)
+### **Objetivo:** Migrar tu sistema de carga masiva y gestión administrativa a Laravel
 
-#### **🗂️ ARCHIVOS QUE SE AGREGAN:**
+#### **🗂️ ARCHIVOS QUE SE MIGRAN A LARAVEL:**
 
 ```
 portafolio-docente-unsaac/
-├── 📁 BACKEND/ (+16 archivos nuevos)
-│   ├── 📁 controladores/ (+5 archivos)
-│   │   ├── usuarios.js                  # CRUD usuarios
-│   │   ├── excel.js                     # Procesador Excel
-│   │   ├── ciclos.js                    # Ciclos académicos
-│   │   ├── asignaciones.js              # Asignaciones
-│   │   └── reportes.js                  # Generador reportes
-│   ├── 📁 modelos/ (+4 archivos)
-│   │   ├── Ciclo.js                     # Modelo ciclo académico
-│   │   ├── Asignatura.js                # Modelo asignatura
-│   │   ├── Portafolio.js                # Modelo portafolio
-│   │   └── Asignacion.js                # Modelo asignaciones
-│   ├── 📁 rutas/ (+4 archivos)
-│   │   ├── usuarios.js                  # APIs usuarios
-│   │   ├── excel.js                     # APIs carga Excel
-│   │   ├── ciclos.js                    # APIs ciclos
-│   │   └── reportes.js                  # APIs reportes
-│   └── 📁 servicios/ (+3 archivos)
-│       ├── procesador-excel.js          # Lógica Excel
-│       ├── generador-reportes.js        # Lógica reportes
-│       └── validador-datos.js           # Validaciones
-├── 📁 FRONTEND/ (+13 archivos nuevos)
-│   ├── 📁 paginas/ (+5 archivos)
-│   │   ├── gestion-usuarios.html        # Gestión usuarios
-│   │   ├── carga-excel.html             # Subir Excel
-│   │   ├── ciclos-academicos.html       # Gestión ciclos
-│   │   ├── asignaciones.html            # Asignaciones
-│   │   └── reportes.html                # Reportes
-│   ├── 📁 assets/css/ (+3 archivos)
-│   │   ├── formularios.css              # Estilos formularios
-│   │   ├── tablas.css                   # Estilos tablas
-│   │   └── reportes.css                 # Estilos reportes
-│   └── 📁 assets/js/ (+5 archivos)
-│       ├── gestion-usuarios.js          # Funciones usuarios
-│       ├── procesador-excel.js          # Procesar Excel
-│       ├── ciclos.js                    # Funciones ciclos
-│       ├── asignaciones.js              # Funciones asignaciones
-│       └── reportes.js                  # Funciones reportes
-└── 📁 BASE-DE-DATOS/ (+1 archivo)
-    └── 02-tablas-completas.sql          # Ciclos, asignaturas, etc.
+├── 📁 app/ (+16 archivos Laravel)
+│   ├── Http/Controllers/ (+5 controladores)
+│   │   ├── UsuarioController.php        # CRUD usuarios
+│   │   ├── CargaMasivaController.php    # Procesador Excel
+│   │   ├── CicloController.php          # Ciclos académicos
+│   │   ├── AsignacionController.php     # Asignaciones
+│   │   └── ReporteController.php        # Generador reportes
+│   ├── Models/ (+4 modelos)
+│   │   ├── Asignatura.php               # Modelo asignatura
+│   │   ├── CargaAcademica.php           # Modelo carga académica
+│   │   ├── Portafolio.php               # Modelo portafolio
+│   │   └── Asignacion.php               # Modelo asignaciones
+│   ├── Services/ (+3 servicios)
+│   │   ├── ExcelService.php             # Lógica Excel Laravel
+│   │   ├── ReporteService.php           # Lógica reportes
+│   │   └── ValidacionService.php        # Validaciones
+│   └── Jobs/ (+4 jobs)
+│       ├── ProcesarCargaMasiva.php      # Job Excel background
+│       ├── GenerarReporte.php           # Job reportes
+│       ├── CrearPortafolios.php         # Job crear portafolios
+│       └── NotificarUsuarios.php        # Job notificaciones
+├── 📁 resources/views/ (+5 vistas)
+│   ├── admin/
+│   │   ├── usuarios.blade.php           # Tu usuarios.html
+│   │   ├── carga-masiva.blade.php       # Tu carga-masiva.html
+│   │   ├── ciclos.blade.php             # Tu ciclos.html
+│   │   ├── asignaciones.blade.php       # Tu asignaciones.html
+│   │   └── reportes.blade.php           # Tu reportes.html
+│   └── components/
+│       ├── forms/                        # Componentes formularios
+│       └── tables/                       # Componentes tablas
+├── 📁 resources/js/ (Mantener tu JS actual)
+│   └── paginas/dashboard/admin/          # Tu JavaScript actual
+└── 📁 database/
+    ├── migrations/ (+4 migraciones)
+    │   ├── create_asignaturas_table.php
+    │   ├── create_carga_academica_table.php
+    │   ├── create_portafolios_table.php
+    │   └── create_asignaciones_table.php
+    └── seeders/ (+2 seeders)
+        ├── AsignaturaSeeder.php          # Basado en tu CSV
+        └── CargaAcademicaSeeder.php      # Basado en tu CSV
 ```
 
-#### **¿Qué hace cada archivo NUEVO?**
+#### **¿Qué hace cada archivo LARAVEL?**
 
-**BACKEND NUEVOS:**
-- `controladores/usuarios.js` - Crear, editar, eliminar usuarios
--    
-- `servicios/generador-reportes.js` - Crea reportes en PDF y Excel
-- `modelos/Ciclo.js` - Estructura de datos para semestres
-- `modelos/Asignatura.js` - Estructura de datos para asignaturas
-- `modelos/Portafolio.js` - Estructura de datos para portafolios
-- `modelos/Asignacion.js` - Estructura de datos para asignaciones
-- `modelos/Reporte.js` - Estructura de datos para reportes
-- `modelos/Usuario.js` - Estructura de datos para usuarios
-- `modelos/Archivo.js` - Estructura de datos para archivos
+**CONTROLADORES LARAVEL:**
+- `UsuarioController.php` - CRUD usuarios con Eloquent
+- `CargaMasivaController.php` - Procesa tus CSV con Laravel Excel
+- `CicloController.php` - Gestión ciclos académicos
+- `AsignacionController.php` - Asignaciones docentes-verificadores
+- `ReporteController.php` - Genera reportes con DomPDF
 
-**FRONTEND NUEVOS:**
-- `paginas/gestion-usuarios.html` - Página para gestionar usuarios
-- `paginas/carga-excel.html` - Página para subir archivos Excel
-- `assets/js/procesador-excel.js` - Lee archivos Excel y muestra datos
-- `assets/css/formularios.css` - Estilos para formularios   
-- `assets/js/gestion-usuarios.js` - Funciones para gestionar usuarios
-- `assets/js/carga-excel.js` - Funciones para cargar Excel
-- `assets/js/procesador-excel.js` - Funciones para procesar Excel
-- `assets/js/formularios.js` - Funciones para formularios   
+**MODELOS ELOQUENT:**
+- `Asignatura.php` - Modelo para asignaturas (basado en tu CSV)
+- `CargaAcademica.php` - Modelo para carga académica (tu CSV)
+- `Portafolio.php` - Modelo para portafolios
+- `Asignacion.php` - Modelo para asignaciones
+
+**SERVICIOS LARAVEL:**
+- `ExcelService.php` - Procesa tus 6 archivos CSV con Laravel Excel
+- `ReporteService.php` - Genera reportes PDF/Excel
+- `ValidacionService.php` - Validaciones de datos
+
+**JOBS LARAVEL:**
+- `ProcesarCargaMasiva.php` - Procesa Excel en background
+- `GenerarReporte.php` - Genera reportes asíncronos
+- `CrearPortafolios.php` - Crea portafolios automáticamente
+- `NotificarUsuarios.php` - Envía notificaciones por email
+
+**VISTAS BLADE:**
+- `usuarios.blade.php` - Tu usuarios.html convertido a Blade
+- `carga-masiva.blade.php` - Tu carga-masiva.html convertido a Blade
+- `ciclos.blade.php` - Tu ciclos.html convertido a Blade
+- `asignaciones.blade.php` - Tu asignaciones.html convertido a Blade
+- `reportes.blade.php` - Tu reportes.html convertido a Blade
 
 #### **¿Cómo sé que Etapa 2 funciona?**
 - ✅ Administrador puede crear usuarios
@@ -426,45 +457,42 @@ portafolio-docente-unsaac/
 
 ---
 
-## 📅 ETAPA 3: ARCHIVOS BÁSICOS (2 semanas)
-### **Objetivo:** Docentes pueden subir archivos básicos
+## 📅 ETAPA 3: ARCHIVOS BÁSICOS CON LARAVEL (2 semanas)
+### **Objetivo:** Migrar sistema de archivos y verificación a Laravel
 
-#### **🗂️ ARCHIVOS QUE SE AGREGAN:**
+#### **🗂️ ARCHIVOS QUE SE MIGRAN A LARAVEL:**
 
 ```
 portafolio-docente-unsaac/
-├── 📁 BACKEND/ (+12 archivos nuevos)
-│   ├── 📁 controladores/ (+2 archivos)
-│   │   ├── archivos.js                  # Gestión archivos
-│   │   └── verificacion.js              # Verificación documentos
-│   ├── 📁 modelos/ (+2 archivos)
-│   │   ├── Archivo.js                   # Modelo archivo
-│   │   └── Observacion.js               # Modelo observaciones
-│   ├── 📁 rutas/ (+2 archivos)
-│   │   ├── archivos.js                  # APIs archivos
-│   │   └── verificacion.js              # APIs verificación
-│   ├── 📁 servicios/ (+3 archivos)
-│   │   ├── subir-archivos.js            # Lógica subida
-│   │   ├── validar-archivos.js          # Validaciones archivos
-│   │   └── gestor-permisos.js           # Permisos archivos
-│   └── 📁 middleware/ (+3 archivos)
-│       ├── upload-multer.js             # Configuración Multer
-│       ├── validar-archivo.js           # Validar archivos
-│       └── verificar-permisos.js        # Verificar permisos
-├── 📁 FRONTEND/ (+8 archivos nuevos)
-│   ├── 📁 paginas/ (+4 archivos)
-│   │   ├── mis-portafolios.html         # Lista portafolios
-│   │   ├── subir-archivos.html          # Subir archivos
-│   │   ├── lista-archivos.html          # Ver archivos
-│   │   └── cola-verificacion.html       # Cola verificación
-│   ├── 📁 assets/css/ (+1 archivo)
-│   │   └── archivos.css                 # Estilos archivos
-│   └── 📁 assets/js/ (+3 archivos)
-│       ├── subir-archivos.js            # Subir archivos
-│       ├── lista-archivos.js            # Listar archivos
-│       └── verificacion.js              # Verificar archivos
-└── 📁 BASE-DE-DATOS/ (+1 archivo)
-    └── 03-tablas-archivos.sql           # Tablas archivos
+├── 📁 app/ (+12 archivos Laravel)
+│   ├── Http/Controllers/ (+2 controladores)
+│   │   ├── ArchivoController.php        # Gestión archivos
+│   │   └── VerificacionController.php   # Verificación documentos
+│   ├── Models/ (+2 modelos)
+│   │   ├── Archivo.php                  # Modelo archivo
+│   │   └── Observacion.php              # Modelo observaciones
+│   ├── Services/ (+3 servicios)
+│   │   ├── ArchivoService.php           # Lógica subida archivos
+│   │   ├── ValidacionArchivoService.php # Validaciones archivos
+│   │   └── PermisoService.php           # Gestión permisos
+│   ├── Http/Middleware/ (+3 middleware)
+│   │   ├── VerificarPermisos.php        # Verificar permisos
+│   │   ├── ValidarArchivo.php           # Validar archivos
+│   │   └── SubirArchivo.php             # Configuración upload
+│   └── Jobs/ (+2 jobs)
+│       ├── ProcesarArchivo.php          # Procesar archivo
+│       └── NotificarVerificacion.php    # Notificar verificación
+├── 📁 resources/views/ (+4 vistas)
+│   ├── docente/
+│   │   ├── mis-portafolios.blade.php    # Lista portafolios
+│   │   ├── subir-archivos.blade.php     # Subir archivos
+│   │   └── lista-archivos.blade.php     # Ver archivos
+│   └── verificador/
+│       └── cola-verificacion.blade.php  # Cola verificación
+├── 📁 resources/js/ (Mantener tu JS actual)
+│   └── paginas/dashboard/                # Tu JavaScript actual
+└── 📁 storage/
+    └── app/public/uploads/               # Archivos subidos
 ```
 
 #### **¿Qué hace cada archivo NUEVO?**
@@ -523,40 +551,35 @@ portafolio-docente-unsaac/
 
 ---
 
-## 📅 ETAPA 4: EXPLORADOR AVANZADO (3 semanas)
-### **Objetivo:** Sistema completo tipo Windows Explorer
+## 📅 ETAPA 4: EXPLORADOR AVANZADO CON LARAVEL (3 semanas)
+### **Objetivo:** Migrar explorador tipo Windows a Laravel
 
-#### **🗂️ ARCHIVOS QUE SE AGREGAN:**
+#### **🗂️ ARCHIVOS QUE SE MIGRAN A LARAVEL:**
 
 ```
 portafolio-docente-unsaac/
-├── 📁 BACKEND/ (+8 archivos nuevos)
-│   ├── 📁 controladores/ (+2 archivos)
-│   │   ├── explorador.js                # Lógica explorador
-│   │   └── busqueda.js                  # Búsqueda archivos
-│   ├── 📁 servicios/ (+4 archivos)
-│   │   ├── auto-distribucion.js         # Auto-distribución IA
-│   │   ├── generador-zip.js             # Crear archivos ZIP
-│   │   ├── busqueda-contenido.js        # Buscar en contenido
-│   │   └── estructura-carpetas.js       # Gestión carpetas
-│   └── 📁 rutas/ (+2 archivos)
-│       ├── explorador.js                # APIs explorador
-│       └── busqueda.js                  # APIs búsqueda
-├── 📁 FRONTEND/ (+9 archivos nuevos)
-│   ├── 📁 paginas/ (+1 archivo)
-│   │   └── explorador-completo.html     # Interfaz explorador
-│   ├── 📁 assets/css/ (+3 archivos)
-│   │   ├── explorador-windows.css       # Estilos Windows
-│   │   ├── arrastrar-soltar.css         # Estilos drag & drop
-│   │   └── arbol-carpetas.css           # Estilos árbol
-│   └── 📁 assets/js/ (+5 archivos)
-│       ├── explorador-principal.js      # Lógica principal
-│       ├── arrastrar-soltar.js          # Drag & drop
-│       ├── auto-distribucion.js         # Auto-distribución
-│       ├── busqueda-avanzada.js         # Búsqueda
-│       └── navegacion-arbol.js          # Árbol navegación
-└── 📁 BASE-DE-DATOS/ (+1 archivo)
-    └── 04-optimizaciones.sql            # Índices y optimizaciones
+├── 📁 app/ (+8 archivos Laravel)
+│   ├── Http/Controllers/ (+2 controladores)
+│   │   ├── ExploradorController.php     # Lógica explorador
+│   │   └── BusquedaController.php       # Búsqueda archivos
+│   ├── Services/ (+4 servicios)
+│   │   ├── AutoDistribucionService.php  # Auto-distribución IA
+│   │   ├── ZipService.php               # Crear archivos ZIP
+│   │   ├── BusquedaContenidoService.php # Buscar en contenido
+│   │   └── EstructuraCarpetaService.php # Gestión carpetas
+│   └── Jobs/ (+2 jobs)
+│       ├── GenerarZipService.php        # Generar ZIP background
+│       └── IndexarArchivos.php          # Indexar archivos
+├── 📁 resources/views/ (+1 vista)
+│   └── explorador/
+│       └── explorador-completo.blade.php # Interfaz explorador
+├── 📁 resources/js/ (Mantener tu JS actual)
+│   └── explorador/                       # Tu JavaScript explorador
+├── 📁 resources/css/ (Mantener tu CSS actual)
+│   └── explorador/                       # Tu CSS explorador
+└── 📁 database/
+    └── migrations/
+        └── create_archivos_index_table.php # Índices optimización
 ```
 
 #### **Diseño Visual Específico a Implementar:**
@@ -604,59 +627,153 @@ portafolio-docente-unsaac/
 
 ---
 
+## 🛠️ TECNOLOGÍAS Y REQUISITOS
+
+### **📋 STACK TECNOLÓGICO:**
+
+**Backend Laravel:**
+- **Laravel 10.x** - Framework PHP principal
+- **PHP 8.1+** - Lenguaje de programación
+- **MySQL 8.0** - Base de datos principal
+- **Redis** (opcional) - Caché y colas
+- **Laravel Sanctum** - Autenticación API
+- **Laravel Excel** - Procesamiento de archivos CSV/Excel
+- **DomPDF** - Generación de reportes PDF
+- **Laravel Queue** - Procesamiento en background
+
+**Frontend (Mantiene tu estructura actual):**
+- **HTML5** - Estructura semántica
+- **CSS3** - Estilos organizados por sección
+- **JavaScript ES6+** - Lógica modular
+- **Bootstrap 5** - Framework CSS
+- **Font Awesome** - Iconografía
+- **Blade Templates** - Motor de plantillas Laravel
+
+**Herramientas de Desarrollo:**
+- **Composer** - Gestor de dependencias PHP
+- **Node.js** - Para compilación de assets
+- **Git** - Control de versiones
+- **Artisan** - Comandos de Laravel
+
+### **🚀 COMANDOS DE INSTALACIÓN:**
+
+```bash
+# 1. Clonar el proyecto
+git clone [url-del-repositorio]
+cd portafolio-docente-unsaac
+
+# 2. Instalar dependencias PHP
+composer install
+
+# 3. Configurar variables de entorno
+cp .env.example .env
+php artisan key:generate
+
+# 4. Configurar base de datos en .env
+DB_CONNECTION=mysql
+DB_HOST=127.0.0.1
+DB_PORT=3306
+DB_DATABASE=portafolio_docente
+DB_USERNAME=root
+DB_PASSWORD=
+
+# 5. Ejecutar migraciones
+php artisan migrate
+
+# 6. Cargar datos iniciales
+php artisan db:seed
+
+# 7. Crear enlace simbólico para archivos
+php artisan storage:link
+
+# 8. Instalar dependencias Node.js (opcional)
+npm install
+npm run dev
+
+# 9. Iniciar servidor de desarrollo
+php artisan serve
+```
+
+### **📁 ESTRUCTURA DE ARCHIVOS CSV:**
+
+El sistema utiliza 6 archivos CSV para carga masiva:
+
+1. **01_usuarios_masivos.csv** - Datos de usuarios y roles
+2. **02_carreras_completas.csv** - Información de carreras
+3. **03_asignaturas_completas.csv** - Catálogo de asignaturas
+4. **04_carga_academica.csv** - Asignaciones docente-asignatura
+5. **05_verificaciones.csv** - Configuración de verificaciones
+6. **06_codigos_institucionales.csv** - Códigos de la institución
+
+### **🔧 CONFIGURACIÓN ADICIONAL:**
+
+```bash
+# Configurar colas (opcional)
+php artisan queue:work
+
+# Configurar caché
+php artisan config:cache
+php artisan route:cache
+php artisan view:cache
+
+# Generar documentación API
+php artisan l5-swagger:generate
+```
+
+---
+
 ## 📊 RESUMEN: CRECIMIENTO CONTROLADO DE ARCHIVOS
 
-### **📈 Evolución Profesional Corregida:**
+### **📈 Evolución Profesional con Laravel:**
 
 ```
-ETAPA 1: 19 archivos básicos
-├── BACKEND: 8 archivos (servidor, auth básico)
-├── FRONTEND: 10 archivos (páginas básicas)  
-└── BASE-DE-DATOS: 1 archivo (tablas usuarios)
+ETAPA 1: 19 archivos Laravel básicos
+├── APP: 8 archivos (controladores, modelos, middleware)
+├── RESOURCES: 10 archivos (vistas Blade, JS, CSS)
+└── DATABASE: 1 archivo (migraciones y seeders)
 
 
 ETAPA 2: +30 archivos = 49 archivos
-├── BACKEND: +16 archivos (administración completa)
-├── FRONTEND: +13 archivos (interfaces admin)
-└── BASE-DE-DATOS: +1 archivo (tablas académicas)
+├── APP: +16 archivos (controladores admin, servicios, jobs)
+├── RESOURCES: +13 archivos (vistas admin, componentes)
+└── DATABASE: +1 archivo (migraciones académicas)
 
 ETAPA 3: +21 archivos = 70 archivos  
-├── BACKEND: +12 archivos (gestión archivos)
-├── FRONTEND: +8 archivos (interfaces archivos)
-└── BASE-DE-DATOS: +1 archivo (tablas archivos)
+├── APP: +12 archivos (controladores archivos, servicios)
+├── RESOURCES: +8 archivos (vistas archivos)
+└── STORAGE: +1 archivo (gestión archivos)
 
 ETAPA 4: +18 archivos = 88 archivos FINALES
-├── BACKEND: +8 archivos (explorador avanzado)
-├── FRONTEND: +9 archivos (interfaz Windows)
-└── BASE-DE-DATOS: +1 archivo (optimizaciones)
+├── APP: +8 archivos (controladores explorador, servicios)
+├── RESOURCES: +9 archivos (vistas explorador)
+└── DATABASE: +1 archivo (optimizaciones e índices)
 ```
 
-### **🎯 DISTRIBUCIÓN FINAL PROFESIONAL:**
+### **🎯 DISTRIBUCIÓN FINAL PROFESIONAL CON LARAVEL:**
 
 ```
-📁 BACKEND (44 archivos):
-├── 1 servidor principal (servidor.js)
+📁 APP (44 archivos Laravel):
 ├── 9 controladores (lógica de negocio)
-├── 7 modelos (estructura de datos)
-├── 8 rutas (APIs/endpoints)
-├── 6 middleware (seguridad y validaciones)
+├── 7 modelos Eloquent (estructura de datos)
+├── 8 middleware (seguridad y validaciones)
 ├── 10 servicios (procesamiento complejo)
-├── 2 utilidades (funciones auxiliares)
-└── 1 carpeta uploads
+├── 6 jobs (tareas en background)
+├── 4 requests (validación de formularios)
+└── 1 carpeta storage/uploads
 
-📁 FRONTEND (40 archivos):
-├── 1 página principal (index.html)
-├── 14 páginas HTML específicas
-├── 7 archivos CSS (estilos)
-├── 13 archivos JavaScript (funcionalidad)
-├── 2 componentes reutilizables
+📁 RESOURCES (40 archivos):
+├── 1 layout principal (app.blade.php)
+├── 14 vistas Blade específicas
+├── 7 archivos CSS (estilos organizados)
+├── 13 archivos JavaScript (funcionalidad modular)
+├── 2 componentes Blade reutilizables
 └── 3 carpetas de assets organizadas
 
-📁 BASE-DE-DATOS (4 archivos):
-├── 01-tablas-basicas.sql (Etapa 1)
-├── 02-tablas-completas.sql (Etapa 2)
-├── 03-tablas-archivos.sql (Etapa 3)
-└── 04-optimizaciones.sql (Etapa 4)
+📁 DATABASE (4 archivos):
+├── 01-create_users_table.php (Etapa 1)
+├── 02-create_academic_tables.php (Etapa 2)
+├── 03-create_files_table.php (Etapa 3)
+└── 04-create_optimizations.php (Etapa 4)
 ```
 
 ---
@@ -842,25 +959,25 @@ FLUJO USANDO EL EXPLORADOR:
 
 ---
 
-## ⏱️ CRONOGRAMA REALISTA CORREGIDO
+## ⏱️ CRONOGRAMA REALISTA CON LARAVEL
 
-### **Semana 1-2: Etapa 1 (19 archivos)**
-- **Semana 1**: Backend básico (servidor + auth + BD)
-- **Semana 2**: Frontend básico (login + dashboards + componentes)
+### **Semana 1-2: Etapa 1 (19 archivos Laravel)**
+- **Semana 1**: Instalación Laravel + migración frontend básico
+- **Semana 2**: Autenticación Laravel + sistema multi-rol
 
 ### **Semana 3-5: Etapa 2 (+30 archivos = 49 total)**
-- **Semana 3**: Backend admin (usuarios + Excel + ciclos)
-- **Semana 4**: Frontend admin (interfaces + formularios)
-- **Semana 5**: Integración + reportes + testing
+- **Semana 3**: Controladores admin + procesamiento CSV
+- **Semana 4**: Vistas Blade admin + servicios Laravel
+- **Semana 5**: Jobs background + reportes + testing
 
 ### **Semana 6-7: Etapa 3 (+21 archivos = 70 total)**
-- **Semana 6**: Backend archivos (subida + validación + permisos)
-- **Semana 7**: Frontend archivos (interfaces + verificación básica)
+- **Semana 6**: Controladores archivos + middleware permisos
+- **Semana 7**: Vistas archivos + servicios verificación
 
 ### **Semana 8-10: Etapa 4 (+18 archivos = 88 total)**
-- **Semana 8**: Backend explorador (IA + búsqueda + ZIP)
-- **Semana 9**: Frontend explorador (interfaz Windows + drag & drop)
-- **Semana 10**: Integración final + optimización + testing
+- **Semana 8**: Controladores explorador + servicios IA
+- **Semana 9**: Vistas explorador + JavaScript drag & drop
+- **Semana 10**: Optimización + caché + testing final
 
 ### **Total: 10 semanas (2.5 meses)**
 
@@ -898,7 +1015,7 @@ FLUJO USANDO EL EXPLORADOR:
 
 ---
 
-## 🚀 CONCLUSIÓN MEJORADA
+## 🚀 CONCLUSIÓN MEJORADA CON LARAVEL
 
 ### **🎯 ¿Qué tienes ahora?**
 
@@ -908,49 +1025,49 @@ FLUJO USANDO EL EXPLORADOR:
 - **Interfaz específica**: Explorador tipo Windows en 3 paneles
 - **Proceso completo**: Desde configuración hasta cierre de ciclo
 
-#### **ESTRUCTURA TÉCNICA PROFESIONAL:**
-- **Backend separado**: 44 archivos organizados profesionalmente
-- **Frontend separado**: 40 archivos con estructura clara
-- **Base de datos separada**: 4 scripts SQL evolutivos
+#### **ESTRUCTURA TÉCNICA PROFESIONAL CON LARAVEL:**
+- **Backend Laravel**: 44 archivos organizados profesionalmente
+- **Frontend migrado**: 40 archivos con estructura Blade
+- **Base de datos Laravel**: 4 migraciones evolutivas
 - **Crecimiento controlado**: 19 → 49 → 70 → 88 archivos
 
-#### **PLAN DE IMPLEMENTACIÓN DETALLADO:**
-- **4 etapas escalables**: Cada una construye sobre la anterior
+#### **PLAN DE MIGRACIÓN DETALLADO:**
+- **4 etapas escalables**: Cada una migra componentes específicos
 - **Cronograma realista**: 10 semanas con entregables claros
-- **Administración mínima**: Solo archivos necesarios por etapa
+- **Migración gradual**: Mantiene tu frontend actual
 - **Criterios de éxito**: Métricas específicas para cada etapa
 
 ### **🏆 VENTAJAS DE ESTA APROXIMACIÓN CORREGIDA:**
 
 #### **✅ PARA EL DESARROLLO:**
-- **Estructura estándar**: Familiar para cualquier desarrollador
-- **Desarrollo paralelo**: Backend y frontend independientes
-- **Testing incremental**: Cada etapa se prueba por separado
-- **Deployment flexible**: Componentes se pueden deployar separadamente
+- **Framework robusto**: Laravel con todas las herramientas necesarias
+- **Migración gradual**: Mantiene tu frontend actual funcionando
+- **Testing integrado**: Laravel con PHPUnit incluido
+- **Deployment profesional**: Preparado para producción
 
 #### **✅ PARA EL USUARIO:**
-- **Entrega de valor temprana**: Funcionalidad desde Etapa 1
-- **Interfaz profesional**: Explorador tipo Windows en Etapa 4
-- **Experiencia consistente**: Componentes reutilizables
-- **Performance optimizada**: Separación de responsabilidades
+- **Funcionalidad inmediata**: Tu frontend actual sigue funcionando
+- **Mejoras graduales**: Cada etapa agrega funcionalidad Laravel
+- **Experiencia consistente**: Mantiene tu interfaz actual
+- **Performance mejorada**: Laravel con optimizaciones automáticas
 
 #### **✅ PARA LA UNIVERSIDAD:**
-- **Inversión protegida**: Cada etapa es funcional independientemente
-- **Escalabilidad garantizada**: Arquitectura preparada para crecimiento
-- **Mantenimiento eficiente**: Estructura clara y organizada
-- **Adopción gradual**: Usuarios se familiarizan progresivamente
+- **Inversión protegida**: Tu trabajo actual se preserva
+- **Escalabilidad garantizada**: Laravel preparado para crecimiento
+- **Mantenimiento eficiente**: Estructura Laravel estándar
+- **Adopción gradual**: Usuarios no notan cambios bruscos
 
-### **📊 NÚMEROS FINALES CORREGIDOS:**
-- **88 archivos totales** organizados profesionalmente
+### **📊 NÚMEROS FINALES CON LARAVEL:**
+- **88 archivos totales** organizados profesionalmente con Laravel
 - **4 etapas de 2-3 semanas** cada una
-- **3 componentes separados** (Backend + Frontend + BD)
+- **3 componentes integrados** (Laravel Backend + Blade Frontend + MySQL)
 - **Interfaz completa** tipo Windows Explorer
 
 ### **🎯 PRÓXIMO PASO RECOMENDADO:**
-**Empezar con la Etapa 1** - En 2 semanas tendrás un sistema funcional con backend, frontend y base de datos separados, donde puedas entrar, navegar y cambiar roles. Esto te permitirá:
-- Probar la arquitectura separada
+**Empezar con la Etapa 1** - En 2 semanas tendrás un sistema funcional con Laravel, manteniendo tu frontend actual, donde puedas entrar, navegar y cambiar roles. Esto te permitirá:
+- Probar la migración gradual a Laravel
 - Validar la funcionalidad básica multi-rol
 - Obtener feedback de usuarios reales
-- Construir confianza en el enfoque escalable
+- Construir confianza en el enfoque Laravel
 
-**Este sistema transformará la gestión de portafolios académicos en UNSAAC, facilitando los procesos de acreditación con una arquitectura profesional, escalable y mantenible.**
+**Este sistema transformará la gestión de portafolios académicos en UNSAAC, facilitando los procesos de acreditación con una arquitectura Laravel profesional, escalable y mantenible.**
